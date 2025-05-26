@@ -1,0 +1,8 @@
+Flask
+Flask-WTF
+Flask-Login
+Flask-SQLAlchemy
+pandas
+openpyxl
+PyMySQL
+gunicorn
