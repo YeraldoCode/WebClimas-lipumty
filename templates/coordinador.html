@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Revisión de Vehículo{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 bg-white p-5 rounded shadow">
+      <h2 class="mb-4">Revisión de Vehículo</h2>
+      {% if msg %}
+        <div class="alert alert-success">{{ msg }}</div>
+      {% endif %}
+      {% if datos %}
+        <div class="alert alert-success mt-4">
+          <strong>Datos de la unidad:</strong>
+          <ul class="list-group mt-3">
+            <li class="list-group-item"><b>Serial:</b> {{ datos['Serial'] }}</li>
+            <li class="list-group-item"><b>Marca:</b> {{ datos['Marca'] }}</li>
+            <li class="list-group-item"><b>Modelo:</b> {{ datos['Modelo'] }}</li>
+            <li class="list-group-item"><b>Asientos:</b> {{ datos['Asientos'] }}</li>
+            <li class="list-group-item"><b>Año:</b> {{ datos['Año'] }}</li>
+            <li class="list-group-item"><b>Tipo vehiculo:</b> {{ datos['Tipo vehiculo'] }}</li>
+            <li class="list-group-item"><b>Gpo. estatus:</b> {{ datos['Gpo. estatus'] }}</li>
+            <li class="list-group-item"><b>Estatus:</b> {{ datos['Estatus'] }}</li>
+            <li class="list-group-item"><b>Uso:</b> {{ datos['Descripcion'] }}</li>
+            <li class="list-group-item"><b>Aire:</b> {{ datos['aire'] }}</li>
+            <li class="list-group-item"><b>Jala:</b> {{ datos['jala'] }}</li>
+            <li class="list-group-item"><b>Mochila:</b> {{ datos['mochila'] }}</li>
+            <li class="list-group-item"><b>Conversión/Reparación:</b> {{ datos['conversion_reparacion'] }}</li>
+            <li class="list-group-item"><b>Reinsidente:</b> {{ datos['reinsidente'] }}</li>
+          </ul>
+        </div>
+        <form method="post" class="mt-4">
+        <div class="mb-3">
+          <label for="aire" class="form-label">Aire</label>
+          <select class="form-select" id="aire" name="aire">
+            <option value="Sí" {% if datos['aire']=='Sí' %}selected{% endif %}>Sí</option>
+            <option value="No" {% if datos['aire']=='No' %}selected{% endif %}>No</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="jala" class="form-label">Jala</label>
+          <select class="form-select" id="jala" name="jala">
+            <option value="Sí" {% if datos['jala']=='Sí' %}selected{% endif %}>Sí</option>
+            <option value="No" {% if datos['jala']=='No' %}selected{% endif %}>No</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="mochila" class="form-label">Mochila</label>
+          <select class="form-select" id="mochila" name="mochila">
+            <option value="Sí" {% if datos['mochila']=='Sí' %}selected{% endif %}>Sí</option>
+            <option value="No" {% if datos['mochila']=='No' %}selected{% endif %}>No</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="conversion_reparacion" class="form-label">Conversión/Reparación</label>
+          <select class="form-select" id="conversion_reparacion" name="conversion_reparacion">
+            <option value="na" {% if datos['conversion_reparacion']=='na' %}selected{% endif %}>na</option>
+            <option value="pte diagnostico" {% if datos['conversion_reparacion']=='pte diagnostico' %}selected{% endif %}>pte diagnostico</option>
+            <option value="reparacion" {% if datos['conversion_reparacion']=='reparacion' %}selected{% endif %}>reparacion</option>
+            <option value="conversion" {% if datos['conversion_reparacion']=='conversion' %}selected{% endif %}>conversion</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="reinsidente" class="form-label">Reinsidente</label>
+          <select class="form-select" id="reinsidente" name="reinsidente">
+            <option value="Sí" {% if datos['reinsidente']=='Sí' %}selected{% endif %}>Sí</option>
+            <option value="No" {% if datos['reinsidente']=='No' %}selected{% endif %}>No</option>
+          </select>
+        </div>
+        <input type="hidden" name="id_vehiculo" value="{{ datos['id_vehiculo'] }}">
+        <button type="submit" class="btn btn-outline-primary w-100">Guardar Cambios</button>
+      </form>
+      {% elif error %}
+        <div class="alert alert-danger mt-4">{{ error }}</div>
+      {% endif %}
+      
+      <br>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <a href="javascript:history.back()" class="btn btn-outline-warning w-100">cambiar unidad</a>
+          <a href="/" class="btn btn-outline-danger w-100">Salir</a>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+{% endblock %}

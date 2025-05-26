@@ -1,0 +1,16 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^4.1.7"
+  },
+  "name": "web-sigo",
+  "version": "1.0.0",
+  "description": "Este proyecto es una aplicación web para revisión y edición de datos logísticos de vehículos, con roles de coordinador y administrador, usando Flask y Tailwind CSS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

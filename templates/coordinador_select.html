@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Seleccionar Cliente y Unidad{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 bg-white p-5 rounded shadow">
+      <h2 class="mb-4">Selecciona Cliente</h2>
+      <form method="post">
+        <div class="mb-3">
+          <label for="cliente" class="form-label">Cliente</label>
+          <select name="cliente" id="cliente" class="form-select" onchange="this.form.submit()" required>
+            <option value="">Selecciona un cliente</option>
+            {% for c in clientes %}
+              <option value="{{ c }}" {% if c == selected_cliente %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </form>
+      {% if unidades %}
+      <h3 class="h5 mt-4 mb-3">Unidades de {{ selected_cliente }}</h3>
+      <div style="max-height: 500px; overflow-y: auto;">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>ID Vehículo</th>
+              <th>Marca</th>
+              <th>Uso</th>
+              <th>Estatus</th>
+              <th>Revisado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for v in unidades %}
+            <tr {% if v.revisado %}class="table-success"{% endif %}>
+              <td>{{ v.IdVehiculo }}</td>
+              <td>{{ v.Marca }}</td>
+              <td>{{ v.Uso }}</td>
+              <td>{{ v.Estatus }}</td>
+              <td>{{ 'Si' if v.revisado else 'No' }}</td>
+              <td>
+                <a href="{{ url_for('coordinador', id_vehiculo=v.IdVehiculo) }}" class="btn btn-sm btn-primary">Editar</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+      <br>
+      <br>
+    <a href="/" class="btn btn-outline-danger w-100">Salir</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
