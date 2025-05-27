@@ -6,3 +6,4 @@ pandas
 openpyxl
 PyMySQL
 gunicorn
+psycopg2-binary
