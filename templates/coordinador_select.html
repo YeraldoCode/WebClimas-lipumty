@@ -33,10 +33,10 @@
           <tbody>
             {% for v in unidades %}
             <tr {% if v.revisado %}class="table-success"{% endif %}>
-              <td>{{ v.IdVehiculo }}</td>
-              <td>{{ v.Marca }}</td>
-              <td>{{ v.Uso }}</td>
-              <td>{{ v.Estatus }}</td>
+              <td>{{ v.idvehiculo }}</td>
+              <td>{{ v.marca }}</td>
+              <td>{{ v.uso }}</td>
+              <td>{{ v.estatus }}</td>
               <td>{{ 'Si' if v.revisado else 'No' }}</td>
               <td>
                 <a href="{{ url_for('coordinador', id_vehiculo=v.IdVehiculo) }}" class="btn btn-sm btn-primary">Editar</a>
