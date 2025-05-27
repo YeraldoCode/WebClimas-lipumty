@@ -1,38 +1,36 @@
-CREATE DATABASE lipumty_climas;
-USE lipumty_climas;
+create table servicios (
+    id int primary key,
+    marca_ac varchar(50)
+);
 
-CREATE TABLE Servicios (
-	ID INT PRIMARY KEY,
-    Marca_AC VARCHAR(50),
-    Cliente VARCHAR(100)
-    );
+create table vehiculos (
+    idvehiculo int primary key,
+    serial varchar(50),
+    marca varchar(50),
+    modelo varchar(50),
+    asientos int,
+    motor varchar(50),
+    anio int,
+    tipo_vehiculo varchar(50),
+    gpo_estatus varchar(50),
+    uso varchar(50),
+    estatus varchar(50),
+    combustible varchar(30),
+    eco varchar(30),
+    placas varchar(30),
+    placas_federales varchar(30),
+    descripcion varchar(255),
+    aire varchar(10),
+    jala varchar(10),
+    mochila varchar(10),
+    conversion_reparacion varchar(50),
+    reinsidente varchar(10)
+);
 
--- Consultar tabla completa de Servicios
-SELECT*FROM Vehiculos;
-
-CREATE TABLE Vehiculos ( 
-	IdVehiculo INT PRIMARY KEY,
-    Unidad_negocio VARCHAR(100),
-    Serial VARCHAR(50),
-    Marca VARCHAR(50),
-    Modelo VARCHAR(50),
-    Asientos INT,
-    Tipo_vehiculo VARCHAR(50),
-    Gpo_estatus VARCHAR(50),
-    Uso VARCHAR(50),
-    Estatus VARCHAR(50),
-    Descripcion VARCHAR(255),
-    Aire VARCHAR(10),
-    Jala VARCHAR(10),
-    Mochila VARCHAR(10),
-    Conversion_Reparacion VARCHAR(50),
-    Reinsidente VARCHAR(10)
-    );
-    
-SELECT 
-    V.*, S.Marca_AC, S.Cliente
-FROM 
-    Vehiculos V
-JOIN 
-    Servicios S ON V.IdVehiculo = S.ID;
+select 
+    v.*, s.marca_ac
+from 
+    vehiculos v
+join 
+    servicios s on v.idvehiculo = s.id;
 

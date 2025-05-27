@@ -37,32 +37,32 @@ def login_coordinador():
 def coordinador_select():
     # Solo los vehículos que cumplen los filtros del admin
     vehiculos = Vehiculo.query.filter(
-        Vehiculo.Gpo_estatus == 'Activo',
-        Vehiculo.Uso == 'Operaciones',
-        Vehiculo.Estatus == 'Operando',
-        Vehiculo.Descripcion != None,
-        Vehiculo.Descripcion != ''
+        Vehiculo.gpo_estatus == 'Activo',
+        Vehiculo.uso == 'Operaciones',
+        Vehiculo.estatus == 'Operando',
+        Vehiculo.descripcion != None,
+        Vehiculo.descripcion != ''
     ).all()
     # Clientes únicos
-    clientes = sorted(set(v.Descripcion for v in vehiculos))
+    clientes = sorted(set(v.descripcion for v in vehiculos))
     selected_cliente = request.form.get('cliente')
     unidades = []
     if selected_cliente:
-        unidades = [v for v in vehiculos if v.Descripcion == selected_cliente]
+        unidades = [v for v in vehiculos if v.descripcion == selected_cliente]
         for v in unidades:
             v.revisado = all(getattr(v, campo) not in [None, '', ' '] for campo in ['aire', 'jala', 'mochila', 'conversion_reparacion'])
-    if request.method == 'POST' and request.form.get('id_vehiculo'):
-        return redirect(url_for('coordinador', id_vehiculo=request.form.get('id_vehiculo')))
+    if request.method == 'POST' and request.form.get('idvehiculo'):
+        return redirect(url_for('coordinador', idvehiculo=request.form.get('idvehiculo')))
     return render_template('coordinador_select.html', clientes=clientes, unidades=unidades, selected_cliente=selected_cliente)
 
 @app.route('/coordinador', methods=['GET', 'POST'])
 def coordinador():
-    id_vehiculo = request.args.get('id_vehiculo') if request.method == 'GET' else request.form.get('id_vehiculo')
+    idvehiculo = request.args.get('idvehiculo') if request.method == 'GET' else request.form.get('idvehiculo')
     datos = None
     error = None
     msg = None
-    if id_vehiculo:
-        vehiculo = Vehiculo.query.filter_by(IdVehiculo=id_vehiculo).first()
+    if idvehiculo:
+        vehiculo = Vehiculo.query.filter_by(idvehiculo=idvehiculo).first()
         if not vehiculo:
             error = "Vehículo no encontrado"
         elif request.method == 'POST':
@@ -74,16 +74,16 @@ def coordinador():
             db.session.commit()
             msg = "Datos actualizados correctamente."
         datos = {
-            'id_vehiculo': vehiculo.IdVehiculo,
-            'Serial': vehiculo.Serial,
-            'Marca': vehiculo.Marca,
-            'Modelo': vehiculo.Modelo,
-            'Asientos': vehiculo.Asientos,
-            'Año': vehiculo.Año,
-            'Tipo vehiculo': vehiculo.Tipo_vehiculo,
-            'Gpo. estatus': vehiculo.Gpo_estatus,
-            'Estatus': vehiculo.Estatus,
-            'Descripcion': vehiculo.Descripcion,
+            'idvehiculo': vehiculo.idvehiculo,
+            'serial': vehiculo.serial,
+            'marca': vehiculo.marca,
+            'modelo': vehiculo.modelo,
+            'asientos': vehiculo.asientos,
+            'anio': vehiculo.anio,
+            'tipo_vehiculo': vehiculo.tipo_vehiculo,
+            'gpo_estatus': vehiculo.gpo_estatus,
+            'estatus': vehiculo.estatus,
+            'descripcion': vehiculo.descripcion,
             'aire': vehiculo.aire,
             'jala': vehiculo.jala,
             'mochila': vehiculo.mochila,
@@ -113,17 +113,16 @@ def admin_panel():
     for v in vehiculos:
         v.revisado = all(getattr(v, campo) not in [None, '', ' '] for campo in ['aire', 'jala', 'mochila', 'conversion_reparacion'])
         if (
-            v.Gpo_estatus == 'Activo' and
-            v.Uso == 'Operaciones' and
-            v.Estatus == 'Operando' and
-            v.Descripcion not in [None, '', ' ']
+            v.gpo_estatus == 'Activo' and
+            v.uso == 'Operaciones' and
+            v.estatus == 'Operando' and
+            v.descripcion not in [None, '', ' ']
         ):
             filtrados.append(v)
-    filtrados = sorted(filtrados, key=lambda v: (v.Descripcion or '').lower())
+    filtrados = sorted(filtrados, key=lambda v: (v.descripcion or '').lower())
     return render_template('admin.html', vehiculos=filtrados)
 
 @app.route('/admin/upload', methods=['POST'])
-#@login_required
 def upload_excel():
     file = request.files.get('file')
     if not file:
@@ -138,25 +137,25 @@ def upload_excel():
         df = pd.read_excel(file)
         if 'vehiculos' in filename:
             for _, row in df.iterrows():
-                vehiculo = Vehiculo.query.filter_by(IdVehiculo=row['IdVehiculo']).first()
+                vehiculo = Vehiculo.query.filter_by(idvehiculo=row['idvehiculo']).first()
                 if vehiculo:
-                    for col in ['Serial', 'Marca', 'Modelo', 'Asientos', 'Motor', 'Año', 'Tipo_vehiculo', 'Gpo_estatus', 'Uso', 'Estatus', 'Combustible', 'Eco', 'Placas', 'Placas_federales', 'Descripcion', 'aire', 'jala', 'mochila', 'conversion_reparacion', 'reinsidente']:
+                    for col in ['serial', 'marca', 'modelo', 'asientos', 'motor', 'anio', 'tipo_vehiculo', 'gpo_estatus', 'uso', 'estatus', 'combustible', 'eco', 'placas', 'placas_federales', 'descripcion', 'aire', 'jala', 'mochila', 'conversion_reparacion', 'reinsidente']:
                         if col in row:
                             setattr(vehiculo, col, clean_nan(row[col]))
                 else:
-                    vehiculo = Vehiculo(**{col: clean_nan(row.get(col)) for col in ['IdVehiculo', 'Serial', 'Marca', 'Modelo', 'Asientos', 'Motor', 'Año', 'Tipo_vehiculo', 'Gpo_estatus', 'Uso', 'Estatus', 'Combustible', 'Eco', 'Placas', 'Placas_federales', 'Descripcion', 'aire', 'jala', 'mochila', 'conversion_reparacion', 'reinsidente']})
+                    vehiculo = Vehiculo(**{col: clean_nan(row.get(col)) for col in ['idvehiculo', 'serial', 'marca', 'modelo', 'asientos', 'motor', 'anio', 'tipo_vehiculo', 'gpo_estatus', 'uso', 'estatus', 'combustible', 'eco', 'placas', 'placas_federales', 'descripcion', 'aire', 'jala', 'mochila', 'conversion_reparacion', 'reinsidente']})
                     db.session.add(vehiculo)
             db.session.commit()
             flash('Vehículos actualizados correctamente.', 'success')
         elif 'servicios' in filename:
             for _, row in df.iterrows():
-                servicio = Servicios.query.filter_by(ID=row['ID']).first()
+                servicio = Servicios.query.filter_by(id=row['id']).first()
                 if servicio:
-                    for col in ['Marca_AC']:
+                    for col in ['marca_ac']:
                         if col in row:
                             setattr(servicio, col, row[col])
                 else:
-                    servicio = Servicios(**{col: row.get(col) for col in ['ID', 'Marca_AC']})
+                    servicio = Servicios(**{col: row.get(col) for col in ['id', 'marca_ac']})
                     db.session.add(servicio)
             db.session.commit()
             flash('Servicios actualizados correctamente.', 'success')
@@ -171,14 +170,14 @@ def export():
     # JOIN entre Vehiculos y Servicios
     results = db.session.query(
         Vehiculo,
-        Servicios.Marca_AC
-    ).join(Servicios, Vehiculo.IdVehiculo == Servicios.ID).all()
+        Servicios.marca_ac
+    ).join(Servicios, Vehiculo.idvehiculo == Servicios.id).all()
     # Convierte a DataFrame
     data = []
     for v, marca_ac in results:
         row = {col: getattr(v, col) for col in [
-            'IdVehiculo', 'Serial', 'Marca', 'Modelo', 'Asientos', 'Motor', 'Año', 'Tipo_vehiculo', 'Gpo_estatus', 'Uso', 'Estatus', 'Combustible', 'Eco', 'Placas', 'Placas_federales', 'Descripcion', 'aire', 'jala', 'mochila', 'conversion_reparacion', 'reinsidente']}
-        row['Marca_AC'] = marca_ac
+            'idvehiculo', 'serial', 'marca', 'modelo', 'asientos', 'motor', 'anio', 'tipo_vehiculo', 'gpo_estatus', 'uso', 'estatus', 'combustible', 'eco', 'placas', 'placas_federales', 'descripcion', 'aire', 'jala', 'mochila', 'conversion_reparacion', 'reinsidente']}
+        row['marca_ac'] = marca_ac
         data.append(row)
     df = pd.DataFrame(data)
     output = BytesIO()

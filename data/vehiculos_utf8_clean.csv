@@ -1,0 +1,598 @@
+IdVehiculo;Serial;Marca;Modelo;Asientos;Motor;Año;Tipo vehiculo;Gpo. estatus;Uso;Estatus;Combustible;Eco;Placas;Placas federales;Descripcion;aire;jala;mochila;conversion/reparacion;reinsidente
+1809;3MBAA4CS19M033164;Mercedes benz;Torino Marco Polo;41;9,07E+13;2009;Camion;Activo;Capacitación;Paro Técnico;Diesel;936;A17913R;547-RL5;S/A-;No;Sí;No;na;Sí
+1810;3MBAA4CS39M033165;Mercedes benz;Torino Marco Polo;41;9,07E+13;2009;Camion;Activo;Capacitación;Paro Técnico;Diesel;937;A17912R;531-RL5;S/A-;;;;;
+179;3MBAA2CN13M004401;Mercedes benz;Boxer;40;9,05E+13;2003;Camion;Inactivo;Operaciones;Por Vender;Diesel;5101;;003 RP2;Proceso de retiro pago y facturación a Martin Garduño;;;;;
+1617;JTFSX23P896052082;Toyota;Hiace;15;2TR8165779;2009;Camioneta;Inactivo;Operaciones;Por Vender;Gasolina Magna;867;447RL-5;447-RL5;Proceso de retiro pago y facturación a Martin Garduño;;;;;
+3075;3CEJ2X51225002153;Masa;C-11r;41;461842230;2002;Camion;Inactivo;Capacitación;Por Vender;Diesel;416;183-216-R;;Proceso de retiro pago y facturación a Martin Garduño;;;;;
+3089;3MBAA2DK88M031168;Mercedes benz;Ayco;41;9,24915E+13;2008;Camion;Inactivo;Operaciones;Por Vender;Diesel;874;A18302R;379RR3;Proceso de retiro pago y facturación a Martin Garduño;;;;;
+3365;3MBAA2DK68M031170;Mercedes benz;Ayco;41;9,24915E+13;2008;Camion;Activo;Capacitación;Paro Técnico;Diesel;873;A18124R;;S/A-;;;;;
+1253;3HVBZAAN57N577505;International;Zafiro;41;470HM2U1510607;2007;Camion;Activo;Capacitación;Paro Técnico;Diesel;485;*;79RB5B;S/A-;;;;;
+2604;JTFSX23P7D6127492;Toyota;Hiace;15;2TR8436018;2013;Camioneta;Activo;Mantenimiento;Operando;Gasolina Magna;2604;;491-RN8;;;;;;
+3860;JTFSX23P5D6135008;Toyota;Hiace;15;2TR8491245;2013;Camioneta;Activo;Capacitación;Mantenimiento;Gasolina Magna;1417;;302RP5;UTILITARIOS LIPU MTY;;;;;
+3946;JTFSX23P5E6150691;Toyota;Hiace;15;2TR-8668534;2014;Camioneta;Activo;Operaciones;Alto Rezago Mantenimiento;Gasolina Magna;1176;;12RA7D;RESCATES MTTO;;;;;
+15003;9532E82W3RR053371;Volkswagen;Ayco;45;0166570A046566;2024;Camion;Activo;Operaciones;Operando;Diesel;13053;A26789R;58RE9E;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;no
+13460;3HBBZTBN8PL489079;International;Zafiro;41;Y1A072487;2023;Camion;Activo;Operaciones;Operando;Diesel;11869;;90RD1S;HAMADEN;si;si;si;na;no
+8025;WD3YF4A95KP141592;Mercedes benz;Sprinter;21;6,51958E+13;2019;Camioneta;Activo;Operaciones;Operando;Diesel;8226;;08RB3Z;AMAZON MTY;;;;;
+15230;3HBBZTBN4SL365125;International;Zafiro;41;Y1A076820;2025;Camion;Activo;Operaciones;Operando;Diesel;13234;A26993R;83RE1F;ABB ELECTRICAL CONTROL SYSTEMS;no;no;si;pte diagnostico;si
+8754;JN1BE6DS3L9036695;Nissan;Urvan;15;;2020;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8304;A18147R;;UNIDAD RENTADA DEVUELTA;;;;;
+10470;3HBBZTBN7NL398091;International;Zafiro;41;Y1A053705;2022;Camion;Activo;Operaciones;Operando;Diesel;9810;A26465R;44RC7F;IAC;;;;;
+13369;3HBBZTBN1PL485021;International;Zafiro;41;Y1A061443;2023;Camion;Activo;Operaciones;Operando;Diesel;11778;;97RD1S;VERTIV MONTERREY;;;;;
+11143;3HBBZTBN3NL353018;International;Zafiro;41;Y1A059023;2022;Camion;Activo;Operaciones;Operando;Diesel;10370;A20897R;74RC1M;NIDEC-COLD;no;no;si;conversion;si
+9508;9BSK4X206E2B42602;Scania;No Especificado;41;8228670;2014;Camion;Baja;Operaciones;Vendido;Diesel;9001;;138RN6;UNIDAD RENTADA DEVUELTA;;;;;
+10468;3HBBZTBN3NL448310;International;Zafiro;41;Y1A054523;2022;Camion;Activo;Operaciones;Alto Rezago Mantenimiento;Diesel;9808;A20464R;39RC7F;SUNGWOO PESQUERIA;;;;;
+9510;9BSK4X204F3864244;Scania;No Especificado;41;8251286;2014;Camion;Baja;Operaciones;Vendido;Diesel;9003;;521RF7;UNIDAD RENTADA DEVUELTA;;;;;
+10406;3MBAA2DM0GM057974;Mercedes benz;Ayco / zafiro;37;924933C1095434;2016;Camion;Baja;Operaciones;Vendido;Diesel;9749;226-816-R;;UNIDAD RENTADA DEVUELTA;;;;;
+5900;3HBBZSEN4KL573754;International;Reco;41;Y1A038189;2019;Camion;Activo;Operaciones;Operando;Diesel;6172;;46-RB-6A;AZTEK;si;si;si;na;si
+8753;JN1BE6DS0L9035794;Nissan;Urvan;15;;2020;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8303;A18139R;;UNIDAD RENTADA DEVUELTA;;;;;
+15588;3HBBZTBN6SL637481;International;Zafiro;41;Y1A076731;2025;Camion;Activo;Operaciones;Operando;Diesel;13573;;77RE8F;SIEMENS;;;;;
+13175;3HBBZTBN3PL513188;International;Zafiro;41;Y1A068436;2023;Camion;Activo;Operaciones;Operando;Diesel;11584;;67RD7M;UDEM;;;;;
+5014;3HBBZSEN9HL473741;International;Zafiro;41;Y1A032698;2017;Camion;Activo;Operaciones;Operando;Diesel;5302;A21963R;06RA7L;DONG KOOK MTY;;;;;
+14328;3HBBZTBN7RL670936;International;Zafiro;41;Y1A075992;2024;Camion;Activo;Operaciones;Operando;Diesel;12632;A26223R;38RD9Z;VERTIV MONTERREY;;;;;
+13362;3HBBZTBN8PL664205;International;Zafiro;41;Y1A070546;2023;Camion;Activo;Operaciones;Operando;Diesel;11771;;05RD2S;SCANPAINT;no;no;si;reparacion;no
+16155;3HBBZTBN6SL570641;International;Zafiro;41;Y1A077751;2025;Camion;Activo;Operaciones;Operando;Diesel;14101;;91RE6N;CELESTICA APODACA;;;;;
+12932;3MBAA2DP3PM077873;Mercedes benz;Zafiro;41;924982U1391842;2023;Camion;Activo;Operaciones;Operando;Diesel;11346;A28912R;17RD3S;NIDEC-CMD;;;;;
+16160;3HBBZTBN3SL577840;International;Zafiro;41;Y1A077251;2025;Camion;Activo;Operaciones;Operando;Diesel;14106;;79RE6N;CELESTICA APODACA;;;;;
+10510;3HBBZTBN2NL398080;International;Zafiro;41;Y1A053335;2022;Camion;Activo;Operaciones;Operando;Diesel;9850;;29RC7F;VERTIV MONTERREY;;;;;
+14288;3HBBZTBN9RL670937;International;Zafiro;41;Y1A076032;2024;Camion;Activo;Operaciones;Operando;Diesel;12593;A25822R;43RD9Z;SIEMENS;;;;;
+10430;3MBAA6DN7DM046787;Mercedes benz;Torino;41;9,06999E+13;2013;Camion;Baja;Operaciones;Vendido;Diesel;9773;222565R;;UNIDAD RENTADA DEVUELTA;;;;;
+15465;3HBBZTBN2SL615414;International;Zafiro;41;Y1A076700;2025;Camion;Activo;Operaciones;Mantenimiento;Diesel;13452;A27398R;29RE6F;NIDEC-CMD;;;;;
+9661;3MBAA6DS5JM066845;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9154;A15023R;;UNIDAD RENTADA DEVUELTA;;;;;
+15466;3HBBZTBN1SL366281;International;Zafiro;41;Y1A076568;2025;Camion;Activo;Operaciones;Operando;Diesel;13453;A27394R;28RE6F;NIDEC-CMD;;;;;
+10100;3MBAA2DM3GM056592;Mercedes benz;Ayco / zafiro;41;924933C1096049;2016;Camion;Baja;Operaciones;Vendido;Diesel;9553;226-812-R;;UNIDAD RENTADA DEVUELTA;;;;;
+10459;3HBBZTBN7NL448309;International;Zafiro;41;Y1A054320;2022;Camion;Activo;Operaciones;Operando;Diesel;9799;;40RC7F;WOLONG;;;;;
+5895;3HBBZSEN0KL573749;International;Reco;41;Y1A038202;2019;Camion;Activo;Operaciones;Operando;Diesel;6167;;51-RB-6A;OWENS CORNING;;;;;
+6176;3HBBZSEN4KL657475;International;Reco;37;Y1A038187;2019;Camion;Activo;Operaciones;Operando;Diesel;6442;;31-RB-3B;SIEMENS;;;;;
+10990;3HBBZTBN9NL316992;International;Zafiro;41;Y1A057720;2022;Camion;Activo;Operaciones;Operando;Diesel;10220;A20783R;58RC2R;WOLONG;;;;;
+15432;3MN2E82W8SD300023;Volkswagen;Ayco;41;0166798A236789;2025;Camion;Activo;Operaciones;Operando;Diesel;13422;;85RE6F;PANEL REY;;;;;
+10514;3HBBZTBN8NL448318;International;Zafiro;41;Y1A054493;2022;Camion;Activo;Operaciones;Operando;Diesel;9854;;73RC7F;WOLONG;;;;;
+12578;3MBAA2DM8CM044934;Mercedes benz;Torino;36;9,24933E+13;2012;Camion;Baja;Operaciones;Vendido;Diesel;11038;224981R;;UNIDAD RENTADA DEVUELTA;;;;;
+4743;3HBBZSEN8HL674224;International;Zafiro;41;Y1A031948;2017;Camion;Activo;Operaciones;Operando;Diesel;4869;;71RA2F;;;;;;
+5161;3HBBZSEN0HL518887;International;Zafiro;41;Y1A034165;2017;Camion;Activo;Operaciones;Operando;Diesel;5446;;93RA5V;;;;;;
+5894;3HBBZSEN9KL573748;International;Reco;41;Y1A038195;2019;Camion;Activo;Operaciones;Operando;Diesel;6166;;52-RB-6A;OWENS CORNING;;;;;
+15368;3HBBZTBN0SL362660;International;Zafiro;41;Y1A076611;2025;Camion;Activo;Operaciones;Operando;Diesel;13354;;55RE1F;NIDEC-CMD;;;;;
+13363;3HBBZTBN4PL485319;International;Zafiro;41;Y1A071854;2023;Camion;Activo;Operaciones;Operando;Diesel;11772;;04RD2S;;;;;;
+12771;3HBBZTBN8PL373543;International;Zafiro;41;Y1A066309;2023;Camion;Activo;Operaciones;Operando;Diesel;11188;A21789R;61RD5M;AMAZON MTY;;;;;
+13486;3HBBZTBN4PL485711;International;Zafiro;41;Y1A072472;2023;Camion;Activo;Operaciones;Operando;Diesel;11895;;75RD1S;AMAZON MTY;;;;;
+11003;3HBBZSGN7ML343254;International;Reco;41;U1A009966;2021;Camion;Activo;Operaciones;Operando;Diesel;10230;;47RC1D;LIEBHERR;;;;;
+13468;3HBBZTBN0PL489089;International;Zafiro;41;Y1A064764;2023;Camion;Activo;Operaciones;Operando;Diesel;11877;;87RD2S;IAC;;;;;
+5060;3HBBZSEN3HL483665;International;Zafiro;41;Y1A033260;2017;Camion;Activo;Operaciones;Operando;Diesel;5348;;98RA2X;AZTEK;no;no;si;pte diagnostico;no
+7458;3HBBZSGN6KL305107;International;Reco;41;U1A009428;2019;Camion;Activo;Operaciones;Operando;Diesel;7667;;46RB3L;WOLONG;;;;;
+4999;3HBBZSEN2HL473743;International;Zafiro;41;Y1A032553;2017;Camion;Activo;Operaciones;Corralon Grave;Diesel;5288;A21958R;61RA9G;Daños a Telmex municipales multa de alcohol - Pago pendiente por 40 mil pesos en efectivo por daño;;;;;
+14857;3MN2E82W3RD301560;Volkswagen;Ayco;41;0166727A186726;2024;Camion;Activo;Operaciones;Operando;Diesel;12928;A26446R;45RE6B;VERTIV MONTERREY;;;;;
+9723;3MBAA6DN3JM065719;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9216;229559R;;UNIDAD RENTADA DEVUELTA;;;;;
+11155;3MBAA2DM9FM053470;Mercedes benz;Zafiro;41;924933C1075146;2014;Camion;Baja;Operaciones;Vendido;Diesel;10382;226013R;;UNIDAD RENTADA DEVUELTA;;;;;
+14274;3HBBZTBN7RL670922;International;Zafiro;41;Y1A076121;2024;Camion;Activo;Operaciones;Operando;Diesel;12580;A25728R;60RD7Z;LIXIL;;;;;
+13350;3MN2E82W8PD301292;Volkswagen;Ayco;45;0166385A526380;2023;Camion;Activo;Operaciones;Operando;Diesel;11759;A25370R;50RD2S;LIXIL;;;;;
+14210;3HBBZTBN8RL195491;International;Zafiro;41;Y1A075935;2024;Camion;Activo;Operaciones;Operando;Diesel;12516;A25365R;85RD7Z;SIEMENS;;;;;
+9684;3MBAA2DP4MM074492;Mercedes benz;Zafiro;41;924982U1304893;2021;Camion;Activo;Operaciones;Operando;Diesel;9177;;50RC9C;VIAKEM;;;;;
+7890;3HBBZSEN2LL259330;International;Reco;41;Y1A042521;2020;Camion;Activo;Operaciones;Operando;Diesel;8091;;76RB6V;DAWN FOODS;;;;;
+15391;3MN2E82W7RD301903;Volkswagen;Ayco;41;0166780A056780;2024;Camion;Activo;Operaciones;Operando;Diesel;13381;;57RE4F;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;no
+8761;JN1BE6DS5L9035693;Nissan;Urvan;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8311;A18138R;;UNIDAD RENTADA DEVUELTA;;;;;
+10471;3HBBZTBN6NL398079;International;Zafiro;41;Y1A053299;2022;Camion;Activo;Operaciones;Operando;Diesel;9811;A20463R;25RC7F;VEOLIA;;;;;
+15810;JTFSX23P8D6137111;Toyota;Hiace;15;;2013;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;13790;;;UNIDAD RENTADA DEVUELTA;;;;;
+10333;3HBBZSGN1NL497363;International;Zafiro;41;U1A009986;2022;Camion;Activo;Operaciones;Operando;Diesel;9676;;47RC5F;SCANPAINT;si;si;si;na;no
+10097;3MBAA2DM3GM055894;Mercedes benz;Ayco / zafiro;41;924933C1078097;2016;Camion;Baja;Operaciones;Vendido;Diesel;9550;;226-363-R;UNIDAD RENTADA DEVUELTA;;;;;
+14838;3MBAA2DP3PM077579;Mercedes benz;Zafiro;41;924982U1387377;2023;Camion;Activo;Operaciones;Operando;Diesel;12909;A26462R;38RE5B;SIEMENS;;;;;
+8952;3MBAA3CS88M030612;Mercedes benz;Torino;41;9,06966E+13;2018;Camion;Baja;Operaciones;Vendido;Diesel;8463;217-008-R;;UNIDAD RENTADA DEVUELTA;;;;;
+13465;3HBBZTBN2PL485707;International;Zafiro;41;Y1A071796;2023;Camion;Activo;Operaciones;Operando;Diesel;11874;;90RD2S;NIDEC-COLD;no;no;si;conversion;si
+15416;3HBBZTBN9SL615586;International;Zafiro;41;Y1A076787;2025;Camion;Activo;Operaciones;Operando;Diesel;13406;;97RE6F;NIDEC-CMD;;;;;
+13182;3HBBZTBN5PL514004;International;Zafiro;41;Y1A069054;2023;Camion;Activo;Operaciones;Operando;Diesel;11591;;23RD6M;VERTIV MONTERREY;;;;;
+11141;3HBBZTBNXNL353372;International;Zafiro;41;Y1A058836;2022;Camion;Activo;Operaciones;Operando;Diesel;10368;A20898R;63RC1M;KEPLER CONSTRUCTORA;;;;;
+15408;3HBBZTBN5SL613883;International;Zafiro;41;Y1A076826;2025;Camion;Activo;Operaciones;Operando;Diesel;13398;;65RE4F;IAC;;;;;
+12954;3MBAA2DP2PM077881;Mercedes benz;Zafiro;41;924982U1392289;2023;Camion;Activo;Operaciones;Operando;Diesel;11368;A28913R;37RD4S;KAYAKU SAFETY;;;;;
+15380;3HBBZTBN0SL363176;International;Zafiro;41;Y1A076738;2025;Camion;Activo;Operaciones;Operando;Diesel;13370;;77RE4F;NIDEC-USEM;;;;;
+7665;3MBAA2DM9GM057973;Mercedez Benz;Ayco;41;924933C1095317;2016;Camion;Baja;Operaciones;Vendido;Diesel;7868;;64RA2C;UNIDAD RENTADA DEVUELTA;;;;;
+13123;3MN2E82W4PD300981;Volkswagen;Ayco;45;0166340A486338;2023;Camion;Activo;Operaciones;Operando;Diesel;11532;A22526R;85RC5X;IAC;;;;;
+10986;3HBBZTBN2NL316994;International;Zafiro;41;Y1A057439;2022;Camion;Activo;Operaciones;Operando;Diesel;10216;A20779R;62RC2R;AMAZON MTY;;;;;
+10331;3HBBZSGN7NL591974;International;Zafiro;41;U1A009987;2022;Camion;Activo;Operaciones;Operando;Diesel;9674;;64RC5F;AMCOR MTY;;;;;
+13489;3HBBZTBN2PL489076;International;Zafiro;41;Y1A066242;2023;Camion;Activo;Operaciones;Operando;Diesel;11898;;69RD1S;VIAKEM;;;;;
+4845;3HBBZSEN3HL706030;International;Zafiro;41;Y1A032412;2017;Camion;Activo;Operaciones;Operando;Diesel;4971;;27RA3F;;;;;;
+15060;3HBBZTBN7RL156617;International;Zafiro;41;Y1A076433;2024;Camion;Activo;Operaciones;Operando;Diesel;13110;;62RE8E;NIDEC-COLD;si;si;si;na;si
+14481;3HBBZTBN0RL670924;International;Zafiro;41;Y1A076061;2024;Camion;Activo;Operaciones;Operando;Diesel;12639;A25804R;53RD9Z;NIDEC-CMD;;;;;
+15442;3HBBZTBN9SL613885;International;Zafiro;41;Y1A076519;2025;Camion;Activo;Operaciones;Operando;Diesel;13429;;30RE6F;AMAZON MTY;;;;;
+9623;WV1LH22E6F6024017;Volkswagen;Cargo Van Crafter;21;;2015;Camioneta;Baja;Operaciones;Vendido;Diesel;9116;A17087R;;UNIDAD RENTADA DEVUELTA;;;;;
+9880;W1Y8DD3Z1LP230159;Mercedes benz;Sprinter;21;6,51958E+13;2020;Camioneta;Activo;Operaciones;Mantenimiento;Diesel;9373;;47RC1G;KAYAKU SAFETY;;;;;
+7768;3HBBZSGN1LL267027;International;Reco;41;U1A009758;2020;Camion;Activo;Operaciones;Operando;Diesel;7970;;37RB3V;CELESTICA AGUA FRIA;;;;;
+4808;3HBBZSEN7HL674375;International;Zafiro;41;Y1A031611;2017;Camion;Activo;Operaciones;Operando;Diesel;4934;795-021-C;64RB6B;LIXIL;;;;;
+14853;3MN2E82W7RD301576;Volkswagen;Ayco;41;0166714A846711;2024;Camion;Activo;Operaciones;Operando;Diesel;12924;A26441R;49RE6B;AMAZON MTY;;;;;
+10456;3HBBZTBN0NL448877;International;Zafiro;41;Y1A055261;2022;Camion;Activo;Operaciones;Operando;Diesel;9796;;30RC7F;CELESTICA ESCOBEDO;;;;;
+14484;3HBBZTBN9RL034325;International;Zafiro;41;Y1A076292;2024;Camion;Activo;Operaciones;Operando;Diesel;12642;A26225R;11RE1A;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+10085;3MBAA2DM4GM055905;Mercedes benz;Ayco / zafiro;41;;2016;Camion;Baja;Operaciones;Vendido;Diesel;9538;229-520-R;;UNIDAD RENTADA DEVUELTA;;;;;
+5939;WD3YF1A9XJP575116;Mercedes benz;Sprinter;22;6,51955E+13;2018;Camioneta;Activo;Operaciones;Operando;Diesel;6211;;94-RB-3B;AMAZON MTY;;;;;
+13184;3HBBZTBN7PL516059;International;Zafiro;41;Y1A069254;2023;Camion;Activo;Operaciones;Operando;Diesel;11593;;21RD6M;IAC;;;;;
+10603;3MBAA6DN5CM043143;Mercedes benz;Torino;47;9,06999E+13;2012;Camion;Baja;Operaciones;Vendido;Diesel;9918;225900R;;UNIDAD RENTADA DEVUELTA;;;;;
+7881;3HBBZSEN3LL261622;International;Reco;41;Y1A042588;2020;Camion;Activo;Operaciones;Operando;Diesel;8083;;10RB6V;DAWN FOODS;;;;;
+8051;WD3YF4A93LP175919;Mercedes benz;Sprinter;21;6,51958E+13;2020;Camioneta;Activo;Operaciones;Alto Rezago Mantenimiento;Diesel;8251;;05RC9A;COR-IAC;;;;;
+15406;3HBBZTBN4SL351550;International;Zafiro;41;Y1A076742;2025;Camion;Activo;Operaciones;Operando;Diesel;13396;;70RE4F;NIDEC-USEM;;;;;
+5051;3HBBZSEN4HL479009;International;Zafiro;41;Y1A032891;2017;Camion;Activo;Operaciones;Operando;Diesel;5339;;59RA2X;OWENS CORNING;;;;;
+15062;3HBBZTBN8RL223550;International;Zafiro;41;Y1A076523;2024;Camion;Activo;Operaciones;Operando;Diesel;13112;;60RE8E;ABB ELECTRICAL CONTROL SYSTEMS;no;no;si;pte diagnostico;si
+14224;3HBBZTBN5RL232299;International;Zafiro;41;Y1A075650;2024;Camion;Activo;Operaciones;Operando;Diesel;12530;A25364R;74RD7Z;CELESTICA APODACA;;;;;
+14874;3MN2E82WXRD301474;Volkswagen;Ayco;41;0166716A076711;2024;Camion;Activo;Operaciones;Operando;Diesel;12945;;41RE6B;SIEMENS;;;;;
+11138;3HBBZTBN7NL352390;International;Zafiro;41;Y1A059210;2022;Camion;Activo;Operaciones;Operando;Diesel;10365;A20904R;66RC1M;AMCOR MTY;;;;;
+8944;3MBAA6DN4GM057783;Mercedes benz;Torino;41;906999C1060930;2016;Camion;Baja;Operaciones;Vendido;Diesel;8455;72-HA-2R;;UNIDAD RENTADA DEVUELTA;;;;;
+5058;3HBBZSENXHL483646;International;Zafiro;41;Y1A033258;2017;Camion;Activo;Operaciones;Operando;Diesel;5346;;15RA5V;GLOBAL FM;;;;;
+13714;3HBBZTBN9RL365096;International;Zafiro;41;Y1A073349;2023;Camion;Activo;Operaciones;Operando;Diesel;12022;;03RD5V;CELESTICA APODACA;;;;;
+11002;3HBBZSGN1ML343248;International;Reco;41;U1A009964;2021;Camion;Activo;Operaciones;Operando;Diesel;10229;;48RC1D;KEPLER CONSTRUCTORA;;;;;
+9711;3MBAA2DP2MM074491;Mercedes benz;Zafiro;41;924982U1305242;2021;Camion;Activo;Operaciones;Operando;Diesel;9204;;51RC9C;WOLONG;;;;;
+7767;3HBBZSGN2LL266744;International;Reco;41;U1A009657;2020;Camion;Activo;Operaciones;Operando;Diesel;7969;;38RB3V;NAPS;;;;;
+15584;3HBBZTBN9SL575235;International;Zafiro;41;Y1A077081;2025;Camion;Activo;Operaciones;Operando;Diesel;13569;;79RE8F;;;;;;
+12964;3MBAA2DP6PM077754;Mercedes benz;Zafiro;41;924982U1393652;2023;Camion;Activo;Operaciones;Operando;Diesel;11378;A29843R;84RD2S;WOLONG;;;;;
+12936;3MBAA2DP4PM077879;Mercedes benz;Zafiro;41;924982U1389957;2023;Camion;Activo;Operaciones;Operando;Diesel;11350;A28911R;14RD3S;KAYAKU SAFETY;;;;;
+5011;3HBBZSEN4HL706070;International;Zafiro;41;Y1A032556;2017;Camion;Activo;Operaciones;Operando;Diesel;5299;A21987R;65RA9G;CAPACITACION;;;;;
+10050;JN1BE6DS1L9038140;Nissan;Urvan;15;;2020;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;9503;A19704R;;UNIDADE RENTADA DEVUELTA;;;;;
+14330;3HBBZTBN2RL195468;International;Zafiro;41;Y1A075990;2024;Camion;Activo;Operaciones;Operando;Diesel;12634;A25805R;40RD9Z;AMCOR MTY;;;;;
+15364;3HBBZTBN3SL362779;International;Zafiro;41;Y1A076746;2025;Camion;Activo;Operaciones;Operando;Diesel;13350;;80RE4F;KEPLER CONSTRUCTORA;;;;;
+10293;3MBAA6DN8BM041093;Mercedes benz;Torino;41;9,06999E+13;2013;Camion;Baja;Operaciones;Vendido;Diesel;9636;214683R;;UNIDAD RENTADA DEVUELTA;;;;;
+13712;3HBBZTBN0PL856041;International;Zafiro;41;Y1A073573;2023;Camion;Activo;Operaciones;Operando;Diesel;12020;;92RD7V;WOLONG;;;;;
+5048;3HBBZSEN9HL479006;International;Zafiro;41;Y1A033000;2017;Camion;Activo;Operaciones;Operando;Diesel;5336;;61RA2X;AZTEK;no;no;si;na;no
+6177;3HBBZSEN5KL657498;International;Reco;37;Y1A038185;2019;Camion;Activo;Operaciones;Operando;Diesel;6443;;30-RB-3B;GLOBAL FM;;;;;
+16163;3HBBZTBN7SL648862;International;Zafiro;41;Y1A077308;2025;Camion;Activo;Operaciones;Operando;Diesel;14109;;96RE6N;CELESTICA AGUA FRIA;;;;;
+7770;3HBBZSGN7LL271082;International;Reco;41;U1A009875;2020;Camion;Activo;Operaciones;Operando;Diesel;7972;;34RB3V;NIDEC-CMD;;;;;
+9275;JTFSX23P8K6204531;Toyota;Hiace;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8782;A18251R;;UNIDAD RENTADA DEVUELTA;;;;;
+13128;3MN2E82W7PD301087;Volkswagen;Ayco;45;0166360A946354;2023;Camion;Activo;Operaciones;Operando;Diesel;11537;A22520R;09RD7M;VERTIV MONTERREY;;;;;
+13463;3HBBZTBN4PL485725;International;Zafiro;41;Y1A072490;2023;Camion;Activo;Operaciones;Operando;Diesel;11872;;92RD2S;IAC;;;;;
+15428;3MN2E82W8RD301957;Volkswagen;Ayco;41;0166791A186789;2024;Camion;Activo;Operaciones;Operando;Diesel;13418;;89RE6F;NIDEC-USEM;;;;;
+7758;3HBBZSGN4KL814659;International;Reco;41;U1A009541;2019;Camion;Activo;Operaciones;Operando;Diesel;7960;A21212R;28RB3V;GLOBAL FM;;;;;
+7689;9532G82W5KR911116;Volkswagen;Ayco;45;0165053A215050;2019;Camion;Baja;Operaciones;Vendido;Diesel;7892;;43RC2G;UNIDAD DEMO DEVUELTA;;;;;
+5113;3HBBZSENXHL518881;International;Zafiro;41;Y1A033569;2017;Camion;Activo;Operaciones;Operando;Diesel;5399;;80RA2X;;;;;;
+10467;3HBBZTBN3NL443608;International;Zafiro;41;Y1A053161;2022;Camion;Activo;Operaciones;Mantenimiento;Diesel;9807;A20460R;22RC7F;WOLONG;;;;;
+15431;3MN2E82W2RD301906;Volkswagen;Ayco;41;0166782A016780;2024;Camion;Activo;Operaciones;Operando;Diesel;13421;;87RE6F;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;no
+16154;3HBBZTBN5SL648861;International;Zafiro;41;Y1A077682;2025;Camion;Activo;Operaciones;Operando;Diesel;14100;;72RE6N;CELESTICA APODACA;;;;;
+5280;3HBBZSGN0HL494331;International;Zafiro;41;U1A008953;2017;Camion;Activo;Operaciones;Operando;Diesel;5557;;80RA2J;;;;;;
+10439;3HBBZTBN4NL443603;International;Zafiro;41;Y1A054776;2022;Camion;Activo;Operaciones;Operando;Diesel;9782;;23RC7F;UDEM;;;;;
+14482;3HBBZTBN0RL195470;International;Zafiro;41;Y1A076006;2024;Camion;Activo;Operaciones;Operando;Diesel;12640;A26224R;52RD9Z;VERTIV MONTERREY;;;;;
+4997;3HBBZSEN7HL473740;International;Zafiro;41;Y1A032594;2017;Camion;Activo;Operaciones;Operando;Diesel;5286;A21956R;63RA9G;GLOBAL FM;;;;;
+10007;3MBAA6DN8EM0999;Mercedes benz;Torino;41;;2014;Camion;Baja;Operaciones;Vendido;Diesel;9460;A19281R;;UNIDAD RENTADA DEVUELTA;;;;;
+10334;3HBBZSGNXNL497362;International;Zafiro;41;U1A009984;2022;Camion;Activo;Operaciones;Operando;Diesel;9677;;48RC5F;CELESTICA AGUA FRIA;;;;;
+9883;3MBAA3CN77M020890;Mercedes benz;Torino Marco Polo;41;;2007;Camion;Baja;Operaciones;Vendido;Diesel;9376;A17757R;;UNIDAD RENTADA DEVUELTA;;;;;
+14839;3MBAA2DP2PM077590;Mercedes benz;Zafiro;41;924982U1401488;2023;Camion;Activo;Operaciones;Operando;Diesel;12910;A26946R;33RE5B;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+9712;3MBAA2DP1MM074496;Mercedes benz;Zafiro;41;924982U1304683;2021;Camion;Activo;Operaciones;Corralon Media;Diesel;9205;;46RC9C;Choque con motociclista fallecido - Trámite de liberación pendiente por falta de operador;;;;;
+7757;3HBBZSGN6KL443018;International;Reco;41;U1A009551;2019;Camion;Activo;Operaciones;Operando;Diesel;7959;;71RB3V;DONG KOOK MTY;;;;;
+15356;3MBAA2DP9RM082627;Mercedes benz;Zafiro;41;924982U1451405;2024;Camion;Activo;Operaciones;Operando;Diesel;13346;;54RE5F;NIDEC-CMD;;;;;
+14072;JTFSX23P1K6201809;Toyota;Hiace;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;12378;A24548R;;UNIDAD RENTADA DEVUELTA;;;;;
+9621;3MBAA3CN77M020890;Mercedes benz;Torino Marco Polo;41;;2007;Camion;Baja;Operaciones;Vendido;Diesel;9114;A17757R;;UNIDAD RENTADA DEVUELTA;;;;;
+13717;3HBBZTBN7PL500069;International;Zafiro;41;Y1A073341;2023;Camion;Activo;Operaciones;Operando;Diesel;12025;;23RD7V;VEOLIA;;;;;
+7664;3MBAA2DM0GM056615;Mercedez Benz;Ayco;41;924933S1095906;2016;Camion;Baja;Operaciones;Vendido;Diesel;7867;;61RA2C;UNIDAD RENTADA DEVUELTA;;;;;
+13177;3HBBZTBN1PL513190;International;Zafiro;41;Y1A068421;2023;Camion;Activo;Operaciones;Operando;Diesel;11586;;65RD7M;AZTEK;no;no;si;reparacion;no
+8722;JTFSX23P9K6203310;Toyota;Hiace;15;2TR-9204274;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8272;RZE207A;;UNIDAD RENTADA DEVUELTA;;;;;
+13257;W1Y8DD3Z1PP498246;Mercedes benz;Sprinter;21;6,51958E+13;2023;Camioneta;Activo;Operaciones;Operando;Diesel;11666;permiso;17RD4S;AMAZON MTY;;;;;
+13349;3MN2E82WXPD301309;Volkswagen;Ayco;45;0166386A166380;2023;Camion;Activo;Operaciones;Operando;Diesel;11758;;51RD2S;VEOLIA;;;;;
+6302;3HBBZSEN5KL664306;International;Reco;41;Y1A039229;2019;Camion;Activo;Operaciones;Operando;Diesel;6567;;84RB4B;AZTEK;no;no;si;conversion;si
+9274;JTFSX23P4K6204588;Toyota;Hiace;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8781;A18280R;;UNIDAD RENTADA DEVUELTA;;;;;
+13186;3HBBZTBN0PL516355;International;Zafiro;41;Y1A069262;2023;Camion;Activo;Operaciones;Operando;Diesel;11595;;20RD6M;SIEMENS;;;;;
+10454;3MBAA6DN1DM046641;Mercedes benz;Torino;41;9,06999E+13;2013;Camion;Baja;Operaciones;Vendido;Diesel;9797;;;UNIDAD RENTADA DEVUELTA;;;;;
+15369;3HBBZTBN6SL352344;International;Zafiro;41;Y1A076626;2025;Camion;Activo;Operaciones;Operando;Diesel;13355;;54RE1F;HAMADEN;si;si;si;na;no
+15229;3HBBZTBN6RL157614;International;Zafiro;41;Y1A076437;2024;Camion;Activo;Operaciones;Operando;Diesel;13234;;42RE7B;NIDEC-COLD;si;si;si;conversion;si
+4946;3HBBZSEN8HL706024;International;Zafiro;41;Y1A032387;2017;Camion;Activo;Operaciones;Operando;Diesel;5235;;52RA3F;;;;;;
+9622;3MBAA3CN77M023384;Mercedes benz;Torino Marco Polo;41;;2007;Camion;Baja;Operaciones;Vendido;Diesel;9115;A16772R;;UNIDAD RENTADA DEVUELTA;;;;;
+10436;3HBBZTBN6NL443599;International;Zafiro;41;Y1A053813;2022;Camion;Activo;Operaciones;Operando;Diesel;9779;;36RC7F;UDEM;;;;;
+9882;W1Y8DD3Z2LP230879;Mercedes benz;Sprinter;21;6,51958E+13;2020;Camioneta;Activo;Operaciones;Operando;Diesel;9375;;46RC1G;KAYAKU SAFETY;;;;;
+10513;3HBBZTBN5NL448308;International;Zafiro;41;Y1A054317;2022;Camion;Activo;Operaciones;Operando;Diesel;9853;;75RC7F;IAC SANTA CATARINA;;;;;
+13372;3HBBZTBN0PL485320;International;Zafiro;41;Y1A071856;2023;Camion;Activo;Operaciones;Operando;Diesel;11781;;95RD1S;IAC;;;;;
+9685;3MBAA2DP8MM074477;Mercedes benz;Zafiro;41;924982U1305767;2021;Camion;Activo;Operaciones;Operando;Diesel;9178;;57RC9C;NIDEC-USEM;;;;;
+5064;3HBBZSENXHL479015;International;Zafiro;41;Y1A032977;2017;Camion;Activo;Operaciones;Operando;Diesel;5352;;82RC4U;LIXIL;;;;;
+9271;3MBAA6DN1EM050108;Mercedes benz;Torino;41;;2014;Camion;Baja;Operaciones;Vendido;Diesel;8779;224411R;;UNIDAD RENTADA DEVUELTA;;;;;
+14329;3HBBZTBN7RL195482;International;Zafiro;41;Y1A076104;2024;Camion;Activo;Operaciones;Mantenimiento;Diesel;12633;A26227R;39RD9Z;AXIONLOG MTY;;;;;
+15362;3HBBZTBN6SL358158;International;Zafiro;41;Y1A076743;2025;Camion;Activo;Operaciones;Operando;Diesel;13348;;81RE4F;KEPLER CONSTRUCTORA;;;;;
+9504;YS2K4X20XE1884451;Scania;No Especificado;41;6755130;2014;Camion;Baja;Operaciones;Vendido;Diesel;8997;;043RN6;UNIDAD RENTADA DEVUELTA;;;;;
+9885;3MBAA6DN8EM048999;Mercedes benz;Torino;41;;2014;Camion;Baja;Operaciones;Vendido;Diesel;9378;A19281R;;UNIDAD RENTADA DEVUELTA;;;;;
+9722;3MBAA6DS0JM066851;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9215;A15041R;;UNIDAD RENTADA DEVUELTA;;;;;
+9686;3MBAA2DP0MM074490;Mercedes benz;Zafiro;41;924982U1305446;2021;Camion;Activo;Operaciones;Operando;Diesel;9179;;52RC9C;AMAZON MTY 2;;;;;
+16162;3HBBZTBN5SL577841;International;Zafiro;41;Y1A077294;2025;Camion;Activo;Operaciones;Operando;Diesel;14108;;82RE6N;CELESTICA AGUA FRIA;;;;;
+4657;3HBBZSEN6HL642176;International;Zafiro;45;Y1A031732;2017;Camion;Activo;Operaciones;Operando;Diesel;4784;794-930-C;37RB9C;;;;;;
+7030;WD3YF1A99KP633864;Mercedes benz;Sprinter;21;6,51955E+13;2019;Camioneta;Activo;Operaciones;Operando;Diesel;7272;;47RB2C;LIEBHERR;;;;;
+13178;3HBBZTBN7PL513310;International;Zafiro;41;Y1A068422;2023;Camion;Activo;Operaciones;Operando;Diesel;11587;;64RD7M;DONG KOOK MTY;;;;;
+12774;3HBBZTBN4PL373541;International;Zafiro;41;Y1A066305;2023;Camion;Activo;Operaciones;Operando;Diesel;11191;A21792R;58RD5M;KAYAKU SAFETY;;;;;
+10089;3MBAA2DM5GM057971;Mercedes benz;Ayco / zafiro;41;924933C1095439;2016;Camion;Baja;Operaciones;Vendido;Diesel;9542;226-824-R;54-RB-5S;UNIDAD RENTADA DEVUELTA;;;;;
+9739;3MBAA3DK78M029580;Mercedes benz;Torino;41;;2008;Camion;Baja;Operaciones;Vendido;Diesel;9232;219694R;;UNIDAD RENTADA DEVUELTA;;;;;
+14211;3HBBZTBN2RL195485;International;Zafiro;41;Y1A075948;2024;Camion;Activo;Operaciones;Operando;Diesel;12517;A25368R;84RD7Z;SIEMENS;;;;;
+8950;3MBAA6DN3BM041101;Mercedes benz;Torino;41;9,06999E+13;2011;Camion;Baja;Operaciones;Vendido;Diesel;8461;214-652 R;;UNIDAD RENTADA DEVUELTA;;;;;
+15582;3HBBZTBN4SL615415;International;Zafiro;41;Y1A076701;2025;Camion;Activo;Operaciones;Operando;Diesel;13567;;81RE8F;RAGASA;;;;;
+14271;3HBBZTBNXRL670929;International;Zafiro;41;Y1A076010;2024;Camion;Activo;Operaciones;Operando;Diesel;12577;A25719R;63RD7Z;AMAZON MTY 2;;;;;
+16009;W1Y5KD3Z5RP649259;Mercedes benz;Sprinter;22;6,54921E+13;2024;Camioneta;Inactivo;Operaciones;Siniestro;Diesel;13964;;63RE7L;En tramite con la aseguradora;;;;;
+6131;3HBBZSENXKL652300;International;Reco;37;Y1A037953;2019;Camion;Activo;Operaciones;Alto Rezago Mantenimiento;Diesel;6404;;06RB2B;COFLEX;;;;;
+11139;3HBBZTBN7NL352969;International;Zafiro;41;Y1A059212;2022;Camion;Activo;Operaciones;Operando;Diesel;10366;A20896R;65RC1M;KEPLER CONSTRUCTORA;;;;;
+11004;3HBBZTBN5ML817795;International;Reco;41;Y1A051078;2021;Camion;Activo;Operaciones;Operando;Diesel;10231;;90RC9C;NIDEC-USEM;;;;;
+5050;3HBBZSEN2HL479008;International;Zafiro;41;Y1A032273;2017;Camion;Activo;Operaciones;Alto Rezago Mantenimiento;Diesel;5338;;60RA2X;TALLER;;;;;
+9884;3MBAA3CN26M017457;Mercedes benz;Torino;41;;2006;Camion;Baja;Operaciones;Vendido;Diesel;9377;A17638R;;UNIDAD RENTADA DEVUELTA;;;;;
+9902;3MBAA3CN77M023384;Mercedes benz;Torino Marco Polo;41;;2007;Camion;Baja;Operaciones;Vendido;Diesel;9384;A16772R;;UNIDAD RENTADA DEVUELTA;;;;;
+9857;JN1BE6DS0L9035794;Nissan;Urvan;15;;2020;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;9350;A18139R;;UNIDAD RENTADA DEVUELTA;;;;;
+15279;3HBBZTBN8SL365175;International;Zafiro;41;Y1A077090;2025;Camion;Activo;Operaciones;Operando;Diesel;13269;;09RE5F;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+8758;JN1BE6DSXK9033579;Nissan;Urvan;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8308;A18137R;;UNIDAD RENTADA DEVUELTA;;;;;
+13562;3HBBZTBN4PL492481;International;Zafiro;41;Y1A071060;2023;Camion;Activo;Operaciones;Operando;Diesel;11971;;80RD4V;LIXIL;;;;;
+16158;3HBBZTBN8SL570639;International;Zafiro;41;Y1A077671;2025;Camion;Activo;Operaciones;Operando;Diesel;14104;;88RE6N;CELESTICA APODACA;;;;;
+9708;3MBAA2DP7MM074504;Mercedes benz;Zafiro;41;924982U1301469;2021;Camion;Activo;Operaciones;Operando;Diesel;9201;;61RC9C;RAGASA;;;;;
+15367;3HBBZTBN5SL351329;International;Zafiro;41;Y1A076640;2025;Camion;Activo;Operaciones;Operando;Diesel;13353;;52RE1F;HAMADEN;no;no;si;na;si
+4685;3HBBZSEN1GL292891;International;Zafiro;41;Y1A028661;2016;Camion;Activo;Operaciones;Operando;Diesel;4812;794677C;24RB9C;LIXIL;;;;;
+9879;W1Y8DD3Z0LP231237;Mercedes benz;Sprinter;21;6,51958E+13;2020;Camioneta;Activo;Operaciones;Operando;Diesel;9372;;45RC1G;KAYAKU SAFETY;;;;;
+15363;3HBBZTBN4SL364279;International;Zafiro;41;Y1A076818;2025;Camion;Activo;Operaciones;Operando;Diesel;13349;;82RE4F;KEPLER CONSTRUCTORA;;;;;
+5054;3HBBZSEN1HL483602;International;Zafiro;41;Y1A033267;2017;Camion;Activo;Operaciones;Operando;Diesel;5342;;01RA3X;DAWN FOODS;;;;;
+7844;3HBBZSGN5KL828697;International;Zafiro;41;U1A009481;2019;Camion;Activo;Operaciones;Operando;Diesel;8046;;79RB3V;NIDEC-USEM;;;;;
+4769;3HBBZSEN9HL674149;International;Zafiro;41;Y1A031464;2017;Camion;Activo;Operaciones;Operando;Diesel;4895;795-010-C;50RB6B;;;;;;
+9662;3MBAA6DS1JM066843;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9155;A15032R;;UNIDAD RENTADA DEVUELTA;;;;;
+5897;3HBBZSEN9KL573751;International;Reco;41;Y1A038193;2019;Camion;Activo;Operaciones;Operando;Diesel;6169;;49-RB-6A;DAWN FOODS;;;;;
+13167;3HBBZTBN7PL513372;International;Zafiro;41;Y1A068939;2023;Camion;Activo;Operaciones;Operando;Diesel;11576;;75RD5M;LIXIL;;;;;
+9507;YS2K4X205C1877680;Scania;No Especificado;41;6699865;2014;Camion;Baja;Operaciones;Vendido;Diesel;9000;;038RN6;UNIDAD RENTADA DEVUELTA;;;;;
+13458;3HBBZTBN6PL485015;International;Zafiro;41;Y1A056952;2023;Camion;Activo;Operaciones;Operando;Diesel;11867;;92RD1S;CELESTICA APODACA;;;;;
+15440;3HBBZTBN0SL573695;International;Zafiro;41;Y1A076478;2025;Camion;Activo;Operaciones;Operando;Diesel;13427;;32RE6F;NIDEC-USEM;;;;;
+10511;3HBBZTBN1NL443610;International;Zafiro;41;Y1A053824;2022;Camion;Activo;Operaciones;Operando;Diesel;9851;;41RC7F;IAC SANTA CATARINA;;;;;
+5019;3HBBZSEN9HL473755;International;Zafiro;41;Y1A032677;2017;Camion;Activo;Operaciones;Operando;Diesel;5307;A21988R;05RA7L;KAYAKU SAFETY;;;;;
+10435;3HBBZTBN4NL396718;International;Zafiro;41;Y1A053111;2022;Camion;Activo;Operaciones;Operando;Diesel;9778;;28RC7F;KEPLER CONSTRUCTORA;;;;;
+7291;3HBBZSGN1KL260688;International;Reco;41;U1A009359;2019;Camion;Activo;Operaciones;Operando;Diesel;7527;;06RB4L;CELESTICA ESCOBEDO;;;;;
+9706;3MBAA2DP7MM074499;Mercedes benz;Zafiro;41;924982U1301933;2021;Camion;Activo;Operaciones;Operando;Diesel;9199;;43RC9C;CELESTICA APODACA;;;;;
+14854;3MN2E82W1RD301590;Volkswagen;Ayco;41;0166737A096737;2024;Camion;Activo;Operaciones;Operando;Diesel;12925;A26440R;48RE6B;IAC;;;;;
+13164;3HBBZTBN5PL513371;International;Zafiro;41;Y1A069062;2023;Camion;Activo;Operaciones;Operando;Diesel;11573;;77RD5M;AMAZON MTY;;;;;
+12772;3HBBZTBN6PL362315;International;Zafiro;41;Y1A064777;2023;Camion;Activo;Operaciones;Mantenimiento;Diesel;11189;A21790R;60RD5M;VERTIV MONTERREY;;;;;
+9715;3MBAA2DP5MM074503;Mercedes benz;Zafiro;41;924982U1301395;2021;Camion;Activo;Operaciones;Operando;Diesel;9208;;62RC9C;CELESTICA APODACA;;;;;
+9689;3MBAA2DP6MM074493;Mercedes benz;Zafiro;41;924982U1307024;2021;Camion;Activo;Operaciones;Operando;Diesel;9182;;49RC9C;KEPLER CONSTRUCTORA;;;;;
+7666;3MBAA2DM0GM057974;Mercedez Benz;Ayco;41;924933C1095434;2016;Camion;Baja;Operaciones;Vendido;Diesel;7869;;66RA2C;UNIDAD RENTADA DEVUELTA;;;;;
+9683;3MBAA2DPXMM074478;Mercedes benz;Zafiro;41;924982U1307513;2021;Camion;Activo;Operaciones;Operando;Diesel;9176;;56RC9C;VIAKEM;;;;;
+16575;3N6AD31A8RK834845;Nissan;NP 300;2;QR25572363H;2024;Camioneta;Activo;Mantenimiento;Operando;Gasolina Magna;19958;RH-9480-P;;;;;;;
+5062;3HBBZSGN0HL705589;International;Zafiro;41;Y1A008765;2017;Camion;Activo;Operaciones;Operando;Diesel;5350;;82RA2X;CAPACITACION;;;;;
+5901;3HBBZSEN6KL573755;International;Reco;41;Y1A038191;2019;Camion;Activo;Operaciones;Operando;Diesel;6173;;45-RB-6A;CELESTICA AGUA FRIA;;;;;
+5056;3HBBZSEN8HL483614;International;Zafiro;41;Y1A033262;2017;Camion;Activo;Operaciones;Operando;Diesel;5344;;55RA2X;GLOBAL FM;;;;;
+15415;3HBBZTBN8SL615580;International;Zafiro;41;Y1A076554;2025;Camion;Activo;Operaciones;Operando;Diesel;13405;;98RE6F;SIEMENS;;;;;
+8866;WD3YE8A92FP146863;Mercedez Benz;Sprinter;21;6,51955E+13;2015;Camioneta;Baja;Operaciones;Vendido;Diesel;8411;;121RN6;UNIDAD RENTADA DEVUELTA;;;;;
+15378;3HBBZTBN1SL613881;International;Zafiro;41;Y1A076845;2025;Camion;Activo;Operaciones;Operando;Diesel;13368;;78RE4F;SIEMENS;;;;;
+12579;3MBAA2DM1CM044970;Mercedes benz;Torino;36;9,24933E+13;2012;Camion;Baja;Operaciones;Vendido;Diesel;11039;A16420R;;UNIDAD RENTADA DEVUELTA;;;;;
+10988;3HBBZTBN9NL316989;International;Zafiro;41;Y1A057724;2022;Camion;Activo;Operaciones;Operando;Diesel;10218;A20787R;60RC2R;SCANPAINT;no;no;si;conversion;si
+8942;3MBAA6DN1DM046655;Mercedes benz;Torino;41;9,06999E+13;2013;Camion;Baja;Operaciones;Vendido;Diesel;8453;856-HY-8;;UNIDAD RENTADA DEVUELTA;;;;;
+16168;3HBBZTBN5SL573790;International;Zafiro;41;Y1A076686;2025;Camion;Activo;Operaciones;Operando;Diesel;14114;;75RE6N;CELESTICA AGUA FRIA;;;;;
+15383;3HBBZTBN2SL613890;International;Zafiro;41;Y1A076963;2025;Camion;Activo;Operaciones;Operando;Diesel;13373;;72RE4F;NIDEC-CMD;;;;;
+11005;3MBAA2DM0CM044667;Mercedes benz;Ayco Zafiro;37;9,24933E+13;2011;Camion;Baja;Operaciones;Vendido;Diesel;10232;A16333R;;UNIDAD RENTADA DEVUELTA;;;;;
+15410;3HBBZTBN2SL613887;International;Zafiro;41;Y1A076928;2025;Camion;Activo;Operaciones;Mantenimiento;Diesel;13400;;63RE4F;VERTIV MONTERREY;;;;;
+15004;9532E82WXRR053755;Volkswagen;Ayco;45;0166578A896574;2024;Camion;Activo;Operaciones;Mantenimiento;Diesel;13054;A26788R;57RE9E;ABB ELECTRICAL CONTROL SYSTEMS;chocada;;;;
+12890;3MBAA2DM4CM045448;International;Zafiro;41;9,24933E+13;2012;Camion;Baja;Operaciones;Vendido;Diesel;11304;A16334R;;UNIDAD RENTADA;;;;;
+13352;3MBAA2DPXPM078325;Mercedes benz;Zafiro;41;924982U1397330;2023;Camion;Activo;Operaciones;Operando;Diesel;11761;;92RD3S;SIEMENS;;;;;
+13183;3HBBZTBN5PL516058;International;Zafiro;41;Y1A068877;2023;Camion;Activo;Operaciones;Operando;Diesel;11592;;22RD6M;UDEM;;;;;
+15234;3HBBZTBN9SL358459;International;Zafiro;41;Y1A076505;2025;Camion;Activo;Operaciones;Operando;Diesel;13238;;60RE1F;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+14477;3HBBZTBN1RL195493;International;Zafiro;41;Y1A076138;2024;Camion;Activo;Operaciones;Operando;Diesel;12635;A25819R;37RD9Z;VERTIV MONTERREY;;;;;
+8947;3MBAA6DSXKM067586;Mercedes benz;Torino;41;926995U1201104;2019;Camion;Baja;Operaciones;Vendido;Diesel;8458;A-15718-R;;UNIDAD RENTADA DEVUELTA;;;;;
+10458;3HBBZTBN1NL443607;International;Zafiro;41;Y1A053823;2022;Camion;Activo;Operaciones;Operando;Diesel;9798;;42RC7F;IAC SANTA CATARINA;;;;;
+14483;3HBBZTBN6RL195490;International;Zafiro;41;Y1A076134;2024;Camion;Activo;Operaciones;Operando;Diesel;12641;A26226R;51RD9Z;SIEMENS;;;;;
+13370;3HBBZTBN3PL481407;International;Zafiro;41;Y1A060508;2023;Camion;Activo;Operaciones;Operando;Diesel;11779;;96RD1S;VERTIV MONTERREY;;;;;
+10461;3HBBZTBN7NL448312;International;Zafiro;41;Y1A054743;2022;Camion;Activo;Operaciones;Operando;Diesel;9801;;37RC7F;KEPLER CONSTRUCTORA;;;;;
+15381;3HBBZTBN8SL369176;International;Zafiro;41;Y1A076951;2025;Camion;Activo;Operaciones;Operando;Diesel;13371;;75RE4F;NIDEC-CMD;;;;;
+15386;3MN2E82WXSD300024;Volkswagen;Ayco;41;0166798A196789;2025;Camion;Activo;Operaciones;Operando;Diesel;13376;;61RE4F;NIDEC-COLD;no;no;si;conversion;si
+12929;3MBAA2DP5PM077776;Mercedes benz;Zafiro;41;924982U1396490;2023;Camion;Activo;Operaciones;Operando;Diesel;11343;A28910R;99RD2S;KAYAKU SAFETY;;;;;
+9272;3MBAA6DN9BM041099;Mercedes benz;Torino;41;;2011;Camion;Baja;Operaciones;Vendido;Diesel;8780;214654R;;UNIDAD RENTADA DEVUELTA;;;;;
+15379;3HBBZTBN5SL351332;International;Zafiro;41;Y1A076807;2025;Camion;Activo;Operaciones;Operando;Diesel;13369;;76RE4F;SIEMENS;;;;;
+5057;3HBBZSEN1HL483616;International;Zafiro;41;Y1A033261;2017;Camion;Activo;Operaciones;Operando;Diesel;5345;;99RA2X;GLOBAL FM;;;;;
+15064;3HBBZTBN8RL156271;International;Zafiro;41;Y1A076348;2024;Camion;Activo;Operaciones;Operando;Diesel;13114;;58RE8E;SIEMENS;;;;;
+10081;3MBAA2DM2GM055904;Mercedes benz;Ayco / zafiro;41;;2016;Camion;Baja;Operaciones;Vendido;Diesel;9534;226-361-R;;UNIDAD RENTADA DEVUELTA;;;;;
+9667;3MBAA6DNXJM065717;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9160;229562R;;UNIDAD RENTADA DEVUELTA;;;;;
+10473;3HBBZTBN1NL448306;International;Zafiro;41;Y1A054495;2022;Camion;Activo;Operaciones;Operando;Diesel;9813;A20461R;43RC7F;AMAZON MTY 2;;;;;
+6323;3HBBZSEN6KL664315;International;Reco;41;Y1A038963;2019;Camion;Activo;Capacitación;Paro Técnico;Diesel;6584;;83-RB-4B;S/A-;;;;;
+13485;3HBBZTBN2PL485710;International;Zafiro;41;Y1A071871;2023;Camion;Activo;Operaciones;Alto Rezago Mantenimiento;Diesel;11894;;77RD1S;S/A;;;;;
+15392;3MN2E82W7RD301884;Volkswagen;Ayco;41;0166779A136772;2024;Camion;Activo;Operaciones;Operando;Diesel;13382;;56RE4F;NIDEC-COLD;si;si;si;na;no
+8951;3MBAA6DS2JM066222;Mercedes benz;Torino;41;926995U1213389;2018;Camion;Baja;Operaciones;Vendido;Diesel;8462;74 - HA-2R;;UNIDAD RENTADA DEVUELTA;;;;;
+16165;3HBBZTBN1SL571342;International;Zafiro;41;Y1A077054;2025;Camion;Activo;Operaciones;Operando;Diesel;14111;;85RE6N;CELESTICA APODACA;;;;;
+16148;3HBBZTBN7SL613884;International;Zafiro;41;Y1A076849;2025;Camion;Activo;Operaciones;Operando;Diesel;14094;A29823R;89RE6N;CELESTICA APODACA;;;;;
+9717;3MBAA2DP1MM074501;Mercedes benz;Zafiro;41;924982U1301645;2021;Camion;Activo;Operaciones;Operando;Diesel;9210;;64RC9C;KEPLER CONSTRUCTORA;;;;;
+13050;3HBBZTBN3PL509707;International;Zafiro;41;Y1A067237;2023;Camion;Activo;Operaciones;Operando;Diesel;11459;;71RD7M;VERTIV MONTERREY;;;;;
+16448;3HBBZTBN4SL592072;International;Zafiro;41;Y1A077402;2025;Camion;Activo;Operaciones;Operando;Diesel;14202;;En tramite;VERTIV MONTERREY;;;;;
+7763;3HBBZSGN2LL264508;International;Reco;41;U1A009667;2020;Camion;Activo;Operaciones;Operando;Diesel;7965;;25RB3V;OWENS CORNING;;;;;
+16006;W1Y5KD3Z8RP679131;Mercedes benz;Sprinter;22;6,54921E+13;2024;Camioneta;Activo;Operaciones;Operando;Diesel;13961;A28411R;50RE7L;UDEM  CIRCUITOS;;;;;
+8941;3MBAA6DS0FM051399;Mercedes benz;Torino;41;926995U1C96146;2016;Camion;Baja;Operaciones;Vendido;Diesel;8452;226-058-r;;UNIDAD RENTADA DEVUELTA;;;;;
+7688;JTFSX23PXK6202943;Toyota;Hiace;15;2TR9202975;2019;Camioneta;Activo;Operaciones;Operando;Gasolina Magna;7891;;22RB9P;AMCOR MTY;;;;;
+13124;3MN2E82W8PD300983;Volkswagen;Ayco;45;0166341A166338;2023;Camion;Activo;Operaciones;Operando;Diesel;11533;A22525R;84RC5X;VERTIV MONTERREY;;;;;
+10079;3MBAA2DM7GM056613;Mercedes benz;Ayco / zafiro;41;;2016;Camion;Baja;Operaciones;Vendido;Diesel;9532;226-457-R;;UNIDAD RENTADA DEVUELTA;;;;;
+13561;3HBBZTBN2PL492480;International;Zafiro;41;Y1A071059;2023;Camion;Activo;Operaciones;Alto Rezago Mantenimiento;Diesel;11970;;81RD4V;OWENS CORNING;;;;;
+13368;3HBBZTBN1PL485004;International;Zafiro;41;Y1A061255;2023;Camion;Activo;Operaciones;Operando;Diesel;11777;;98RD1S;IAC;;;;;
+11144;3HBBZTBN0NL352120;International;Zafiro;41;Y1A058152;2022;Camion;Activo;Operaciones;Operando;Diesel;10371;A20905R;73RC1M;WOLONG;;;;;
+11166;3MBAA2DM6FM053474;Mercedes benz;Torino;41;924933C1075069;2015;Camion;Baja;Operaciones;Vendido;Diesel;10393;226015R;;UNIDAD RENTADA DEVUELTA;;;;;
+5899;3HBBZSEN2KL573753;International;Reco;41;Y1A038190;2019;Camion;Activo;Operaciones;Operando;Diesel;6171;;47-RB-6A;DAWN FOODS;;;;;
+15353;3MBAA2DP9RM082630;Mercedes benz;Zafiro;41;924982U1458741;2024;Camion;Activo;Operaciones;Operando;Diesel;13343;;57RE5F;NIDEC-CMD;;;;;
+9707;3MBAA2DP2MM074507;Mercedes benz;Zafiro;41;924982U1309072;2021;Camion;Activo;Operaciones;Operando;Diesel;9200;;58RC9C;KEPLER CONSTRUCTORA;;;;;
+7842;3HBBZSGN0LL266676;International;Reco;41;U1A009714;2020;Camion;Activo;Operaciones;Operando;Diesel;8044;;22RB3V;DAWN FOODS;;;;;
+15019;3HBBZTBN9RL157946;International;Zafiro;41;Y1A076459;2024;Camion;Activo;Operaciones;Operando;Diesel;13069;;03RE9E;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+15388;3MN2E82W5RD301950;Volkswagen;Ayco;41;0166788A076780;2024;Camion;Activo;Operaciones;Operando;Diesel;13378;;58RE4F;NIDEC-CMD;;;;;
+9511;9BSK4X207E3842608;Scania;No Especificado;41;8228675;2014;Camion;Baja;Operaciones;Vendido;Diesel;9004;;088RN6;UNIDAD RENTADA DEVUELTA;;;;;
+15231;3HBBZTBNXSL365128;International;Zafiro;41;Y1A076919;2025;Camion;Activo;Operaciones;Operando;Diesel;13235;A27001R;82RE1F;SIEMENS;;;;;
+10457;3HBBZTBN9NL398500;International;Zafiro;41;Y1A054637;2022;Camion;Activo;Operaciones;Operando;Diesel;9797;;26RC7F;SCANPAINT;si;si;si;na;si
+13180;3HBBZTBNXPL374404;International;Zafiro;41;Y1A066708;2023;Camion;Activo;Operaciones;Operando;Diesel;11589;;26RD6M;RAGASA;;;;;
+15000;3HBBZTBN2RL158193;International;Zafiro;41;Y1A076513;2024;Camion;Activo;Operaciones;Operando;Diesel;13050;A26768R;32RE7B;ABB ELECTRICAL CONTROL SYSTEMS;SI;SI;SI;NA;si
+13168;3HBBZTBN9PL516354;International;Zafiro;41;Y1A069253;2023;Camion;Activo;Operaciones;Operando;Diesel;11577;;74RD5M;AMAZON MTY;;;;;
+15366;3HBBZTBN6SL352196;International;Zafiro;41;Y1A076688;2025;Camion;Activo;Operaciones;Operando;Diesel;13352;;53RE1F;HAMADEN;si;si;si;na;no
+13462;3HBBZTBN8PL489096;International;Zafiro;41;Y1A071852;2023;Camion;Activo;Operaciones;Operando;Diesel;11871;;93RD2S;VIAKEM;;;;;
+10330;3HBBZSGN5NL591973;International;Zafiro;41;U1A009985;2022;Camion;Activo;Operaciones;Operando;Diesel;9673;;65RC5F;SCANPAINT;no;no;si;conversion;si
+9663;3MBAA6DSXJM066842;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9156;A15033R;;UNIDAD RENTADA DEVUELTA;;;;;
+15430;3MN2E82W1SD300039;Volkswagen;Ayco;41;0166797A306789;2025;Camion;Activo;Operaciones;Operando;Diesel;13420;;84RE6F;PANEL REY;;;;;
+13166;3HBBZTBN3PL513370;International;Zafiro;41;Y1A068453;2023;Camion;Activo;Operaciones;Operando;Diesel;11575;;69RD7M;VERTIV MONTERREY;;;;;
+15590;3HBBZTBN7SL636565;International;Zafiro;41;Y1A076549;2025;Camion;Activo;Operaciones;Operando;Diesel;13575;;32RC1F;KEPLER CONSTRUCTORA;;;;;
+9716;3MBAA2DP0MM074506;Mercedes benz;Zafiro;41;924982U1308821;2021;Camion;Activo;Operaciones;Operando;Diesel;9209;;59RC9C;CELESTICA APODACA;;;;;
+15236;3HBBZTBN0SL364277;International;Zafiro;41;Y1A076769;2025;Camion;Activo;Operaciones;Operando;Diesel;13240;;59RE1F;ABB ELECTRICAL CONTROL SYSTEMS;no;no;si;reparacion;si
+12565;JN1BE6DS5N9043795;Nissan;Urvan;15;QR25794503Q;2022;Camioneta;Activo;Operaciones;Operando;Gasolina Magna;11025;A22024R;En tramite;BAT;;;;;
+8053;3N6AD35A4LK826517;Nissan;NP 300;2;QR25344425H;2020;Camioneta;Baja;Mantenimiento;Siniestro;Gasolina Magna;19994;PP-9533-A;;INDEMNIZADA EL 12 DE JULIO 2024;;;;;
+13461;3HBBZTBN2PL489093;International;Zafiro;41;Y1A071848;2023;Camion;Activo;Operaciones;Operando;Diesel;11870;;94RD2S;RAGASA;;;;;
+9278;JTFSX23PXK6204627;Toyota;Hiace;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8785;A18230R;;UNIDAD RENTADA DEVUELTA;;;;;
+15232;3HBBZTBN3RL225268;International;Zafiro;41;Y1A076595;2024;Camion;Activo;Operaciones;Operando;Diesel;13236;;84RE1F;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;no
+13367;3HBBZTBNXPL663718;International;Zafiro;41;Y1A067999;2023;Camion;Activo;Operaciones;Operando;Diesel;11776;;99RD1S;IAC;;;;;
+8760;JTFSX23P9K6204604;Toyota;Hiace;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8310;A18146R;;UNIDAD RENTADA DEVUELTA;;;;;
+13563;3HBBZTBN8PL500064;International;Zafiro;41;Y1A073091;2023;Camion;Activo;Operaciones;Operando;Diesel;11972;;79RD4V;SIEMENS;;;;;
+13176;3HBBZTBN5PL513189;International;Zafiro;41;Y1A068448;2023;Camion;Activo;Operaciones;Operando;Diesel;11585;;66RD7M;AZTEK;no;no;si;reparacion;si
+15237;3HBBZTBN0SL365171;International;Zafiro;41;Y1A077070;2025;Camion;Activo;Operaciones;Operando;Diesel;13241;;58RE1F;AMAZON MTY 2;;;;;
+13364;3HBBZTBN1PL485018;International;Zafiro;41;Y1A061256;2023;Camion;Activo;Operaciones;Operando;Diesel;11773;;03RD2S;AMCOR MTY;;;;;
+16447;3HBBZTBN6SL632006;International;Zafiro;41;Y1A077414;2025;Camion;Activo;Operaciones;Operando;Diesel;14201;;En tramite;VERTIV MONTERREY;;;;;
+14856;3MN2E82W3RD301736;Volkswagen;Ayco;41;0166754A336748;2024;Camion;Activo;Operaciones;Operando;Diesel;12927;A26445R;46RE6B;VERTIV MONTERREY;;;;;
+11136;3HBBZTBN6NL352848;International;Zafiro;41;Y1A059017;2022;Camion;Activo;Operaciones;Operando;Diesel;10363;A20899R;68RC1M;WOLONG;;;;;
+16151;3HBBZTBN8SL571340;International;Zafiro;41;Y1A077412;2025;Camion;Activo;Operaciones;Operando;Diesel;14097;;87RE6N;CELESTICA APODACA;;;;;
+13127;3MN2E82W4PD301080;Volkswagen;Ayco;45;0166356A936354;2023;Camion;Activo;Operaciones;Operando;Diesel;11536;A22523R;81RC5X;AMAZON MTY;;;;;
+15377;3HBBZTBN7SL361697;International;Zafiro;41;Y1A076823;2025;Camion;Activo;Operaciones;Operando;Diesel;13367;;79RE4F;HAMADEN;no;no;si;na;si
+15581;3HBBZTBN0SL573793;International;Zafiro;41;Y1A076699;2025;Camion;Activo;Operaciones;Operando;Diesel;13566;;82RE8F;RAGASA;;;;;
+13719;3HBBZTBN5RL365094;International;Zafiro;41;Y1A074720;2023;Camion;Activo;Operaciones;Operando;Diesel;12027;;99RD4V;WOLONG;;;;;
+13290;3MBAA2DM8GM055163;Mercedes benz;Zafiro;41;924933C1087802;2016;Camion;Baja;Operaciones;Vendido;Diesel;11699;226-458-R;;UNIDAD RENTADA DEVUELTA;;;;;
+13488;3HBBZTBN6PL485029;International;Zafiro;41;Y1A071857;2023;Camion;Activo;Operaciones;Operando;Diesel;11897;;71RD1S;VIAKEM;;;;;
+8736;JTFSX23P1K6194909;Toyota;Hiace;15;2TR-9173605;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8286;RUB939A;;UNIDAD RENTADA DEVUELTA;;;;;
+9856;JTFSX23P4K6204574;Toyota;Hiace;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;9349;A18217R;;UNIDAD RENTADA DEVUELTA;;;;;
+10487;3MBAA2DM3FM053478;Mercedes benz;Ayco / zafiro;37;924933C1074825;2016;Camion;Baja;Operaciones;Vendido;Diesel;9826;226-010-R;;UNIDAD RENTADA DEVUELTA;;;;;
+14840;3MBAA2DP1PM077578;Mercedes benz;Zafiro;41;924982U1387232;2023;Camion;Activo;Operaciones;Mantenimiento;Diesel;12911;A26468R;37RE5B;VERTIV MONTERREY;;;;;
+10098;3MBAA2DMXGM056590;Mercedes benz;Ayco / zafiro;41;924933C1093197;2016;Camion;Baja;Operaciones;Vendido;Diesel;9551;226-356-R;;UNIDADE RENTADA DEVUELTA;;;;;
+9690;3MBAA6DN8EM048999;Mercedes benz;Torino;41;;2014;Camion;Baja;Operaciones;Vendido;Diesel;9183;A19281R;;UNIDAD RENTADA DEVUELTA;;;;;
+7374;3HBBZSGN4KL075129;International;Reco;41;U1A009391;2019;Camion;Activo;Operaciones;Operando;Diesel;7598;;96RB3L;DAWN FOODS;;;;;
+14999;3HBBZTBNXRL157423;International;Zafiro;41;Y1A076442;2024;Camion;Activo;Operaciones;Mantenimiento;Diesel;13049;A26763R;33RE7B;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+15469;3HBBZTBN0SL613886;International;Zafiro;41;Y1A077101;2025;Camion;Activo;Operaciones;Operando;Diesel;13456;;73RE4F;NIDEC-CMD;;;;;
+13455;JTFSX23P8G6169321;Toyota;Hiace;15;;2016;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;11864;;;UNIDAD RENTADA DEVUELTA;;;;;
+7882;3HBBZSGN5LL267046;International;Reco;41;U1A009885;2020;Camion;Activo;Operaciones;Operando;Diesel;8084;;08RB6V;WOLONG;;;;;
+14287;3HBBZTBN8RL195474;International;Zafiro;41;Y1A076025;2024;Camion;Activo;Operaciones;Operando;Diesel;12592;A25807R;44RD9Z;SIEMENS;;;;;
+14289;3HBBZTBN3RL670917;International;Zafiro;41;Y1A075828;2024;Camion;Activo;Operaciones;Operando;Diesel;12594;A25817R;42RD9Z;SIEMENS;;;;;
+9660;3MBAA6DS3JM066844;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9153;A15021R;;UNIDAD RENTADA DEVUELTA;;;;;
+13361;3HBBZTBNXPL663721;International;Zafiro;41;Y1A070089;2023;Camion;Activo;Operaciones;Operando;Diesel;11770;;06RD2S;VERTIV MONTERREY;;;;;
+4663;3HBBZSEN7HL642168;International;Zafiro;45;Y1A031554;2017;Camion;Activo;Operaciones;Operando;Diesel;4790;794679C;36RB9C;;;;;;
+5390;3HBBZSEN3JL628595;International;Reco;45;Y1A034428;2018;Camion;Activo;Operaciones;Operando;Diesel;5664;;54RA3S;AZTEK;si;si;si;na;no
+8726;JTFSX23P4K6205353;Toyota;Hiace;15;2TR-9211654;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8276;;;UNIDADA RENTADA DEVUELTA;;;;;
+15467;3HBBZTBN1SL573690;International;Zafiro;41;Y1A076796;2025;Camion;Activo;Operaciones;Operando;Diesel;13454;;27RE6F;SIEMENS;;;;;
+13125;3MN2E82W4PD300978;Volkswagen;Ayco;45;0166340A496338;2023;Camion;Activo;Operaciones;Operando;Diesel;11534;A22522R;83RC5X;AMAZON MTY;;;;;
+14272;3HBBZTBN0RL670938;International;Zafiro;41;Y1A076020;2024;Camion;Activo;Operaciones;Operando;Diesel;12578;A25727R;62RD7Z;IAC;;;;;
+10509;3HBBZTBN9NL448876;International;Zafiro;41;Y1A054735;2022;Camion;Activo;Operaciones;Operando;Diesel;9849;;31RC7F;IAC SANTA CATARINA;;;;;
+15413;3HBBZTBN0SL371312;International;Zafiro;41;Y1A076776;2025;Camion;Activo;Operaciones;Operando;Diesel;13403;;02RE7F;NIDEC-CMD;;;;;
+14875;3MN2E82W6RD301648;Volkswagen;Ayco;41;0166738A816737;2024;Camion;Activo;Operaciones;Operando;Diesel;12946;A26442R;40RE6B;DONG KOOK MTY;;;;;
+15414;3HBBZTBN2SL369173;International;Zafiro;41;Y1A076597;2025;Camion;Activo;Operaciones;Operando;Diesel;13404;;99RE6F;NIDEC-USEM;;;;;
+13170;3HBBZTBN4PL513636;International;Zafiro;41;Y1A068871;2023;Camion;Activo;Operaciones;Operando;Diesel;11579;;11RD5M;LIXIL;;;;;
+16446;3HBBZTBN3SL594055;International;Zafiro;41;Y1A077398;2025;Camion;Activo;Operaciones;Operando;Diesel;14200;;En tramite;VERTIV MONTERREY;;;;;
+9505;9BSK4X209F3869987;Scania;No Especificado;41;8257259;2014;Camion;Baja;Operaciones;Vendido;Diesel;8998;;523RP7;UNIDAD RENTADA DEVUELTA;;;;;
+14478;3HBBZTBN6RL670927;International;Zafiro;41;Y1A076137;2024;Camion;Activo;Operaciones;Operando;Diesel;12636;A25820R;36RD9Z;VERTIV MONTERREY;;;;;
+11065;3HBBZTBN2NL352121;International;Zafiro;41;Y1A057399;2022;Camion;Activo;Operaciones;Operando;Diesel;10292;A20876R;72RC1M;;;;;;
+12966;3MBAA2DP1PM077757;Mercedes benz;Zafiro;41;924982U1393617;2023;Camion;Activo;Operaciones;Operando;Diesel;11380;En tramite;82RD2S;WOLONG;;;;;
+5061;3HBBZSEN5HL483666;International;Zafiro;41;Y1A033252;2017;Camion;Activo;Operaciones;Operando;Diesel;5349;;14RA5V;GLOBAL FM;;;;;
+13487;3HBBZTBN5PL485717;International;Zafiro;41;Y1A072478;2023;Camion;Activo;Operaciones;Operando;Diesel;11896;;73RD1S;SIEMENS;;;;;
+15001;3HBBZTBN6RL157838;International;Zafiro;41;Y1A076500;2024;Camion;Activo;Operaciones;Operando;Diesel;13051;A26783R;31RE7B;MOTA-ENGIL;no;no;si;reparacion;si
+15382;3HBBZTBN6SL613889;International;Zafiro;41;Y1A077093;2025;Camion;Activo;Operaciones;Operando;Diesel;13372;;74RE4F;SIEMENS;;;;;
+13185;3HBBZTBN1PL509785;International;Zafiro;41;Y1A067242;2023;Camion;Activo;Operaciones;Operando;Diesel;11594;;25RD6M;SIEMENS;;;;;
+5203;3HBBZSEN8HL445381;International;Zafiro;41;Y1A034128;2017;Camion;Baja;Operaciones;Siniestro;Diesel;5488;;05RA1P;SINIESTRO;;;;;
+4974;3HBBZSEN5HL473736;International;Zafiro;41;Y1A032481;2017;Camion;Activo;Operaciones;Operando;Diesel;5263;A21955R;37RA9G;LIEBHERR;;;;;
+13713;3HBBZTBN3PL500067;International;Zafiro;41;Y1A073092;2023;Camion;Activo;Operaciones;Operando;Diesel;12021;;74RD4V;WOLONG;;;;;
+15005;9532E82W6RR051369;Volkswagen;Ayco;45;0166537A026529;2024;Camion;Activo;Operaciones;Operando;Diesel;13055;A2676SR;56RE9E;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;no
+10020;JN1BE6DS6L9038585;Nissan;Urvan;15;QR25762282Q;2020;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;9473;A19663R;;UNIDAD RENTADA DEVUELTA;;;;;
+7845;3HBBZSGN3KL814698;International;Zafiro;41;U1A009477;2019;Camion;Activo;Operaciones;Operando;Diesel;8047;;78RB3V;NAPS;;;;;
+7631;WD3YF1A98KP640725;Mercedes benz;Sprinter;21;6,51955E+13;2019;Camioneta;Inactivo;Operaciones;Siniestro;Diesel;7840;;69RB7P;EN TRAMITE CON LA ASEGURADORA;;;;;
+10336;3HBBZTBN5NL536727;International;Zafiro;41;Y1A052991;2022;Camion;Activo;Operaciones;Operando;Diesel;9679;;62RC5F;CELESTICA APODACA;;;;;
+5202;3HBBZSENXHL445379;International;Zafiro;41;Y1A034094;2017;Camion;Activo;Operaciones;Operando;Diesel;5487;;73RA2X;AZTEK;no;no;si;reparacion;no
+9665;3MBAA6DS2JM066852;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9158;A15030R;;UNIDAD RENTADA DEVUELTA;;;;;
+13560;3HBBZTBN7PL492474;International;Zafiro;41;Y1A072171;2023;Camion;Activo;Operaciones;Operando;Diesel;11969;;82RD4V;SIEMENS;;;;;
+16007;W1Y5KD3Z4RP679837;Mercedes benz;Sprinter;22;6,54921E+13;2024;Camioneta;Activo;Operaciones;Operando;Diesel;13962;A28412R;43RE7L;UDEM  CIRCUITOS;;;;;
+9624;3MBAA3CN66M017459;Mercedes benz;Torino;41;;2006;Camion;Baja;Operaciones;Vendido;Diesel;9117;A17634R;;UNIDAD RENTADA DEVUELTA;;;;;
+15387;3MN2E82W0RD301886;Volkswagen;Ayco;41;0166780A036780;2024;Camion;Activo;Operaciones;Mantenimiento;Diesel;13377;;59RE4F;HAMADEN;si;si;si;na;no
+5000;3HBBZSEN7HL473754;International;Zafiro;41;Y1A032705;2017;Camion;Activo;Operaciones;Operando;Diesel;5289;A21961R;56RA9G;GLOBAL FM;;;;;
+15417;3HBBZTBNXSL362777;International;Zafiro;41;Y1A076766;2025;Camion;Activo;Operaciones;Operando;Diesel;13407;;01RE7F;NIDEC-USEM;;;;;
+11137;3HBBZTBN5NL352968;International;Zafiro;41;Y1A059213;2022;Camion;Activo;Operaciones;Operando;Diesel;10364;A20900R;67RC1M;KEPLER CONSTRUCTORA;;;;;
+12498;JTFSX23P1J6189725;Toyota;Hiace;15;;2018;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;11002;A-18038-R;;TALLER;;;;;
+7599;3HBBZSGN6KL814680;International;Reco;41;U1A009488 ;2019;Camion;Activo;Operaciones;Operando;Diesel;7808;;26RB7M;WOLONG;;;;;
+8741;JTFSX23PXK6201856;Toyota;Hiace;15;2TR-9199444;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8291;;;UNIDAD RENTADA DEVUELTA;;;;;
+9688;3MBAA2DP2MM074488;Mercedes benz;Zafiro;41;924982U1306914;2021;Camion;Activo;Operaciones;Operando;Diesel;9181;;54RC9C;GLOBAL FM;;;;;
+10096;WD3YE8A98GP215931;Mercedes benz;Sprinter;15;;2016;Camioneta;Baja;Operaciones;Vendido;Diesel;9549;A18846R;;UNIDAD RENTADA DEVUELTA;;;;;
+7687;JTFSX23P6K6202941;Toyota;Hiace;15;2TR9202953;2019;Camioneta;Activo;Operaciones;Operando;Gasolina Magna;7890;;23RB9P;AZTEK;no;no;si;reparacion;no
+15429;3MN2E82W2RD300920;Volkswagen;Ayco;41;0166629A236622;2024;Camion;Activo;Operaciones;Operando;Diesel;13419;;88RE6F;NIDEC-CMD;;;;;
+13346;3MN2E82WXPD301083;Volkswagen;Ayco;45;0166360A876354;2023;Camion;Activo;Operaciones;Operando;Diesel;11755;;54RD2S;IAC;;;;;
+9705;3MBAA2DPXMM074500;Mercedes benz;Zafiro;41;924982U1301925;2021;Camion;Activo;Operaciones;Operando;Diesel;9198;;42RC9C;AZTEK;si;si;si;na;no
+8759;JTFSX23P1K6197485;Toyota;Hiace;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8309;A18140R;;UNIDAD RENTADA DEVUELTA;;;;;
+15493;3HBBZTBN1SL615582;International;Zafiro;41;Y1A076468;2025;Camion;Activo;Operaciones;Operando;Diesel;13478;;25RE6F;NIDEC-COLD;no;no;si;reparacion;si
+10606;3MBAA6DN2CM043147;Mercedes benz;Torino;47;9,06999E+13;2012;Camion;Baja;Operaciones;Vendido;Diesel;9921;215700R;;UNIDAD RENTADA DEVUELTA;;;;;
+10993;3HBBZTBN8NL316997;International;Zafiro;41;Y1A057280;2022;Camion;Activo;Operaciones;Operando;Diesel;10223;A20784R;55RC2R;DONG KOOK MTY;;;;;
+9719;3MBAA2DP5MM074498;Mercedes benz;Zafiro;41;924982U1290558;2021;Camion;Activo;Operaciones;Operando;Diesel;9212;;44RC9C;CELESTICA APODACA;;;;;
+5055;3HBBZSEN4HL483612;International;Zafiro;41;Y1A033263;2017;Camion;Activo;Operaciones;Operando;Diesel;5343;A17359R;56RA2X;FORNEY MTY;si;si;si;na;si
+15385;3MN2E82W2RD301887;Volkswagen;Ayco;41;0166776A056772;2024;Camion;Activo;Operaciones;Mantenimiento;Diesel;13375;;62RE4F;;;;;;
+8765;3MBAA6DN7FM053872;Mercedes benz;Torino;41;;2015;Camion;Baja;Operaciones;Vendido;Diesel;8315;;243HY1;UNIDAD RENTADA DEVUELTA;;;;;
+14480;3HBBZTBN8RL195488;International;Zafiro;41;Y1A076050;2024;Camion;Activo;Operaciones;Operando;Diesel;12638;A25806R;54RD9Z;IAC;;;;;
+10082;3MBAA2DM0GM056551;Mercedes benz;Ayco / zafiro;41;;2016;Camion;Baja;Operaciones;Vendido;Diesel;9535;226-360-R;;UNIDAD RENTADA;;;;;
+11153;3MBAA2DM5GM055900;Mercedes benz;Zafiro;41;924933C1087493;2016;Camion;Baja;Operaciones;Vendido;Diesel;10380;226368R;;UNIDAD RENTADA;;;;;
+11154;3MBAA2DM4GM057976;Mercedes benz;Zafiro;41;924933C1095268;2016;Camion;Baja;Operaciones;Vendido;Diesel;10381;226810R;;UNIDAD RENTADA DEVUELTA;;;;;
+5053;3HBBZSENXHL483601;International;Zafiro;41;Y1A033270;2017;Camion;Activo;Operaciones;Operando;Diesel;5341;A17677R;57RA2X;NAPS;;;;;
+13353;3MBAA2DP8PM078324;Mercedes benz;Zafiro;41;924982U1396785;2023;Camion;Activo;Operaciones;Operando;Diesel;11762;;91RD3S;CELESTICA APODACA;;;;;
+15002;9532E82W0RR053005;Volkswagen;Ayco;45;0166547A076546;2024;Camion;Activo;Operaciones;Operando;Diesel;13052;A26767R;59RE9E;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;no
+8739;JTFSX23PXK6197551;Toyota;Hiace;15;2TR-9184029;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8289;SRE437A;;UNIDAD RENTADA DEVUELTA;;;;;
+13355;3MBAA2DP6PM078323;Mercedes benz;Zafiro;41;924982U1394978;2023;Camion;Activo;Operaciones;Operando;Diesel;11764;;90RD3S;WOLONG;;;;;
+8769;3MBAA6DN0FM053874;Mercedes benz;Torino;41;;2015;Camion;Baja;Operaciones;Vendido;Diesel;8319;;245HY1;UNIDAD RENTADA DEVUELTA;;;;;
+16153;3HBBZTBNXSL571341;International;Zafiro;41;Y1A077020;2025;Camion;Activo;Operaciones;Operando;Diesel;14099;;86RE6N;CELESTICA APODACA;;;;;
+10460;3HBBZTBN5NL448311;International;Zafiro;41;Y1A054525;2022;Camion;Activo;Operaciones;Operando;Diesel;9800;;38RC7F;SIEMENS;;;;;
+8948;3MBAA6DNXDM046430;Mercedes benz;Torino;41;9,06999E+13;2013;Camion;Baja;Operaciones;Vendido;Diesel;8459;A-15660-R;;UNIDAD RENTADA DEVUELTA;;;;;
+12487;3MBAA2DP1NM075990;Mercedes benz;Boxer;45;924982U1341186;2022;Camion;Baja;Operaciones;Vendido;Diesel;10991;A21675R;56RC4T;UNIDAD RENTADA DEVUELTA;;;;;
+15365;3HBBZTBN7SL364275;International;Zafiro;41;Y1A077062;2025;Camion;Activo;Operaciones;Operando;Diesel;13351;;56RE1F;HAMADEN;no;no;si;na;si
+13360;3HBBZTBNXPL664206;International;Zafiro;41;Y1A070092;2023;Camion;Activo;Operaciones;Operando;Diesel;11769;;07RD2S;IAC;;;;;
+11276;JTFSX23P4K6195035;Toyota;Hiace;15;2TR9173931;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;10500;SRE491A;;UNIDAD RENTADA DEVUELTA;;;;;
+12953;3MBAA2DP1PM077869;Mercedes benz;Zafiro;41;924982U1380343;2023;Camion;Activo;Operaciones;Operando;Diesel;11367;A29845R;38RD4S;SIEMENS;;;;;
+13172;3HBBZTBN9PL513311;International;Zafiro;41;Y1A068443;2023;Camion;Activo;Operaciones;Operando;Diesel;11581;;09RD5M;VERTIV MONTERREY;;;;;
+15407;3HBBZTBN7SL351333;International;Zafiro;41;Y1A076638;2025;Camion;Activo;Operaciones;Operando;Diesel;13397;;66RE4F;IAC;;;;;
+9276;JTFSX23P7K6204634;Toyota;Hiace;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8783;A18265R;;UNIDAD RENTADA DEVUELTA;;;;;
+9189;JN1BE6DS1J9030732;Nissan;Urvan;15;;2018;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8697;A18049R;;UNIDAD RENTADA DEVUELTA;;;;;
+10294;3MBAA6DNXDM046637;Mercedes benz;Torino;41;9,06999E+13;2013;Camion;Baja;Operaciones;Vendido;Diesel;9637;225798R;;UNIDAD RENTADA DEVUELTA;;;;;
+10431;3MBAA6DN7DM046655;Mercedes benz;Torino;41;9,06999E+13;2013;Camion;Baja;Operaciones;Vendido;Diesel;9774;222375R;;UNIDAD RENTADA DEVUELTA;;;;;
+13469;3HBBZTBN4PL489094;International;Zafiro;41;Y1A071853;2023;Camion;Activo;Operaciones;Operando;Diesel;11878;;86RD2S;LIXIL;;;;;
+13179;3HBBZTBN2PL512579;International;Zafiro;41;Y1A069061;2023;Camion;Activo;Operaciones;Operando;Diesel;11588;;63RD7M;SHERWIN WILLIAMS;;;;;
+15351;3MN2E82W6RD301911;Volkswagen;Ayco;41;0166781A716780;2024;Camion;Activo;Operaciones;Operando;Diesel;13341;;47RE5F;NIDEC-USEM;;;;;
+7764;3HBBZSGN9LL264991;International;Reco;41;U1A009747;2020;Camion;Activo;Operaciones;Operando;Diesel;7966;;21RB3V;CELESTICA APODACA;;;;;
+10486;3MBAA2DM9GM056614;Mercedes benz;Ayco / zafiro;37;924933C1094394;2016;Camion;Baja;Operaciones;Vendido;Diesel;9827;226-826-R;51-RB-5S;UNIDAD RENTADA DEVUELTA;;;;;
+15277;3HBBZTBN4SL352343;International;Zafiro;41;Y1A076616;2025;Camion;Activo;Operaciones;Operando;Diesel;13267;;42RE4F;SIEMENS;;;;;
+8945;3MBAA3CS09MO3283;Mercedes benz;Torino Marco Polo;41;9,06966E+13;2009;Camion;Baja;Operaciones;Vendido;Diesel;8456;217-017-R;;UNIDAD RENTADA DEVUELTA;;;;;
+13459;3HBBZTBN0PL489092;International;Zafiro;41;Y1A072437;2023;Camion;Activo;Operaciones;Operando;Diesel;11868;;91RD1S;S/A|;;;;;
+16156;3HBBZTBN3SL648857;International;Zafiro;41;Y1A077285;2025;Camion;Activo;Operaciones;Operando;Diesel;14102;;77RE6N;CELESTICA APODACA;;;;;
+15012;3HBBZTBN6RL157631;International;Zafiro;41;Y1A076514;2024;Camion;Activo;Operaciones;Operando;Diesel;13062;A26764R;02RE9E;ABB ELECTRICAL CONTROL SYSTEMS;no;no;si;reparacion;si
+13173;3HBBZTBN7PL514540;International;Zafiro;41;Y1A069064;2023;Camion;Activo;Operaciones;Operando;Diesel;11582;;08RD5M;VIAKEM;;;;;
+15937;W1Y5KD3Z9RP642265;Mercedes benz;Sprinter;22;6,54921E+13;2024;Camioneta;Activo;Operaciones;Operando;Diesel;13893;A28413R;75RE2M;UDEM;;;;;
+9710;3MBAA2DP8MM074494;Mercedes benz;Zafiro;41;924982U1305192;2021;Camion;Activo;Operaciones;Operando;Diesel;9203;;48RC9C;LIXIL;;;;;
+11140;3HBBZTBN1NL353017;International;Zafiro;41;Y1A059034;2022;Camion;Activo;Operaciones;Mantenimiento;Diesel;10367;A20903R;64RC1M;CELESTICA APODACA;;;;;
+14876;3MN2E82W8RD301652;Volkswagen;Ayco;41;0166738A826737;2024;Camion;Activo;Operaciones;Operando;Diesel;12947;A26443R;50RE6B;CELESTICA AGUA FRIA;;;;;
+13457;3HBBZTBN0PL485723;International;Zafiro;41;Y1A071788;2023;Camion;Activo;Operaciones;Operando;Diesel;11866;;93RD1S;IAC;;;;;
+9858;JTFSX23P0J6182801;Toyota;Hiace;15;;2018;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;9351;A18158R;;UNIDAD RENTADA DEVUELTA;;;;;
+15278;3HBBZTBN2SL365172;International;Zafiro;41;Y1A077087;2025;Camion;Activo;Operaciones;Operando;Diesel;13268;;43RE4F;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+10472;3HBBZTBNXNL448319;International;Zafiro;41;Y1A054492;2022;Camion;Activo;Operaciones;Operando;Diesel;9812;A20462R;27RC7F;WOLONG;;;;;
+7760;3HBBZSGN4LL264414;International;Reco;41;U1A009666;2020;Camion;Activo;Operaciones;Operando;Diesel;7962;;23RB3V;CELESTICA APODACA;;;;;
+6301;3HBBZSEN8KL664316;International;Reco;41;Y1A038998;2019;Camion;Activo;Operaciones;Operando;Diesel;6566;;82RB4B;;;;;;
+6419;9BWDB45UXJT065426;Volkswagen;Gol;5;CFZ S97030;2018;Automóvil;Activo;Utilitario;Operando;Gasolina Magna;9955;FMF8566;;UTILITARIOS LIPU MTY;;;;;
+13464;3HBBZTBN9PL485719;International;Zafiro;41;Y1A071863;2023;Camion;Activo;Operaciones;Operando;Diesel;11873;;91RD2S;DONG KOOK MTY;;;;;
+15354;3MBAA2DP2RM082629;Mercedes benz;Zafiro;41;924982U1451010;2024;Camion;Activo;Operaciones;Operando;Diesel;13344;;56RE5F;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;no
+10992;3HBBZTBN6NL316996;International;Zafiro;41;Y1A057703;2022;Camion;Activo;Operaciones;Operando;Diesel;10222;A20782R;56RC2R;CELESTICA APODACA;;;;;
+9704;3MBAA2DP1MM074479;Mercedes benz;Zafiro;41;924982U1307272;2021;Camion;Activo;Operaciones;Operando;Diesel;9197;;55RC9C;GLOBAL FM;;;;;
+6417;9BWDB45UXJT064017;Volkswagen;Gol;5;CFZ S95883;2018;Automóvil;Inactivo;Utilitario;Siniestro;Gasolina Magna;9953;F68ATN;;EN VALUACIÓN CON LA ASEGURADORA;;;;;
+13484;3HBBZTBN4PL485708;International;Zafiro;41;Y1A072473;2023;Camion;Activo;Operaciones;Operando;Diesel;11893;;79RD1S;SIEMENS;;;;;
+8949;3MBAA6DN5DM046433;Mercedes benz;Torino;41;9,06999E+13;2013;Camion;Baja;Operaciones;Vendido;Diesel;8460;A-15661-R;;UNIDADE RENTADA DEVUELTA;;;;;
+11067;3HBBZTBN4NL352122;International;Zafiro;41;Y1A057400;2022;Camion;Activo;Operaciones;Operando;Diesel;10294;A20877R;70RC1M;LIXIL;;;;;
+13165;3HBBZTBN9PL514006;International;Zafiro;41;Y1A068938;2023;Camion;Activo;Operaciones;Operando;Diesel;11574;;76RD5M;SIEMENS;;;;;
+15061;3HBBZTBN7RL226567;International;Zafiro;41;Y1A076830;2024;Camion;Activo;Operaciones;Operando;Diesel;13111;;61RE8E;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+15233;3HBBZTBN5SL358457;International;Zafiro;41;Y1A076510;2025;Camion;Activo;Operaciones;Operando;Diesel;13237;;61RE1F;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+12933;3MBAA2DP5PM077874;Mercedes benz;Zafiro;41;924982U1391381;2023;Camion;Activo;Operaciones;Operando;Diesel;11347;A29838R;16RD3S;KAYAKU SAFETY;;;;;
+15439;3HBBZTBN3SL358456;International;Zafiro;41;Y1A076512;2025;Camion;Activo;Operaciones;Operando;Diesel;13426;;33RE6F;SIEMENS;;;;;
+14222;3HBBZTBNXRL195492;International;Zafiro;41;Y1A075937;2024;Camion;Activo;Operaciones;Operando;Diesel;12528;A25366R;76RD7Z;SIEMENS;;;;;
+5896;3HBBZSEN7KL573750;International;Reco;41;Y1A038199;2019;Camion;Activo;Operaciones;Operando;Diesel;6168;;50-RB-6A;AZTEK;si;si;si;na;no
+9687;3MBAA2DP4MM074489;Mercedes benz;Zafiro;41;924982U1306873;2021;Camion;Activo;Operaciones;Operando;Diesel;9180;;53RC9C;WOLONG;;;;;
+14270;3HBBZTBN6RL670930;International;Zafiro;41;Y1A075941;2024;Camion;Activo;Operaciones;Operando;Diesel;12576;A25726R;64RD7Z;PLASMAN;;;;;
+12495;JTFSX23P8J6189575;Toyota;Hiace;15;2TR9154360;2018;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;10999;A-18092-R;;TALLER;;;;;
+9183;JTFSX23P4J6186978;Toyota;Hiace;15;2TR9146369;2018;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8691;;A18044R;UNIDAD RENTADA;;;;;
+15587;3HBBZTBN0SL637475;International;Zafiro;41;Y1A076714;2025;Camion;Activo;Operaciones;Operando;Diesel;13572;;01RC1F;VERTIV MONTERREY;;;;;
+13466;3HBBZTBN6PL489078;International;Zafiro;41;Y1A066244;2023;Camion;Activo;Operaciones;Operando;Diesel;11875;;89RD2S;VERTIV MONTERREY;;;;;
+14855;3MN2E82W5RD301575;Volkswagen;Ayco;41;0166725A396718;2024;Camion;Activo;Operaciones;Operando;Diesel;12926;A26444R;47RE6B;VERTIV MONTERREY;;;;;
+15393;3MN2E82W9RD301949;Volkswagen;Ayco;41;0166787A136780;2024;Camion;Activo;Operaciones;Operando;Diesel;13383;;55RE4F;NIDEC-CMD;;;;;
+5018;3HBBZSEN5HL473753;International;Zafiro;41;Y1A032708;2017;Camion;Activo;Operaciones;Operando;Diesel;5306;A21960R;57RA9G;;;;;;
+10051;JN1BE6DS3L9036311;Nissan;Urvan;15;;2020;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;9504;A19705R;;UNIDAD RENTADA;;;;;
+16149;3HBBZTBN3SL571343;International;Zafiro;41;Y1A077413;2025;Camion;Activo;Operaciones;Operando;Diesel;14095;A29835R;80RE6N;CELESTICA APODACA;;;;;
+10095;WD3YE8A92FP163906;Mercedez Benz;Sprinter;15;;2015;Camioneta;Baja;Operaciones;Vendido;Diesel;9548;A19288R;;UNIDAD RENTADA DEVUELTA;;;;;
+9724;3MBAASDSXJM066517;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9217;229741R;;UNIDAD RENTADA DEVUELTA;;;;;
+13482;3MN2E82WXPD301004;Volkswagen;Ayco;45;0166341A276338;2023;Camion;Activo;Operaciones;Operando;Diesel;11891;;07RD7M;LIXIL;;;;;
+13126;3MN2E82W3PD301006;Volkswagen;Ayco;45;0166341A136338;2023;Camion;Activo;Operaciones;Operando;Diesel;11535;A22521R;82RC5X;VERTIV MONTERREY;;;;;
+11120;3MBAA2DM4FM053120;Mercedes benz;Zafiro;43;924933C1073606;2014;Camion;Baja;Operaciones;Vendido;Diesel;10347;226-018-R;;UNIDAD RENTADA 2015 DEVUELTA;;;;;
+7031;WD3YF1A97KP634270;Mercedes benz;Sprinter;21;6,51955E+13;2019;Camioneta;Activo;Operaciones;Mantenimiento;Diesel;7273;;48RB2C;IAC;;;;;
+9709;3MBAA2DP9MM074505;Mercedes benz;Zafiro;41;924982U1309111;2021;Camion;Activo;Operaciones;Operando;Diesel;9202;;60RC9C;SIEMENS;;;;;
+5016;3HBBZSEN1HL473751;International;Zafiro;41;Y1A032702;2017;Camion;Activo;Operaciones;Operando;Diesel;5304;A21957R;59RA9G;CAPACITACION;;;;;
+15494;3HBBZTBN5SL362010;International;Zafiro;41;Y1A076850;2025;Camion;Activo;Operaciones;Operando;Diesel;13479;;24RE6F;NIDEC-USEM;;;;;
+16008;W1Y5KD3Z2RP660204;Mercedes benz;Sprinter;22;6,54921E+13;2024;Camioneta;Activo;Operaciones;Operando;Diesel;13963;A28414R;44RE7L;UDEM  CIRCUITOS;;;;;
+8766;3MBAA6DN8FM053881;Mercedes benz;Torino;41;;2015;Camion;Baja;Operaciones;Vendido;Diesel;8316;;252HY1;UNIDAD RENTADA DEVUELTA;;;;;
+10601;3MBAA6DN5DM046643;Mercedes benz;Torino;41;9,06999E+13;2013;Camion;Baja;Operaciones;Vendido;Diesel;9916;;;UNIDAD RENTADA DEVUELTA;;;;;
+15936;W1Y5KD3Z3RP658753;Mercedes benz;Sprinter;22;6,54921E+13;2024;Camioneta;Activo;Operaciones;Operando;Diesel;13892;A28415R;40RE7L;UDEM  CIRCUITOS;;;;;
+8762;JN1BE6DS4K9033867;Nissan;Urvan;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8312;A18157R;;UNIDAD RENTADA DEVUELTA;;;;;
+14213;3HBBZTBN2RL670939;International;Zafiro;41;Y1A075933;2024;Camion;Activo;Operaciones;Operando;Diesel;12519;A25363R;82RD7Z;SIEMENS;;;;;
+16161;3HBBZTBN1SL592062;International;Zafiro;41;Y1A077664;2025;Camion;Activo;Operaciones;Operando;Diesel;14107;;84RE6N;CELESTICA AGUA FRIA;;;;;
+16152;3HBBZTBN5SL648858;International;Zafiro;41;Y1A077228;2025;Camion;Activo;Operaciones;Operando;Diesel;14098;;73RE6N;CELESTICA APODACA;;;;;
+16150;3HBBZTBN5SL648682;International;Zafiro;41;Y1A077283;2025;Camion;Activo;Operaciones;Operando;Diesel;14096;A29842R;74RE6N;CELESTICA APODACA;;;;;
+13348;3MN2E82W9PD301091;Volkswagen;Ayco;45;0166360B026354;2023;Camion;Activo;Operaciones;Operando;Diesel;11757;;52RD2S;WOLONG;;;;;
+7913;3HBBZSEN2LL256928;International;Reco;41;Y1A042486;2020;Camion;Activo;Operaciones;Operando;Diesel;8114;;77RB6V;DONG KOOK MTY;;;;;
+7883;3HBBZSGN6LL264169;International;Reco;41;U1A009708;2020;Camion;Activo;Operaciones;Operando;Diesel;8085;;07RB6V;OWENS CORNING;;;;;
+9509;9BSK4X202E3844699;Scania;No Especificado;41;8230771;2014;Camion;Baja;Operaciones;Vendido;Diesel;9002;;086RN6;UNIDAD RENTADA DEVUELTA;;;;;
+8755;JN1BE6DS1L9035576;Nissan;Urvan;15;;2020;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8305;A18149R;;UNIDAD RENTADA DEVUELTA;;;;;
+15010;3HBBZTBN8RL158182;International;Zafiro;41;Y1A076488;2024;Camion;Activo;Operaciones;Operando;Diesel;13060;A26766R;05RE9E;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+8757;JN1BE6DS5L9036603;Nissan;Urvan;15;;2020;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8307;;;UNIDAD RENTADA DEVUELTA;;;;;
+13046;3HBBZTBN6PL508048;International;Zafiro;41;Y1A066929;2023;Camion;Activo;Operaciones;Operando;Diesel;11455;;45RD7M;WOLONG;;;;;
+13490;3HBBZTBN4PL489077;International;Zafiro;41;Y1A071929;2023;Camion;Activo;Operaciones;Operando;Diesel;11899;;67RD1S;UDEM;;;;;
+14479;3HBBZTBN5RL195481;International;Zafiro;41;Y1A076073;2024;Camion;Activo;Operaciones;Operando;Diesel;12637;A25818R;55RD9Z;DONG KOOK MTY;;;;;
+15426;3MN2E82W4RD301955;Volkswagen;Ayco;41;0166787A126780;2024;Camion;Activo;Operaciones;Operando;Diesel;13416;;91RE6F;NIDEC-COLD;si;si;si;na;no
+14212;3HBBZTBNXRL670946;International;Zafiro;41;Y1A075476;2024;Camion;Activo;Operaciones;Operando;Diesel;12518;A25369R;83RD7Z;SIEMENS;;;;;
+8768;3MBAA6DN8GM058502;Mercedes benz;Torino;41;;2015;Camion;Baja;Operaciones;Vendido;Diesel;8318;;22HA2F;UNIDAD RENTADA DEVUELTA;;;;;
+10508;3HBBZTBN3NL448307;International;Zafiro;41;Y1A054494;2022;Camion;Activo;Operaciones;Operando;Diesel;9848;;21RC7F;LISI;;;;;
+10469;3HBBZTBN7NL448875;International;Zafiro;41;Y1A054745;2022;Camion;Activo;Operaciones;Operando;Diesel;9809;A20459R;50RC7F;IAC SANTA CATARINA;;;;;
+9725;3MBAA6DS8JM066841;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9218;A15034R;;UNIDAD RENTADA DEVUELTA;;;;;
+13366;3HBBZTBN8PL485016;International;Zafiro;41;Y1A056284;2023;Camion;Activo;Operaciones;Operando;Diesel;11775;;01RD2S;IAC;;;;;
+13718;3HBBZTBN2PL500058;International;Zafiro;41;Y1A072176;2023;Camion;Activo;Operaciones;Operando;Diesel;12026;;01RD5V;AMAZON MTY 2;;;;;
+11135;3HBBZTBN6NL352669;International;Zafiro;41;Y1A059209;2022;Camion;Activo;Operaciones;Operando;Diesel;10362;A20901R;69RC1M;AZTEK;no;no;si;compresor;si
+15427;3MN2E82W2RD301954;Volkswagen;Ayco;41;0166787A146780;2024;Camion;Activo;Operaciones;Operando;Diesel;13417;;90RE6F;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;no
+7766;3HBBZSGN4LL264607;International;Reco;41;U1A009658;2020;Camion;Activo;Operaciones;Operando;Diesel;7968;;19RB3V;;;;;;
+9664;3MBAA6DS7JM066846;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9157;A15024R;;UNIDAD RENTADA DEVUELTA;;;;;
+7752;3HBBZSGN0KL443015;International;Reco;41;U1A009509;2019;Camion;Activo;Operaciones;Operando;Diesel;7954;;75RB3V;NAPS;;;;;
+12938;3MBAA2DP0PM077877;Mercedes benz;Zafiro;41;924982U1389664;2023;Camion;Activo;Operaciones;Mantenimiento;Diesel;11352;A29844R;08RD3S;SIEMENS;;;;;
+11152;3MBAA2DM8FM053475;Mercedes benz;Zafiro;41;924933C1075132;2014;Camion;Baja;Operaciones;Vendido;Diesel;10379;226021R;;UNIDAD RENTADA DEVUELTA;;;;;
+4969;3HBBZSEN3HL473721;International;Zafiro;41;Y1A032476;2017;Camion;Activo;Operaciones;Operando;Diesel;5258;A17519R;42RA9G;LIXIL;;;;;
+9985;3MN2E82W8HD700057;Volkswagen;Ayco;45;0164451A314450;2017;Camion;Baja;Operaciones;Vendido;Diesel;9438;;66RC1G;UNIDAD RENTADA DEVUELTA CONFIRMADA POR JOSE DIEZ;;;;;
+13174;3HBBZTBN1PL513187;International;Zafiro;41;Y1A068455;2023;Camion;Activo;Operaciones;Operando;Diesel;11583;;68RD7M;IAC SANTA CATARINA;;;;;
+14286;3HBBZTBN3RL195480;International;Zafiro;41;Y1A076034;2024;Camion;Activo;Operaciones;Operando;Diesel;12591;A25821R;45RD9Z;SIEMENS;;;;;
+16164;3HBBZTBN4SL570640;International;Zafiro;41;Y1A077397;2025;Camion;Activo;Operaciones;Operando;Diesel;14110;;83RE6N;CELESTICA AGUA FRIA;;;;;
+13378;JTFSX23P6J6189400;Toyota;Hiace;15;2TR-9153807;2018;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;11787;A18037R;;UNIDAD RENTADA;;;;;
+13169;3HBBZTBN3PL516057;International;Zafiro;41;Y1A068878;2023;Camion;Activo;Operaciones;Operando;Diesel;11578;;73RD5M;IAC SANTA CATARINA;;;;;
+15011;3HBBZTBN8RL225766;International;Zafiro;41;Y1A076494;2024;Camion;Activo;Operaciones;Operando;Diesel;13061;A26787R;04RE9E;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+16166;3HBBZTBN3SL592063;International;Zafiro;41;Y1A077407;2025;Camion;Activo;Operaciones;Operando;Diesel;14112;;78RE6N;CELESTICA APODACA;;;;;
+8946;3MBAA6DS7KM067593;Mercedes benz;Torino;41;926995U1222468;2019;Camion;Baja;Operaciones;Vendido;Diesel;8457;A-15657-R;;UNIDAD RENTADA DEVUELTA;;;;;
+9666;3MBAA6DN2JM065727;Mercedes benz;Torino;41;;2018;Camion;Baja;Operaciones;Vendido;Diesel;9159;229536R;;UNIDAD RENTADA DEVUELTA;;;;;
+5199;3HBBZSEN4HL445376;International;Zafiro;41;Y1A034137;2017;Camion;Activo;Operaciones;Operando;Diesel;5484;;76RA2X;CELESTICA AGUA FRIA;;;;;
+6321;WD3YF1A95JP591787;Mercedes benz;Sprinter;22;6,51955E+13;2018;Camioneta;Inactivo;Operaciones;Documentos;Diesel;6582;;53RB1G;Extravio de placa local;;;;;
+10018;JN1BE6DS3L9038317;Nissan;Urvan;15;QR25760689Q;2020;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;9471;A19662R;;UNIDAD RENTADA;;;;;
+10438;3HBBZTBN0NL443601;International;Zafiro;41;Y1A053721;2022;Camion;Activo;Operaciones;Operando;Diesel;9781;;24RC7F;UDEM;;;;;
+10433;3MBAA6DSXGM057339;Mercedes benz;Torino;41;926995U1114572;2016;Camion;Baja;Operaciones;Vendido;Diesel;9776;223527R;;UNIDAD RENTADA DEVUELTA;;;;;
+10987;3HBBZTBN7NL316988;International;Zafiro;41;Y1A057708;2022;Camion;Activo;Operaciones;Operando;Diesel;10217;A20781R;61RC2R;WOLONG;;;;;
+13047;3HBBZTBN0PL508112;International;Zafiro;41;Y1A067018;2023;Camion;Activo;Operaciones;Operando;Diesel;11456;;44RD7M;WOLONG;;;;;
+10332;3HBBZSGN1NL591971;International;Zafiro;41;U1A009979;2022;Camion;Activo;Operaciones;Operando;Diesel;9675;;63RC5F;SCANPAINT;no;no;si;reparacion;no
+9502;9BSK4X202E3842600;Scania;No Especificado;41;8228668;2014;Camion;Baja;Operaciones;Vendido;Diesel;8995;;139RN6;UNIDAD RENTADA DEVUELTA;;;;;
+16159;3HBBZTBN0SL571347;International;Zafiro;41;Y1A076932;2025;Camion;Activo;Operaciones;Operando;Diesel;14105;;81RE6N;CELESTICA APODACA;;;;;
+15235;3HBBZTBN6SL365174;International;Zafiro;41;Y1A077085;2025;Camion;Activo;Operaciones;Operando;Diesel;13239;;57RE1F;AMAZON MTY;;;;;
+11142;3HBBZTBN5NL353019;International;Zafiro;41;Y1A058833;2022;Camion;Activo;Operaciones;Operando;Diesel;10369;A20902R;75RC1M;KEPLER CONSTRUCTORA;;;;;
+5059;3HBBZSEN1HL483664;International;Zafiro;41;Y1A033265;2017;Camion;Activo;Operaciones;Operando;Diesel;5347;;54RA2X;AZTEK;si;si;si;na;si
+5022;3HBBZSEN0HL473756;International;Zafiro;41;Y1A032674;2017;Camion;Activo;Operaciones;Operando;Diesel;5310;A21966R;02RA7L;CELESTICA APODACA;;;;;
+5898;3HBBZSEN0KL573752;International;Reco;41;Y1A038186;2019;Camion;Activo;Operaciones;Corralon Grave;Diesel;6170;;48-RB-6A;Choque con camioneta JAC daños por $265 mil;;;;;
+15390;3MN2E82W4SD300035;Volkswagen;Ayco;41;0166798A166789;2025;Camion;Activo;Operaciones;Operando;Diesel;13380;;60RE4F;AMAZON MTY;;;;;
+5279;3HBBZSGN9HL494330;International;Zafiro;41;U1A008951;2017;Camion;Activo;Operaciones;Operando;Diesel;5556;;74RA2J;;;;;;
+13351;3MN2E82W0PD301285;Volkswagen;Ayco;45;0166378A736372;2023;Camion;Activo;Operaciones;Operando;Diesel;11760;A25371R;49RD2S;LIXIL;;;;;
+15389;3MN2E82W6RD301889;Volkswagen;Ayco;41;0166779A176772;2024;Camion;Activo;Operaciones;Operando;Diesel;13379;;86RE6F;NIDEC-USEM;;;;;
+15438;3HBBZTBN6SL350402;International;Zafiro;41;Y1A076636;2025;Camion;Activo;Operaciones;Operando;Diesel;13425;;92RE6F;NIDEC-COLD;si;si;si;na;si
+8943;3MBAA6DNXGM057786;Mercedes benz;Torino;41;906999C1066807;2016;Camion;Baja;Operaciones;Vendido;Diesel;8454;202-JV-9;;UNIDAD RENTADA DEVUELTA;;;;;
+15935;W1Y5KD3Z9RP659924;Mercedes benz;Sprinter;22;6,54921E+13;2024;Camioneta;Activo;Operaciones;Operando;Diesel;13891;A28416R;17RE7L;UDEM  CIRCUITOS;;;;;
+14269;3HBBZTBN3RL670951;International;Zafiro;41;Y1A076004;2024;Camion;Activo;Operaciones;Operando;Diesel;12575;A25718R;65RD7Z;IAC;;;;;
+7765;3HBBZSGN4LL264509;International;Reco;41;U1A009718;2020;Camion;Activo;Operaciones;Operando;Diesel;7967;;20RB3V;;;;;;
+15468;3HBBZTBNXSL613880;International;Zafiro;41;Y1A076555;2025;Camion;Activo;Operaciones;Operando;Diesel;13455;A27397R;26RE6F;NIDEC-CMD;;;;;
+6296;3HBBZSENXKL664236;International;Reco;39;Y1A039150;2019;Camion;Activo;Operaciones;Operando;Diesel;6561;;;DAWN FOODS;;;;;
+13049;3HBBZTBN2PL508760;International;Zafiro;41;Y1A066931;2023;Camion;Activo;Operaciones;Operando;Diesel;11458;;72RD7M;SIEMENS;;;;;
+16005;W1Y5KD3ZXRP686484;Mercedes benz;Sprinter;22;6,54921E+13;2024;Camioneta;Activo;Operaciones;Operando;Diesel;13960;A28410R;65RE7L;UDEM  CIRCUITOS;;;;;
+13483;3HBBZTBN0PL485317;International;Zafiro;41;Y1A071855;2023;Camion;Activo;Operaciones;Operando;Diesel;11892;;85RD2S;SIEMENS;;;;;
+10991;3HBBZTBN4NL316995;International;Zafiro;41;Y1A057710;2022;Camion;Activo;Operaciones;Operando;Diesel;10221;A20780R;57RC2R;CELESTICA AGUA FRIA;;;;;
+14273;3HBBZTBN3RL670934;International;Zafiro;41;Y1A075951;2024;Camion;Activo;Operaciones;Operando;Diesel;12579;A25717R;61RD7Z;ABB ELECTRICAL CONTROL SYSTEMS;si;si;si;na;si
+14873;3MN2E82W4RD300174;Volkswagen;Ayco;41;0166521A256520;2024;Camion;Activo;Operaciones;Operando;Diesel;12944;A26447R;42RE6B;RAGASA;;;;;
+13051;3HBBZTBN6PL508762;International;Zafiro;41;Y1A067998;2023;Camion;Activo;Operaciones;Operando;Diesel;11460;;70RD7M;VERTIV MONTERREY;;;;;
+8764;3MBAA6DNXFM053879;Mercedes benz;Torino;41;;2015;Camion;Baja;Operaciones;Vendido;Diesel;8314;250HY1;;UNIDAD RENTADA DEVUELTA;;;;;
+13716;3HBBZTBN6PL856044;International;Zafiro;41;Y1A073346;2023;Camion;Activo;Operaciones;Operando;Diesel;12024;;25RD7V;LIXIL;;;;;
+9270;3MBAA6DN1DM045655;Mercedes benz;Torino;41;;2013;Camion;Baja;Operaciones;Vendido;Diesel;8778;222375R;;UNIDAD RENTADA DEVUELTA;;;;;
+11066;3HBBZTBN2NL351681;International;Zafiro;41;Y1A057274;2022;Camion;Activo;Operaciones;Operando;Diesel;10293;A20874R;81RC2R;KEPLER CONSTRUCTORA;;;;;
+10289;3MBAA6DNXBM041077;Mercedes benz;Torino;41;9,06999E+13;2011;Camion;Baja;Operaciones;Vendido;Diesel;9632;214680R;;UNIDAD RENTADA DEVUELTA;;;;;
+7880;3HBBZSEN3LL257196;International;Reco;41;Y1A043115;2020;Camion;Activo;Operaciones;Operando;Diesel;8082;;11RB6V;CELESTICA ESCOBEDO;;;;;
+13347;3MN2E82W3PD301085;Volkswagen;Ayco;45;0166360B046354;2023;Camion;Activo;Operaciones;Operando;Diesel;11756;;53RD2S;KAYAKU SAFETY;;;;;
+10512;3HBBZTBN2NL398094;International;Zafiro;41;Y1A053816;2022;Camion;Activo;Operaciones;Operando;Diesel;9852;;20RC7F;UDEM;;;;;
+16167;3HBBZTBN3SL648860;International;Zafiro;41;Y1A077681;2025;Camion;Activo;Operaciones;Operando;Diesel;14113;;76RE6N;CELESTICA AGUA FRIA;;;;;
+9714;3MBAA2DP3MM074502;Mercedes benz;Zafiro;41;924982U1301137;2021;Camion;Activo;Operaciones;Operando;Diesel;9207;;63RC9C;;;;;;
+4629;3HBBZSEN8GL292886;International;Zafiro;45;Y1A028392;2016;Camion;Activo;Operaciones;Operando;Diesel;4756;794678C;96RB6B;LIXIL;;;;;
+8020;WD3YF4A95KP142273;Mercedes benz;Sprinter;21;6,51958E+13;2019;Camioneta;Activo;Operaciones;Operando;Diesel;8221;;07RB3Z;UDEM  CIRCUITOS;;;;;
+7602;3HBBZSGN5KL814671;International;Reco;41;U1A009534 ;2019;Camion;Activo;Operaciones;Operando;Diesel;7811;;23RB7M;WOLONG;;;;;
+15384;3HBBZTBN5SL615407;International;Zafiro;41;Y1A077091;2025;Camion;Activo;Operaciones;Operando;Diesel;13374;;71RE4F;SIEMENS;;;;;
+13171;3HBBZTBN9PL514541;International;Zafiro;41;Y1A069250;2023;Camion;Activo;Operaciones;Operando;Diesel;11580;;10RD5M;VERTIV MONTERREY;;;;;
+13181;3HBBZTBN5PL280558;International;Zafiro;41;Y1A067895;2023;Camion;Activo;Operaciones;Operando;Diesel;11590;;24RD6M;IAC;;;;;
+10989;3HBBZTBN5NL316990;International;Zafiro;41;Y1A057728;2022;Camion;Activo;Operaciones;Operando;Diesel;10219;A20786R;59RC2R;AMAZON MTY 2;;;;;
+8756;JN1BE6DS8K9033578;Nissan;Urvan;15;;2020;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8306;A18159R;;UNIDAD RENTADA DEVUELTA;;;;;
+7762;3HBBZSGN6KL814694;International;Reco;41;U1A009492;2019;Camion;Activo;Operaciones;Operando;Diesel;7964;;26RB3V;NAPS;;;;;
+5027;3HBBZSEN8HL473746;International;Zafiro;41;Y1A032215;2017;Camion;Activo;Operaciones;Mantenimiento;Diesel;5315;A21959R;95RA4V;GLOBAL FM;;;;;
+7648;WD3YF1A90KP633865;Mercedes benz;Sprinter;21;6,51955E+13;2019;Camioneta;Activo;Operaciones;Operando;Diesel;7857;;66RB7P;WOLONG;;;;;
+10432;3MBAA6DS6GM057337;Mercedes benz;Torino;41;926995U1112582;2016;Camion;Baja;Operaciones;Vendido;Diesel;9775;223528R;;UNIDAD RENTADA DEVUELTA;;;;;
+13048;3HBBZTBN2PL508113;International;Zafiro;41;Y1A066775;2023;Camion;Activo;Operaciones;Operando;Diesel;11457;;43RD7M;SIEMENS;;;;;
+7769;3HBBZSGN6LL266892;International;Reco;41;U1A009680;2020;Camion;Activo;Operaciones;Operando;Diesel;7971;;36RB3V;CELESTICA ESCOBEDO;;;;;
+10985;3HBBZTBN0NL316993;International;Zafiro;41;Y1A057440;2022;Camion;Activo;Operaciones;Operando;Diesel;10215;A20785R;63RC2R;AMAZON MTY;;;;;
+16157;3HBBZTBN7SL571345;International;Zafiro;41;Y1A077114;2025;Camion;Activo;Operaciones;Operando;Diesel;14103;;90RE6N;CELESTICA AGUA FRIA;;;;;
+14223;3HBBZTBN1RL195462;International;Zafiro;41;Y1A076021;2024;Camion;Activo;Operaciones;Mantenimiento;Diesel;12529;A25367R;75RD7Z;KAYAKU SAFETY;;;;;
+9713;3MBAA2DP3MM074497;Mercedes benz;Zafiro;41;924982U1305620;2021;Camion;Activo;Operaciones;Operando;Diesel;9206;;45RC9C;KEPLER CONSTRUCTORA;;;;;
+12773;3HBBZTBN7PL373436;International;Zafiro;41;Y1A064075;2023;Camion;Activo;Operaciones;Operando;Diesel;11190;A21791R;59RD5M;UDEM;;;;;
+10437;3HBBZTBN9NL443600;International;Zafiro;41;Y1A053715;2022;Camion;Activo;Operaciones;Operando;Diesel;9780;;35RC7F;UDEM;;;;;
+15441;3HBBZTBN4SL369174;International;Zafiro;41;Y1A076550;2025;Camion;Activo;Operaciones;Operando;Diesel;13428;;31RE6F;NIDEC-COLD;no;no;si;reparacion;si
+13715;3HBBZTBN3PL492486;International;Zafiro;41;Y1A055374;2023;Camion;Activo;Operaciones;Operando;Diesel;12023;;26RD7V;VERTIV MONTERREY;;;;;
+9786;3MBAA5DM9HM059368;Mercedes benz;Torino;41;;2017;Camion;Baja;Operaciones;Vendido;Diesel;9279;A15719R;;UNIDAD RENTADA DEVUELTA;;;;;
+9277;JN1BE6DSXK9033596;Nissan;Urvan;15;;2019;Camioneta;Baja;Operaciones;Vendido;Gasolina Magna;8784;A18145R;;UNIDAD RENTADA DEVUELTA;;;;;
+16449;3HBBZTBN8SL600853;International;Zafiro;41;Y1A077835;2025;Camion;Activo;Operaciones;Operando;Diesel;14203;;En tramite;VERTIV MONTERREY;;;;;
+13365;3HBBZTBN5PL481408;International;Zafiro;41;Y1A069053;2023;Camion;Activo;Operaciones;Operando;Diesel;11774;;02RD2S;WOLONG;;;;;
+5010;3HBBZSEN8HL715029;International;Zafiro;41;Y1A032559;2017;Camion;Inactivo;Operaciones;Siniestro;Diesel;5298;A21962R;66RA9G;En tramite con la aseguradora;;;;;
+8052;WD3YF4A91LP172985;Mercedes benz;Sprinter;21;6,51958E+13;2020;Camioneta;Activo;Operaciones;Operando;Diesel;8252;;07RC9A;UDEM CIRCUITOS;;;;;
+13376;3HBBZTBN6PL664199;International;Zafiro;41;Y1A070640;2023;Camion;Activo;Operaciones;Operando;Diesel;11785;;94RD1S;VERTIV MONTERREY;;;;;
+13467;3HBBZTBN7PL489087;International;Zafiro;41;Y1A064775;2023;Camion;Activo;Operaciones;Operando;Diesel;11876;;88RD2S;IAC;;;;;
+9881;W1Y8DD3Z4LP232147;Mercedes benz;Sprinter;21;6,51958E+13;2020;Camioneta;Activo;Operaciones;Mantenimiento;Diesel;9374;;48RC1G;UDEM CIRCUITOS;;;;;
+10328;3HBBZSGN1NL594417;International;Zafiro;41;U1A009980;2022;Camion;Activo;Operaciones;Operando;Diesel;9671;;49RC5F;KAYAKU SAFETY;;;;;
+5200;3HBBZSEN6HL445377;International;Zafiro;41;Y1A034252;2017;Camion;Activo;Operaciones;Operando;Diesel;5485;;75RA2X;AZTEK;no;no;si;reparacion;no
+15409;3HBBZTBN7SL615408;International;Zafiro;41;Y1A076665;2025;Camion;Activo;Operaciones;Operando;Diesel;13399;;64RE4F;IAC SANTA CATARINA;;;;;
