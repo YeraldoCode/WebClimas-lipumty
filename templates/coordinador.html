@@ -12,15 +12,15 @@
         <div class="alert alert-success mt-4">
           <strong>Datos de la unidad:</strong>
           <ul class="list-group mt-3">
-            <li class="list-group-item"><b>Serial:</b> {{ datos['Serial'] }}</li>
-            <li class="list-group-item"><b>Marca:</b> {{ datos['Marca'] }}</li>
-            <li class="list-group-item"><b>Modelo:</b> {{ datos['Modelo'] }}</li>
-            <li class="list-group-item"><b>Asientos:</b> {{ datos['Asientos'] }}</li>
-            <li class="list-group-item"><b>Año:</b> {{ datos['Año'] }}</li>
-            <li class="list-group-item"><b>Tipo vehiculo:</b> {{ datos['Tipo vehiculo'] }}</li>
-            <li class="list-group-item"><b>Gpo. estatus:</b> {{ datos['Gpo. estatus'] }}</li>
-            <li class="list-group-item"><b>Estatus:</b> {{ datos['Estatus'] }}</li>
-            <li class="list-group-item"><b>Uso:</b> {{ datos['Descripcion'] }}</li>
+            <li class="list-group-item"><b>Serial:</b> {{ datos['serial'] }}</li>
+            <li class="list-group-item"><b>Marca:</b> {{ datos['marca'] }}</li>
+            <li class="list-group-item"><b>Modelo:</b> {{ datos['modelo'] }}</li>
+            <li class="list-group-item"><b>Asientos:</b> {{ datos['asientos'] }}</li>
+            <li class="list-group-item"><b>Año:</b> {{ datos['anio'] }}</li>
+            <li class="list-group-item"><b>Tipo vehiculo:</b> {{ datos['tipo_vehiculo'] }}</li>
+            <li class="list-group-item"><b>Gpo. estatus:</b> {{ datos['gpo_estatus'] }}</li>
+            <li class="list-group-item"><b>Estatus:</b> {{ datos['estatus'] }}</li>
+            <li class="list-group-item"><b>Cliente:</b> {{ datos['descripcion'] }}</li>
             <li class="list-group-item"><b>Aire:</b> {{ datos['aire'] }}</li>
             <li class="list-group-item"><b>Jala:</b> {{ datos['jala'] }}</li>
             <li class="list-group-item"><b>Mochila:</b> {{ datos['mochila'] }}</li>
@@ -66,7 +66,7 @@
             <option value="No" {% if datos['reinsidente']=='No' %}selected{% endif %}>No</option>
           </select>
         </div>
-        <input type="hidden" name="id_vehiculo" value="{{ datos['id_vehiculo'] }}">
+        <input type="hidden" name="idvehiculo" value="{{ datos['idvehiculo'] }}">
         <button type="submit" class="btn btn-outline-primary w-100">Guardar Cambios</button>
       </form>
       {% elif error %}
@@ -75,11 +75,9 @@
       
       <br>
       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <a href="javascript:history.back()" class="btn btn-outline-warning w-100">cambiar unidad</a>
+          <a href="{{ url_for('coordinador_select') }}" class="btn btn-outline-warning w-100">cambiar unidad</a>
           <a href="/" class="btn btn-outline-danger w-100">Salir</a>
       </div>
-
-
     </div>
   </div>
 </div>

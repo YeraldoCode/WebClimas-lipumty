@@ -72,24 +72,9 @@ def coordinador():
             vehiculo.conversion_reparacion = request.form.get('conversion_reparacion')
             vehiculo.reinsidente = request.form.get('reinsidente')
             db.session.commit()
-            msg = "Datos actualizados correctamente."
-        datos = {
-            'idvehiculo': vehiculo.idvehiculo,
-            'serial': vehiculo.serial,
-            'marca': vehiculo.marca,
-            'modelo': vehiculo.modelo,
-            'asientos': vehiculo.asientos,
-            'anio': vehiculo.anio,
-            'tipo_vehiculo': vehiculo.tipo_vehiculo,
-            'gpo_estatus': vehiculo.gpo_estatus,
-            'estatus': vehiculo.estatus,
-            'descripcion': vehiculo.descripcion,
-            'aire': vehiculo.aire,
-            'jala': vehiculo.jala,
-            'mochila': vehiculo.mochila,
-            'conversion_reparacion': vehiculo.conversion_reparacion,
-            'reinsidente': vehiculo.reinsidente
-        }
+            return redirect(url_for('coordinador', idvehiculo=idvehiculo, msg='Datos actualizados correctamente.'))
+        datos = {c.name: getattr(vehiculo, c.name) for c in vehiculo.__table__.columns}
+    msg = request.args.get('msg', msg)
     return render_template('coordinador.html', datos=datos, error=error, msg=msg)
 
 @app.route('/login_logistica', methods=['GET', 'POST'])

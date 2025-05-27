@@ -12,13 +12,13 @@ def process_excel(filepath):
     # Similar para otras hojas
     pass
 
-def save_edits(id_vehiculo, cambios, usuario):
+def save_edits(idvehiculo, cambios, usuario):
     # Guarda los cambios en la base de datos y marca como revisado
-    v = Vehiculo.query.filter_by(id_vehiculo=id_vehiculo).first()
+    v = Vehiculo.query.filter_by(idvehiculo=idvehiculo).first()
     if v:
-        v.datos.update(cambios)
-        v.revisado = True
-        db.session.add(Revision(id_vehiculo=id_vehiculo, usuario=usuario, cambios=cambios))
+        for k, val in cambios.items():
+            setattr(v, k, val)
+        db.session.add(Revision(idvehiculo=idvehiculo, usuario=usuario, cambios=cambios))
         db.session.commit()
 
 def export_excel():
@@ -26,10 +26,12 @@ def export_excel():
     # ...
     pass
 
-def get_vehicle_data(id_vehiculo):
+def get_vehicle_data(idvehiculo):
     # Devuelve los datos del vehículo
-    v = Vehiculo.query.filter_by(id_vehiculo=id_vehiculo).first()
-    return v.datos if v else None
+    v = Vehiculo.query.filter_by(idvehiculo=idvehiculo).first()
+    if v:
+        return {c.name: getattr(v, c.name) for c in v.__table__.columns}
+    return None
 
 def get_review_status():
     # Devuelve el estado de revisión de todos los vehículos
