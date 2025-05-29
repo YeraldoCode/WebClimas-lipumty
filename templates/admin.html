@@ -1,69 +1,249 @@
 {% extends 'base.html' %}
 {% block title %}Panel Administrador{% endblock %}
-{% block nav %}
-<a href="/" class="text-white text-decoration-underline">Salir</a>
-{% endblock %}
 {% block content %}
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="admin-container">
+  <div class="admin-card">
+    <h2 class="admin-title"><span>🚍</span> Panel Administrador</h2>
+    <form method="post" action="/admin/upload" enctype="multipart/form-data" class="admin-actions admin-upload-form">
+      <div class="admin-upload-fields">
+        <label for="file" class="admin-upload-label">Actualizar base de datos:</label>
+        <input type="file" name="file" id="file" class="admin-input" accept=".xlsx">
+        <button type="submit" class="admin-btn upload">Subir Excel</button>
       </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
-<!--Carga de archivos -->
-<div class="bg-white p-5 rounded shadow mb-4">
-  <h2 class="h4 mb-4">Actualizar Base de Datos desde Excel</h2>
-  <form method="post" action="{{ url_for('upload_excel') }}" enctype="multipart/form-data" class="row g-3 align-items-center">
-    <div class="col-auto">
-      <input type="file" name="file" class="form-control" required>
-    </div>
-    <div class="col-auto">
-      <button type="submit" class="btn btn-success">Actualizar</button>
-    </div>
-  </form>
-  <div class="form-text mt-2">
-    Sube <b>vehiculos.xlsx</b> para actualizar la tabla vehiculos o <b>servicios.xlsx</b> para la tabla servicios.
-  </div>
-</div>
-
-<!-- Informacion de la unidad -->
-<div class="bg-white p-5 rounded shadow">
-  <h2 class="h4 mb-4">Estado de Revisión</h2>
-  <div style="max-height: 500px; overflow-y: auto;">
-    <table class="table table-striped table-bordered">
-      <thead>
-        <tr>
-          <th>ID Vehículo</th>
-          <th>Cliente</th>
-          <th>Aire</th>
-          <th>Jala</th>
-          <th>Mochila</th>
-          <th>Conv/Reparación</th>
-          <th>Reinsidente</th>
-          <th>Revisado</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for v in vehiculos %}
-        <tr {% if v.revisado %}class="table-success"{% endif %}>
-          <td>{{ v.idvehiculo or ' ' }}</td>
-          <td>{{ v.descripcion or ' ' }}</td>
-          <td>{{ v.aire or ' ' }}</td>
-          <td>{{ v.jala or ' ' }}</td>
-          <td>{{ v.mochila or ' ' }}</td>
-          <td>{{ v.conversion_reparacion or ' ' }}</td>
-          <td>{{ v.reinsidente or ' ' }}</td>
-          <td>{{ 'Sí' if v.revisado else 'No' }}</td>
-        </tr>
+      <div class="admin-upload-note">
+        Puedes subir <b>vehiculos.xlsx</b> para modificar la base de datos de vehículos<br>
+        o <b>servicios.xlsx</b> para modificar la base de datos de servicios.
+      </div>
+    </form>
+    <h4 class="admin-table-title">Estado de revisión de vehículos</h4>
+    <div class="admin-table-wrapper" style="max-height:60vh;overflow-y:auto;">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Serial</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Cliente</th>
+            <th>Estatus</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in vehiculos %}
+          <tr>
+            {% if v.aire and v.jala and v.mochila and v.conversion_reparacion and v.reinsidente %}
+            <td style="color: #388e3c; font-weight: bold;"> {{ v.idvehiculo }}</td>
+            <td style="color: #388e3c; font-weight: bold;">{{ v.serial }}</td>
+            <td style="color: #388e3c; font-weight: bold;">{{ v.marca }}</td>
+            <td style="color: #388e3c; font-weight: bold;">{{ v.modelo }}</td>
+            <td style="color: #388e3c; font-weight: bold;">{{ v.descripcion }}</td>
+            <td><span style="color: #388e3c; font-weight: bold;">Revisado</span> </td>
+            {% else %}
+            <td style="color:#d32f2f; font-weight: bold;"> {{ v.idvehiculo }}</td>
+            <td style="color:#d32f2f; font-weight: bold;">{{ v.serial }}</td>
+            <td style="color:#d32f2f; font-weight: bold;">{{ v.marca }}</td>
+            <td style="color:#d32f2f; font-weight: bold;">{{ v.modelo }}</td>
+            <td style="color:#d32f2f; font-weight: bold;">{{ v.descripcion }}</td>
+            <td><span style="color: #d32f2f; font-weight: bold;">Pendiente</span></td>
+          </tr>
+          {% endif %}
         {% endfor %}
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+      
+    </div>
+      <a href="/admin/export" class="admin-btn export" style="margin:1rem auto;display:block;max-width:200px;">Exportar Excel</a>
+      <a href="/" class="admin-btn logout" style="margin:0 auto 1rem auto;display:block;max-width:200px;background:#d32f2f;">Salir</a>
+      <p class="admin-info">Desde aquí puedes cargar, exportar y revisar el estado de los vehículos.</p>
   </div>
-  <a href="{{ url_for('export') }}" class="btn btn-primary mt-3">Exportar Consolidado</a>
 </div>
+<style>
+.admin-container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  width: 100vw;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.admin-card {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15);
+  padding: 2.5rem 2rem;
+  max-width: 1200px;
+  width: 100%;
+  min-height: 90vh;
+  min-height: 90dvh;
+  display: flex;
+  flex-direction: column;
+}
+.admin-title {
+  color: #00796b;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.admin-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+.admin-input {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #b2ebf2;
+  font-size: 1rem;
+}
+.admin-btn {
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.7rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+}
+.admin-btn.upload {
+  background: #0288d1;
+  color: #fff;
+}
+.admin-btn.upload:hover {
+  background: #01579b;
+}
+.admin-btn.export {
+  background: #00796b;
+  color: #fff;
+}
+.admin-btn.export:hover {
+  background: #004d40;
+}
+.admin-btn.edit {
+  background: #ffa000;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.95rem;
+}
+.admin-btn.edit:hover {
+  background: #ff6f00;
+}
+.admin-btn.logout {
+  background: #d32f2f;
+  color: #fff;
+  margin-top: 0.5rem;
+}
+.admin-btn.logout:hover {
+  background: #b71c1c;
+}
+.admin-info {
+  color: #555;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.admin-table-title {
+  color: #0288d1;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.admin-table-wrapper {
+  overflow-x: auto;
+  max-height: 60vh;
+  min-height: 200px;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+.admin-table th, .admin-table td {
+  border: 1px solid #e0e0e0;
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+}
+.admin-table th {
+  background: #e0f7fa;
+  color: #00796b;
+}
+.admin-upload-form {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.3rem;
+  margin-bottom: 1.2rem;
+}
+.admin-upload-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+.admin-upload-label {
+  font-weight: 600;
+  min-width: 160px;
+}
+.admin-upload-note {
+  font-size: 0.92rem;
+  color: #666;
+  margin-top: 0.3rem;
+  line-height: 1.3;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .admin-card {
+    padding: 1.5rem 0.5rem;
+    max-width: 98vw;
+  }
+  .admin-table-wrapper {
+    max-height: 45vh;
+  }
+  .admin-table th, .admin-table td {
+    padding: 0.5rem 0.2rem;
+    font-size: 0.95rem;
+  }
+}
+@media (max-width: 700px) {
+  .admin-container {
+    padding: 0;
+    min-width: 100vw;
+    max-width: 100vw;
+  }
+  .admin-card {
+    padding: 0.7rem 0.2rem;
+    max-width: 100vw;
+    min-width: 100vw;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .admin-table-wrapper {
+    max-height: 35vh;
+    min-height: 120px;
+  }
+  .admin-table th, .admin-table td {
+    padding: 0.35rem 0.1rem;
+    font-size: 0.92rem;
+  }
+  .admin-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .admin-btn, .admin-btn.upload, .admin-btn.export, .admin-btn.logout {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.7rem;
+  }
+  .admin-upload-fields {
+    gap: 0.4rem;
+  }
+  .admin-upload-note {
+    font-size: 0.85rem;
+  }
+}
+</style>
 {% endblock %}

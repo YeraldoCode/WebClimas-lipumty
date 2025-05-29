@@ -1,56 +1,147 @@
 {% extends 'base.html' %}
-{% block title %}Seleccionar Cliente y Unidad{% endblock %}
+{% block title %}Seleccionar Unidad{% endblock %}
 {% block content %}
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-10 bg-white p-5 rounded shadow">
-      <h2 class="mb-4">Selecciona Cliente</h2>
-      <form method="post">
-        <div class="mb-3">
-          <label for="cliente" class="form-label">Cliente</label>
-          <select name="cliente" id="cliente" class="form-select" onchange="this.form.submit()" required>
-            <option value="">Selecciona un cliente</option>
-            {% for c in clientes %}
-              <option value="{{ c }}" {% if c == selected_cliente %}selected{% endif %}>{{ c }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </form>
-      {% if unidades %}
-      <h3 class="h5 mt-4 mb-3">Unidades de {{ selected_cliente }}</h3>
-      <div style="max-height: 500px; overflow-y: auto;">
-        <table class="table table-bordered">
+<div class="select-container">
+  <div class="select-card">
+    <h2 class="select-title">Selección de Unidad</h2>
+    <form method="get" class="select-form">
+      <label for="cliente" class="select-label">Cliente</label>
+      <select id="cliente" name="cliente" class="select-input" onchange="this.form.submit()">
+        <option value="">Selecciona un cliente</option>
+        {% for cliente in clientes %}
+          <option value="{{ cliente }}" {% if cliente==selected_cliente %}selected{% endif %}>{{ cliente }}</option>
+        {% endfor %}
+      </select>
+    </form>
+    <a href="/" class="select-link">Volver al inicio</a>
+    {% if selected_cliente %}
+      <h4 class="select-table-title">Unidades disponibles para: {{ selected_cliente }}</h4>
+      <div class="select-table-wrapper">
+        <table class="select-table">
           <thead>
             <tr>
-              <th>ID Vehículo</th>
-              <th>Marca</th>
-              <th>Uso</th>
+              <th>ID</th>
               <th>Estatus</th>
-              <th>Revisado</th>
-              <th>Acción</th>
+             
+              <th>Cliente</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {% for v in unidades %}
-            <tr {% if v.revisado %}class="table-success"{% endif %}>
+            <tr>
               <td>{{ v.idvehiculo }}</td>
-              <td>{{ v.marca }}</td>
-              <td>{{ v.uso }}</td>
-              <td>{{ v.estatus }}</td>
-              <td>{{ 'Si' if v.revisado else 'No' }}</td>
               <td>
-                <a href="{{ url_for('coordinador', idvehiculo=v.idvehiculo) }}" class="btn btn-sm btn-primary">Editar</a>
-              </td>
+              {% if v.aire and v.jala and v.mochila and v.conversion_reparacion and v.reinsidente %}
+                <span style="color: #388e3c; font-weight: bold;">Revisado</span>
+              {% else %}
+                <span style="color: #d32f2f; font-weight: bold;">Pendiente</span>
+              {% endif %}
+            </td>
+              <td>{{ v.descripcion }}</td>
+              <td><a href="{{ url_for('coordinador', idvehiculo=v.idvehiculo) }}" class="select-btn edit">Editar</a></td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
-      {% endif %}
-      <br>
-      <br>
-    <a href="/" class="btn btn-outline-danger w-100">Salir</a>
-    </div>
+    {% endif %}
   </div>
 </div>
+<style>
+.select-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+.select-card {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15);
+  padding: 2.5rem 2rem;
+  max-width: 700px;
+  width: 100%;
+}
+.select-title {
+  color: #00796b;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.select-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.select-label {
+  text-align: left;
+  color: #0288d1;
+  font-weight: 600;
+}
+.select-input {
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+  border: 1px solid #b2ebf2;
+  font-size: 1rem;
+}
+.select-btn {
+  background: #0288d1;
+  color: #fff;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0.8rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.select-btn:hover {
+  background: #01579b;
+}
+.select-link {
+  display: block;
+  margin-bottom: 1.5rem;
+  color: #0288d1;
+  text-decoration: none;
+  font-weight: 500;
+}
+.select-link:hover {
+  text-decoration: underline;
+}
+.select-table-title {
+  color: #0288d1;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.select-table-wrapper {
+  overflow-x: auto;
+}
+.select-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+.select-table th, .select-table td {
+  border: 1px solid #e0e0e0;
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+}
+.select-table th {
+  background: #e0f7fa;
+  color: #00796b;
+}
+.select-btn.edit {
+  background: #ffa000;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.95rem;
+}
+.select-btn.edit:hover {
+  background: #ff6f00;
+}
+</style>
 {% endblock %}

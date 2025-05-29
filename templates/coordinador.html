@@ -1,84 +1,140 @@
 {% extends 'base.html' %}
 {% block title %}Revisión de Vehículo{% endblock %}
 {% block content %}
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8 bg-white p-5 rounded shadow">
-      <h2 class="mb-4">Revisión de Vehículo</h2>
-      {% if msg %}
-        <div class="alert alert-success">{{ msg }}</div>
-      {% endif %}
-      {% if datos %}
-        <div class="alert alert-success mt-4">
-          <strong>Datos de la unidad:</strong>
-          <ul class="list-group mt-3">
-            <li class="list-group-item"><b>Serial:</b> {{ datos['serial'] }}</li>
-            <li class="list-group-item"><b>Marca:</b> {{ datos['marca'] }}</li>
-            <li class="list-group-item"><b>Modelo:</b> {{ datos['modelo'] }}</li>
-            <li class="list-group-item"><b>Asientos:</b> {{ datos['asientos'] }}</li>
-            <li class="list-group-item"><b>Año:</b> {{ datos['anio'] }}</li>
-            <li class="list-group-item"><b>Tipo vehiculo:</b> {{ datos['tipo_vehiculo'] }}</li>
-            <li class="list-group-item"><b>Gpo. estatus:</b> {{ datos['gpo_estatus'] }}</li>
-            <li class="list-group-item"><b>Estatus:</b> {{ datos['estatus'] }}</li>
-            <li class="list-group-item"><b>Cliente:</b> {{ datos['descripcion'] }}</li>
-            <li class="list-group-item"><b>Aire:</b> {{ datos['aire'] }}</li>
-            <li class="list-group-item"><b>Jala:</b> {{ datos['jala'] }}</li>
-            <li class="list-group-item"><b>Mochila:</b> {{ datos['mochila'] }}</li>
-            <li class="list-group-item"><b>Conversión/Reparación:</b> {{ datos['conversion_reparacion'] }}</li>
-            <li class="list-group-item"><b>Reinsidente:</b> {{ datos['reinsidente'] }}</li>
-          </ul>
-        </div>
-        <form method="post" class="mt-4">
-        <div class="mb-3">
-          <label for="aire" class="form-label">Aire</label>
-          <select class="form-select" id="aire" name="aire">
-            <option value="Sí" {% if datos['aire']=='Sí' %}selected{% endif %}>Sí</option>
-            <option value="No" {% if datos['aire']=='No' %}selected{% endif %}>No</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="jala" class="form-label">Jala</label>
-          <select class="form-select" id="jala" name="jala">
-            <option value="Sí" {% if datos['jala']=='Sí' %}selected{% endif %}>Sí</option>
-            <option value="No" {% if datos['jala']=='No' %}selected{% endif %}>No</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="mochila" class="form-label">Mochila</label>
-          <select class="form-select" id="mochila" name="mochila">
-            <option value="Sí" {% if datos['mochila']=='Sí' %}selected{% endif %}>Sí</option>
-            <option value="No" {% if datos['mochila']=='No' %}selected{% endif %}>No</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="conversion_reparacion" class="form-label">Conversión/Reparación</label>
-          <select class="form-select" id="conversion_reparacion" name="conversion_reparacion">
-            <option value="na" {% if datos['conversion_reparacion']=='na' %}selected{% endif %}>na</option>
-            <option value="pte diagnostico" {% if datos['conversion_reparacion']=='pte diagnostico' %}selected{% endif %}>pte diagnostico</option>
-            <option value="reparacion" {% if datos['conversion_reparacion']=='reparacion' %}selected{% endif %}>reparacion</option>
-            <option value="conversion" {% if datos['conversion_reparacion']=='conversion' %}selected{% endif %}>conversion</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="reinsidente" class="form-label">Reinsidente</label>
-          <select class="form-select" id="reinsidente" name="reinsidente">
-            <option value="Sí" {% if datos['reinsidente']=='Sí' %}selected{% endif %}>Sí</option>
-            <option value="No" {% if datos['reinsidente']=='No' %}selected{% endif %}>No</option>
-          </select>
-        </div>
-        <input type="hidden" name="idvehiculo" value="{{ datos['idvehiculo'] }}">
-        <button type="submit" class="btn btn-outline-primary w-100">Guardar Cambios</button>
-      </form>
-      {% elif error %}
-        <div class="alert alert-danger mt-4">{{ error }}</div>
-      {% endif %}
-      
-      <br>
-      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <a href="{{ url_for('coordinador_select') }}" class="btn btn-outline-warning w-100">cambiar unidad</a>
-          <a href="/" class="btn btn-outline-danger w-100">Salir</a>
-      </div>
+<div class="rev-container">
+  <div class="rev-card">
+    <h2 class="rev-title">Revisión de Vehículo</h2>
+    {% if msg %}
+      <div class="rev-msg success">{{ msg }}</div>
+    {% endif %}
+    {% if error %}
+      <div class="rev-msg error">{{ error }}</div>
+    {% endif %}
+    {% if datos %}
+    <form method="post" class="rev-form">
+      <label for="aire" class="rev-label">Aire</label>
+      <select id="aire" name="aire" class="rev-input">
+        <option value="Sí" {% if datos['aire']=='Sí' %}selected{% endif %}>Sí</option>
+        <option value="No" {% if datos['aire']=='No' %}selected{% endif %}>No</option>
+      </select>
+      <label for="jala" class="rev-label">Jala</label>
+      <select id="jala" name="jala" class="rev-input">
+        <option value="Sí" {% if datos['jala']=='Sí' %}selected{% endif %}>Sí</option>
+        <option value="No" {% if datos['jala']=='No' %}selected{% endif %}>No</option>
+      </select>
+      <label for="mochila" class="rev-label">Mochila</label>
+      <select id="mochila" name="mochila" class="rev-input">
+        <option value="Sí" {% if datos['mochila']=='Sí' %}selected{% endif %}>Sí</option>
+        <option value="No" {% if datos['mochila']=='No' %}selected{% endif %}>No</option>
+      </select>
+      <label for="conversion_reparacion" class="rev-label">Conversión/Reparación</label>
+      <select id="conversion_reparacion" name="conversion_reparacion" class="rev-input">
+        <option value="na" {% if datos['conversion_reparacion']=='na' %}selected{% endif %}>na</option>
+        <option value="pte diagnostico" {% if datos['conversion_reparacion']=='pte diagnostico' %}selected{% endif %}>pte diagnostico</option>
+        <option value="reparacion" {% if datos['conversion_reparacion']=='reparacion' %}selected{% endif %}>reparacion</option>
+        <option value="conversion" {% if datos['conversion_reparacion']=='conversion' %}selected{% endif %}>conversion</option>
+      </select>
+      <label for="reinsidente" class="rev-label">Reinsidente</label>
+      <select id="reinsidente" name="reinsidente" class="rev-input">
+        <option value="Sí" {% if datos['reinsidente']=='Sí' %}selected{% endif %}>Sí</option>
+        <option value="No" {% if datos['reinsidente']=='No' %}selected{% endif %}>No</option>
+      </select>
+      <input type="hidden" name="idvehiculo" value="{{ datos['idvehiculo'] }}">
+      <button type="submit" class="rev-btn">Guardar Cambios</button>
+    </form>
+    <div class="rev-info rev-info-scroll">
+      <h4>Datos de la unidad: {{ datos['idvehiculo'] }}</h4>
+    </div>
+    {% endif %}
+    <div class="rev-links">
+      <a href="{{ url_for('coordinador_select') }}" class="rev-link">Cambiar unidad</a>
+      <a href="/" class="rev-link">Salir</a>
     </div>
   </div>
 </div>
+<style>
+.rev-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+.rev-card {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15);
+  padding: 2.5rem 2rem;
+  max-width: 500px;
+  width: 100%;
+}
+.rev-title {
+  color: #00796b;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.rev-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.rev-label {
+  text-align: left;
+  color: #0288d1;
+  font-weight: 600;
+}
+.rev-input {
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+  border: 1px solid #b2ebf2;
+  font-size: 1rem;
+}
+.rev-btn {
+  background: #0288d1;
+  color: #fff;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0.8rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.rev-btn:hover {
+  background: #01579b;
+}
+.rev-info.rev-info-scroll {
+  background: #e0f7fa;
+  border-radius: 0.7rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  max-height: 120px;
+  overflow-y: auto;
+}
+.rev-links {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+.rev-link {
+  color: #0288d1;
+  text-decoration: none;
+  font-weight: 500;
+}
+.rev-link:hover {
+  text-decoration: underline;
+}
+.rev-msg.success {
+  color: #388e3c;
+  margin-bottom: 1rem;
+}
+.rev-msg.error {
+  color: #d32f2f;
+  margin-bottom: 1rem;
+}
+</style>
 {% endblock %}

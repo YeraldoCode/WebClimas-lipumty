@@ -1,18 +1,86 @@
 {% extends 'base.html' %}
-{% block title %}Login Logística{% endblock %}
+{% block title %}Login | Tractofast{% endblock %}
 {% block content %}
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6 bg-white p-5 rounded shadow">
-      <h2 class="mb-4">Acceso Logística</h2>
-      <form method="post" action="/login_logistica">
-        <div class="mb-3">
-          <label for="admin_password" class="form-label">Contraseña de Logística</label>
-          <input type="password" name="password" id="admin_password" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-success w-100">Entrar</button>
-      </form>
-    </div>
+<div class="login-container">
+  <div class="login-card">
+    <h2 class="login-title">Acceso Logística</h2>
+    <form method="post" action="/login/logistica" class="login-form">
+      <label for="admin_password" class="login-label">Contraseña de Logística</label>
+      <input type="password" name="password" id="admin_password" class="login-input" required autocomplete="off">
+      <button type="submit" class="login-btn logistica">Entrar</button>
+    </form>
+    <a href="/" class="login-link">Volver al inicio</a>
   </div>
 </div>
+<style>
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+}
+.login-card {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15);
+  padding: 2.5rem 2rem;
+  max-width: 350px;
+  width: 100%;
+  text-align: center;
+}
+.login-title {
+  color: #00796b;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.login-label {
+  text-align: left;
+  color: #0288d1;
+  font-weight: 600;
+}
+.login-input {
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+  border: 1px solid #b2ebf2;
+  font-size: 1rem;
+}
+.login-btn.logistica {
+  background: #00796b;
+  color: #fff;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0.8rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.login-btn.logistica:hover {
+  background: #004d40;
+}
+.login-link {
+  display: block;
+  margin-bottom: 1.5rem;
+  color: #0288d1;
+  text-decoration: none;
+  font-weight: 500;
+}
+.login-link:hover {
+  text-decoration: underline;
+}
+.login-info {
+  background: #e0f7fa;
+  border-radius: 0.7rem;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+</style>
 {% endblock %}

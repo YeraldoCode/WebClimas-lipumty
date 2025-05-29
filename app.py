@@ -26,11 +26,6 @@ def load_user(user_id):
 def index():
     return render_template('login.html')
 
-@app.route('/login_coordinador', methods=['GET', 'POST'])
-def login_coordinador():
-    if request.method == 'POST':
-        return redirect(url_for('coordinador_select'))
-    return render_template('login_coordinador.html')
 
 
 @app.route('/coordinador/select', methods=['GET', 'POST'])
@@ -45,7 +40,11 @@ def coordinador_select():
     ).all()
     # Clientes únicos
     clientes = sorted(set(v.descripcion for v in vehiculos))
-    selected_cliente = request.form.get('cliente')
+    selected_cliente = None
+    if request.method == 'POST':
+        selected_cliente = request.form.get('cliente')
+    else:
+        selected_cliente = request.args.get('cliente')
     unidades = []
     if selected_cliente:
         unidades = [v for v in vehiculos if v.descripcion == selected_cliente]
@@ -77,7 +76,7 @@ def coordinador():
     msg = request.args.get('msg', msg)
     return render_template('coordinador.html', datos=datos, error=error, msg=msg)
 
-@app.route('/login_logistica', methods=['GET', 'POST'])
+@app.route('/login/logistica', methods=['GET', 'POST'])
 def login_logistica():
     if request.method == 'POST':
         password = request.form.get('password')
