@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Notificaciones{% endblock %}
+{% block content %}
+<div class="notif-container">
+  <div class="notif-card">
+    <h2 class="notif-title">Notificaciones</h2>
+    <div class="notif-list">
+      {% for n in notificaciones %}
+      <div class="notif-item {% if not n.leido %}notif-unread{% endif %}">
+        <div class="notif-msg">{{ n.mensaje }}</div>
+        <div class="notif-meta">
+          <span>{{ n.fecha }}</span>
+          {% if not n.leido %}<a href="/notificaciones/{{ n.id }}/leer" class="notif-leer">Marcar como leída</a>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<style>
+.notif-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+.notif-card { background: #fff; border-radius: 1.2rem; box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15); padding: 2.5rem 2rem; max-width: 600px; width: 100%; }
+.notif-title { color: #0288d1; font-size: 2rem; font-weight: bold; margin-bottom: 1.5rem; text-align: center; }
+.notif-list { display: flex; flex-direction: column; gap: 1rem; }
+.notif-item { background: #e0f7fa; border-radius: 0.7rem; padding: 1rem; color: #0288d1; position: relative; }
+.notif-unread { background: #b3e5fc; font-weight: bold; }
+.notif-meta { font-size: 0.95rem; color: #555; margin-top: 0.5rem; display: flex; justify-content: space-between; align-items: center; }
+.notif-leer { color: #388e3c; text-decoration: underline; font-size: 0.95rem; }
+.notif-leer:hover { color: #1b5e20; }
+</style>
+{% endblock %}

@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitudes de Taller - SIGO{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="content-header">
+        <h1>Solicitudes de Taller</h1>
+        <p>Gestión de solicitudes de mantenimiento y servicio</p>
+    </div>
+    
+    <div class="content-body">
+        <div class="solicitudes-list">
+            {% if solicitudes %}
+                {% for solicitud in solicitudes %}
+                <div class="solicitud-card">
+                    <div class="solicitud-header">
+                        <h3>Solicitud #{{ solicitud.id }}</h3>
+                        <span class="badge {{ 'danger' if solicitud.prioridad == 'Alta' else 'warning' }}">
+                            {{ solicitud.prioridad }}
+                        </span>
+                    </div>
+                    <div class="solicitud-body">
+                        <div class="info-group">
+                            <label>Unidad:</label>
+                            <span>{{ solicitud.unidad }}</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Tipo de Servicio:</label>
+                            <span>{{ solicitud.tipo_servicio }}</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Descripción:</label>
+                            <p>{{ solicitud.descripcion }}</p>
+                        </div>
+                        <div class="info-group">
+                            <label>Fecha Estimada:</label>
+                            <span>{{ solicitud.fecha_estimada }}</span>
+                        </div>
+                    </div>
+                    <div class="solicitud-actions">
+                        <button class="btn btn-primary" onclick="iniciarServicio({{ solicitud.id }})">
+                            <i class="fas fa-tools"></i>
+                            Iniciar Servicio
+                        </button>
+                        <button class="btn btn-secondary" onclick="verDetalles({{ solicitud.id }})">
+                            <i class="fas fa-eye"></i>
+                            Ver Detalles
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-solicitudes">
+                    <i class="fas fa-clipboard-check"></i>
+                    <p>No hay solicitudes pendientes</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .content-wrapper {
+        padding: 2rem;
+        flex: 1;
+    }
+    .content-header {
+        margin-bottom: 2rem;
+    }
+    .content-header h1 {
+        color: #2c3e50;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .content-header p {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+    }
+    .solicitudes-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    .solicitud-card {
+        background: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+    .solicitud-header {
+        padding: 1.5rem;
+        background: #f8f9fa;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .solicitud-header h3 {
+        color: #2c3e50;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    .solicitud-body {
+        padding: 1.5rem;
+    }
+    .info-group {
+        margin-bottom: 1rem;
+    }
+    .info-group:last-child {
+        margin-bottom: 0;
+    }
+    .info-group label {
+        display: block;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+    .info-group span {
+        color: #2c3e50;
+        font-size: 1rem;
+    }
+    .info-group p {
+        color: #2c3e50;
+        font-size: 1rem;
+        margin: 0.5rem 0 0;
+        line-height: 1.5;
+    }
+    .solicitud-actions {
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        gap: 1rem;
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+    .btn i {
+        margin-right: 0.5rem;
+    }
+    .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+    .btn-primary:hover {
+        background: #2980b9;
+    }
+    .btn-secondary {
+        background: #e0e0e0;
+        color: #2c3e50;
+    }
+    .btn-secondary:hover {
+        background: #d0d0d0;
+    }
+    .badge {
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .badge.danger {
+        background: #ffebee;
+        color: #d32f2f;
+    }
+    .badge.warning {
+        background: #fff3e0;
+        color: #ef6c00;
+    }
+    .no-solicitudes {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        background: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .no-solicitudes i {
+        font-size: 3rem;
+        color: #bdc3c7;
+        margin-bottom: 1rem;
+    }
+    .no-solicitudes p {
+        color: #7f8c8d;
+        font-size: 1.2rem;
+        margin: 0;
+    }
+    @media (max-width: 768px) {
+        .content-wrapper {
+            padding: 1rem;
+        }
+        .content-header h1 {
+            font-size: 1.5rem;
+        }
+        .content-header p {
+            font-size: 1rem;
+        }
+        .solicitudes-list {
+            grid-template-columns: 1fr;
+        }
+        .solicitud-actions {
+            flex-direction: column;
+        }
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<script>
+function iniciarServicio(id) {
+    // Implementar lógica para iniciar servicio
+    console.log('Iniciar servicio:', id);
+}
+
+function verDetalles(id) {
+    // Implementar lógica para ver detalles
+    console.log('Ver detalles:', id);
+}
+</script>
+{% endblock %} 

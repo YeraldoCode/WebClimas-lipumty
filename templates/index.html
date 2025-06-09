@@ -15,31 +15,21 @@
                 <p class="login-subtitle">Sistema Integral de Gestión Operativa</p>
             </div>
             <div class="login-divider"></div>
-            <h2 class="login-section-title">Acceso Logística / Taller</h2>
-            <form method="post" action="/login" class="login-form">
-                <div class="form-group">
-                    <label for="username" class="login-label">Usuario</label>
-                    <input type="text" name="username" id="username" class="login-input" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label for="password" class="login-label">Contraseña</label>
-                    <input type="password" name="password" id="password" class="login-input" required autocomplete="off">
-                </div>
-                <button type="submit" class="login-btn logistica">
-                    <i class="fas fa-sign-in-alt icon"></i>
-                    <span>Entrar</span>
-                </button>
-            </form>
-            {% if error %}
-            <div class="login-error">
-                <i class="fas fa-exclamation-circle"></i>
-                <span>{{ error }}</span>
+            <p class="login-desc">Seleccione su perfil para ingresar</p>
+            <div class="login-links">
+                <a href="/login?rol=logistica" class="login-btn logistica">
+                    <i class="fas fa-clipboard-list icon"></i>
+                    <span>Logística</span>
+                </a>
+                <a href="/coordinador" class="login-btn coordinador">
+                    <i class="fas fa-user-tie icon"></i>
+                    <span>Coordinador</span>
+                </a>
+                <a href="/login?rol=taller" class="login-btn taller">
+                    <i class="fas fa-tools icon"></i>
+                    <span>Taller</span>
+                </a>
             </div>
-            {% endif %}
-            <a href="/" class="login-link">
-                <i class="fas fa-arrow-left icon"></i>
-                <span>Volver al inicio</span>
-            </a>
             <div class="login-footer">
                 <p>LIPU by Traxión &copy; 2025</p>
             </div>
@@ -92,96 +82,68 @@
             background-color: #e0e0e0;
             margin: 1.5rem 0;
         }
-        .login-section-title {
+        .login-desc {
             color: #2c3e50;
-            font-size: 1.5rem;
-            font-weight: 600;
             margin-bottom: 2rem;
-        }
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            text-align: left;
-        }
-        .login-label {
-            color: #2c3e50;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 500;
         }
-        .login-input {
-            padding: 0.75rem 1rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            transition: all 0.2s;
-        }
-        .login-input:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
+        .login-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
         .login-btn {
             display: flex;
             align-items: center;
-            justify-content: center;
             padding: 1rem 1.5rem;
             border-radius: 0.5rem;
             font-size: 1.1rem;
             font-weight: 500;
             text-decoration: none;
             transition: all 0.2s;
-            border: none;
-            color: #fff;
-            background: #3498db;
-            cursor: pointer;
+            border: 1px solid #e0e0e0;
+            color: #2c3e50;
+            background-color: #fff;
+            text-align: left;
+        }
+        .icon {
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        .login-btn.logistica .icon {
+            color: #34495e;
+        }
+        .login-btn.coordinador .icon {
+            color: #2980b9;
+        }
+        .login-btn.taller .icon {
+            color: #27ae60;
         }
         .login-btn:hover {
-            background: #2980b9;
+            background-color: #f8f9fa;
             transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .login-btn:active {
-            transform: translateY(0);
+        .login-btn.logistica:hover {
+            border-color: #34495e;
+            background-color: #f5f6f7;
         }
-        .icon {
-            margin-right: 0.75rem;
-            font-size: 1.1rem;
+        .login-btn.coordinador:hover {
+            border-color: #2980b9;
+            background-color: #f0f7fc;
         }
-        .login-link {
-            display: inline-flex;
-            align-items: center;
-            color: #7f8c8d;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        .login-link:hover {
-            color: #2c3e50;
-        }
-        .login-error {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            background: #fee2e2;
-            color: #dc2626;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
+        .login-btn.taller:hover {
+            border-color: #27ae60;
+            background-color: #f0f9f4;
         }
         .login-footer {
             color: #95a5a6;
             font-size: 0.9rem;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
 
         @media (max-width: 480px) {
@@ -193,9 +155,6 @@
             }
             .login-title {
                 font-size: 2rem;
-            }
-            .login-section-title {
-                font-size: 1.25rem;
             }
             .login-btn {
                 padding: 0.875rem 1.25rem;

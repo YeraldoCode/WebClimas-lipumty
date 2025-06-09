@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Bitácora de Cambios{% endblock %}
+{% block content %}
+<div class="bitacora-container">
+  <div class="bitacora-card">
+    <h2 class="bitacora-title">Bitácora de Cambios</h2>
+    <form method="get" class="bitacora-form">
+      <label for="usuario" class="bitacora-label">Usuario:</label>
+      <input type="text" id="usuario" name="usuario" class="bitacora-input" value="{{ filtro_usuario or '' }}">
+      <label for="accion" class="bitacora-label">Acción:</label>
+      <input type="text" id="accion" name="accion" class="bitacora-input" value="{{ filtro_accion or '' }}">
+      <label for="fecha" class="bitacora-label">Fecha:</label>
+      <input type="date" id="fecha" name="fecha" class="bitacora-input" value="{{ filtro_fecha or '' }}">
+      <button type="submit" class="bitacora-btn">Filtrar</button>
+    </form>
+    <div class="bitacora-table-wrapper">
+      <table class="bitacora-table">
+        <thead>
+          <tr>
+            <th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in bitacora %}
+          <tr>
+            <td>{{ b.fecha }}</td>
+            <td>{{ b.usuario }}</td>
+            <td>{{ b.accion }}</td>
+            <td>{{ b.detalles }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<style>
+.bitacora-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+.bitacora-card { background: #fff; border-radius: 1.2rem; box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15); padding: 2.5rem 2rem; max-width: 1100px; width: 100%; }
+.bitacora-title { color: #0288d1; font-size: 2rem; font-weight: bold; margin-bottom: 1.5rem; text-align: center; }
+.bitacora-form { display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem; align-items: center; flex-wrap: wrap; }
+.bitacora-label { font-weight: 600; color: #0288d1; }
+.bitacora-input { padding: 0.5rem 1rem; border-radius: 0.5rem; border: 1px solid #b2ebf2; font-size: 1rem; }
+.bitacora-btn { background: #0288d1; color: #fff; border-radius: 0.5rem; padding: 0.5rem 1rem; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; }
+.bitacora-btn:hover { background: #01579b; }
+.bitacora-table-wrapper { overflow-x: auto; max-height: 60vh; min-height: 120px; }
+.bitacora-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+.bitacora-table th, .bitacora-table td { border: 1px solid #e0e0e0; padding: 0.7rem 0.5rem; text-align: center; }
+.bitacora-table th { background: #e0f7fa; color: #0288d1; }
+</style>
+{% endblock %}

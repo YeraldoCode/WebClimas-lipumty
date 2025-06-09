@@ -1,140 +1,294 @@
-{% extends 'base.html' %}
-{% block title %}Revisión de Vehículo{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Panel de Coordinador de Operaciones - SIGO{% endblock %}
+
 {% block content %}
-<div class="rev-container">
-  <div class="rev-card">
-    <h2 class="rev-title">Revisión de Vehículo</h2>
-    {% if msg %}
-      <div class="rev-msg success">{{ msg }}</div>
-    {% endif %}
-    {% if error %}
-      <div class="rev-msg error">{{ error }}</div>
-    {% endif %}
-    {% if datos %}
-    <form method="post" class="rev-form">
-      <label for="aire" class="rev-label">Aire</label>
-      <select id="aire" name="aire" class="rev-input">
-        <option value="Sí" {% if datos['aire']=='Sí' %}selected{% endif %}>Sí</option>
-        <option value="No" {% if datos['aire']=='No' %}selected{% endif %}>No</option>
-      </select>
-      <label for="jala" class="rev-label">Jala</label>
-      <select id="jala" name="jala" class="rev-input">
-        <option value="Sí" {% if datos['jala']=='Sí' %}selected{% endif %}>Sí</option>
-        <option value="No" {% if datos['jala']=='No' %}selected{% endif %}>No</option>
-      </select>
-      <label for="mochila" class="rev-label">Mochila</label>
-      <select id="mochila" name="mochila" class="rev-input">
-        <option value="Sí" {% if datos['mochila']=='Sí' %}selected{% endif %}>Sí</option>
-        <option value="No" {% if datos['mochila']=='No' %}selected{% endif %}>No</option>
-      </select>
-      <label for="conversion_reparacion" class="rev-label">Conversión/Reparación</label>
-      <select id="conversion_reparacion" name="conversion_reparacion" class="rev-input">
-        <option value="na" {% if datos['conversion_reparacion']=='na' %}selected{% endif %}>na</option>
-        <option value="pte diagnostico" {% if datos['conversion_reparacion']=='pte diagnostico' %}selected{% endif %}>pte diagnostico</option>
-        <option value="reparacion" {% if datos['conversion_reparacion']=='reparacion' %}selected{% endif %}>reparacion</option>
-        <option value="conversion" {% if datos['conversion_reparacion']=='conversion' %}selected{% endif %}>conversion</option>
-      </select>
-      <label for="reinsidente" class="rev-label">Reinsidente</label>
-      <select id="reinsidente" name="reinsidente" class="rev-input">
-        <option value="Sí" {% if datos['reinsidente']=='Sí' %}selected{% endif %}>Sí</option>
-        <option value="No" {% if datos['reinsidente']=='No' %}selected{% endif %}>No</option>
-      </select>
-      <input type="hidden" name="idvehiculo" value="{{ datos['idvehiculo'] }}">
-      <button type="submit" class="rev-btn">Guardar Cambios</button>
-    </form>
-    <div class="rev-info rev-info-scroll">
-      <h4>Datos de la unidad: {{ datos['idvehiculo'] }}</h4>
+<div class="content-wrapper">
+    <div class="content-header">
+        <h1>Panel de Coordinador de Operaciones</h1>
+        <p>Gestión de operadores y unidades para transporte de personal</p>
     </div>
-    {% endif %}
-    <div class="rev-links">
-      <a href="{{ url_for('coordinador_select') }}" class="rev-link">Cambiar unidad</a>
-      <a href="/" class="rev-link">Salir</a>
+    
+    <div class="content-body">
+        <!-- Resumen de Estado -->
+        <div class="status-summary">
+            <div class="status-card">
+                <div class="status-icon active">
+                    <i class="fas fa-bus"></i>
+                </div>
+                <div class="status-info">
+                    <h3>Unidades en Servicio</h3>
+                    <span class="status-number">8</span>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-icon warning">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="status-info">
+                    <h3>En Mantenimiento</h3>
+                    <span class="status-number">3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="dashboard-grid">
+                <!-- Operadores -->
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Operadores</h3>
+                        <p>Gestión de cambios de ruta y unidad</p>
+                        <div class="card-actions">
+                            <a href="/solicitud-cambio-ruta" class="btn btn-primary">
+                                <i class="fas fa-route"></i>
+                                Solicitar Cambio de Ruta
+                            </a>
+                            <a href="/solicitud-cambio-unidad" class="btn btn-primary">
+                                <i class="fas fa-exchange-alt"></i>
+                                Solicitar Cambio de Unidad
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gestión de Unidades -->
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Gestión de Unidades</h3>
+                        <p>Cambio y solicitud de unidades</p>
+                        <div class="card-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">2</span>
+                                <span class="stat-label">Cambios Pendientes</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">1</span>
+                                <span class="stat-label">En Taller</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="/solicitud-taller" class="btn btn-primary">
+                                <i class="fas fa-tools"></i>
+                                Solicitar Taller
+                            </a>
+                            <a href="/solicitudes-pendientes" class="btn btn-secondary">
+                                <i class="fas fa-clipboard-list"></i>
+                                Ver Solicitudes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
+
 <style>
-.rev-container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-}
-.rev-card {
-  background: #fff;
-  border-radius: 1.2rem;
-  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15);
-  padding: 2.5rem 2rem;
-  max-width: 500px;
-  width: 100%;
-}
-.rev-title {
-  color: #00796b;
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-.rev-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-.rev-label {
-  text-align: left;
-  color: #0288d1;
-  font-weight: 600;
-}
-.rev-input {
-  padding: 0.7rem;
-  border-radius: 0.5rem;
-  border: 1px solid #b2ebf2;
-  font-size: 1rem;
-}
-.rev-btn {
-  background: #0288d1;
-  color: #fff;
-  border: none;
-  border-radius: 0.7rem;
-  padding: 0.8rem 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.rev-btn:hover {
-  background: #01579b;
-}
-.rev-info.rev-info-scroll {
-  background: #e0f7fa;
-  border-radius: 0.7rem;
-  padding: 1rem;
-  margin-top: 1rem;
-  max-height: 120px;
-  overflow-y: auto;
-}
-.rev-links {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 1.5rem;
-}
-.rev-link {
-  color: #0288d1;
-  text-decoration: none;
-  font-weight: 500;
-}
-.rev-link:hover {
-  text-decoration: underline;
-}
-.rev-msg.success {
-  color: #388e3c;
-  margin-bottom: 1rem;
-}
-.rev-msg.error {
-  color: #d32f2f;
-  margin-bottom: 1rem;
-}
+    .content-wrapper {
+        padding: 2rem;
+        flex: 1;
+    }
+    .content-header {
+        margin-bottom: 2rem;
+    }
+    .content-header h1 {
+        color: #2c3e50;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .content-header p {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+    }
+    .content-body {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .main-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    .status-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+    .status-card {
+        background: #fff;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+    }
+    .status-card:hover {
+        transform: translateY(-5px);
+    }
+    .status-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #e3f2fd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .status-icon i {
+        font-size: 1.5rem;
+        color: #3498db;
+    }
+    .status-icon.active {
+        background: #e8f5e9;
+    }
+    .status-icon.active i {
+        color: #2e7d32;
+    }
+    .status-icon.warning {
+        background: #fff3e0;
+    }
+    .status-icon.warning i {
+        color: #ef6c00;
+    }
+    .status-info h3 {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+    .status-number {
+        color: #2c3e50;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+    .dashboard-card {
+        background: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+    }
+    .card-icon {
+        width: 80px;
+        height: 80px;
+        background: #3498db;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+    .card-icon i {
+        font-size: 2rem;
+        color: white;
+    }
+    .card-content h3 {
+        color: #2c3e50;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .card-content p {
+        color: #7f8c8d;
+        margin-bottom: 1.5rem;
+    }
+    .card-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+    .stat-item {
+        text-align: center;
+    }
+    .stat-value {
+        display: block;
+        color: #2c3e50;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+    .card-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        width: 100%;
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        width: 100%;
+    }
+    .btn i {
+        margin-right: 0.5rem;
+    }
+    .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+    .btn-primary:hover {
+        background: #2980b9;
+        transform: translateX(5px);
+    }
+    .btn-secondary {
+        background: #e0e0e0;
+        color: #2c3e50;
+    }
+    .btn-secondary:hover {
+        background: #d0d0d0;
+    }
+    @media (max-width: 768px) {
+        .content-wrapper {
+            padding: 1rem;
+        }
+        .content-header h1 {
+            font-size: 1.5rem;
+        }
+        .content-header p {
+            font-size: 1rem;
+        }
+        .status-summary {
+            grid-template-columns: 1fr;
+        }
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+        .dashboard-card {
+            padding: 1.5rem;
+        }
+    }
 </style>
 {% endblock %}

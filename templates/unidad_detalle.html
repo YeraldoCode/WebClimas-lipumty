@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Detalle de Unidad{% endblock %}
+{% block content %}
+<div class="unidad-container">
+  <div class="unidad-card">
+    <h2 class="unidad-title">Detalle de Unidad</h2>
+    <div class="unidad-info">
+      <ul>
+        <li><b>ID:</b> {{ unidad.idvehiculo }}</li>
+        <li><b>Serial:</b> {{ unidad.serial }}</li>
+        <li><b>Marca:</b> {{ unidad.marca }}</li>
+        <li><b>Modelo:</b> {{ unidad.modelo }}</li>
+        <li><b>Cliente:</b> {{ unidad.descripcion }}</li>
+        <li><b>Aire:</b> {{ unidad.aire }}</li>
+        <li><b>Jala:</b> {{ unidad.jala }}</li>
+        <li><b>Mochila:</b> {{ unidad.mochila }}</li>
+        <li><b>Conversión/Reparación:</b> {{ unidad.conversion_reparacion }}</li>
+        <li><b>Reinsidente:</b> {{ unidad.reinsidente }}</li>
+      </ul>
+    </div>
+    <div class="unidad-actions">
+      {% if puede_editar %}<a href="/unidad/{{ unidad.idvehiculo }}/editar" class="unidad-btn">Editar</a>{% endif %}
+      {% if puede_revisar %}<a href="/unidad/{{ unidad.idvehiculo }}/revisar" class="unidad-btn">Marcar como revisado</a>{% endif %}
+      {% if puede_asignar %}<a href="/unidad/{{ unidad.idvehiculo }}/asignar-taller" class="unidad-btn">Asignar a taller</a>{% endif %}
+    </div>
+    <h4 class="unidad-table-title">Historial de Mantenimientos</h4>
+    <div class="unidad-table-wrapper">
+      <table class="unidad-table">
+        <thead>
+          <tr>
+            <th>Fecha</th><th>Servicio</th><th>Estatus</th><th>Responsable</th><th>Observaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in mantenimientos %}
+          <tr>
+            <td>{{ m.fecha }}</td>
+            <td>{{ m.tipo_servicio }}</td>
+            <td>{{ m.estatus }}</td>
+            <td>{{ m.responsable }}</td>
+            <td>{{ m.observaciones }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <h4 class="unidad-table-title">Bitácora de Cambios</h4>
+    <div class="unidad-table-wrapper">
+      <table class="unidad-table">
+        <thead>
+          <tr>
+            <th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in bitacora %}
+          <tr>
+            <td>{{ b.fecha }}</td>
+            <td>{{ b.usuario }}</td>
+            <td>{{ b.accion }}</td>
+            <td>{{ b.detalles }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<style>
+.unidad-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+.unidad-card { background: #fff; border-radius: 1.2rem; box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15); padding: 2.5rem 2rem; max-width: 1100px; width: 100%; }
+.unidad-title { color: #0288d1; font-size: 2rem; font-weight: bold; margin-bottom: 1.5rem; text-align: center; }
+.unidad-info ul { list-style: none; padding: 0; margin-bottom: 1.5rem; }
+.unidad-info li { margin-bottom: 0.5rem; font-size: 1.1rem; }
+.unidad-actions { display: flex; gap: 1rem; margin-bottom: 1.5rem; justify-content: center; }
+.unidad-btn { background: #0288d1; color: #fff; border-radius: 0.5rem; padding: 0.5rem 1rem; font-size: 1rem; text-decoration: none; font-weight: 600; }
+.unidad-btn:hover { background: #01579b; }
+.unidad-table-title { color: #0288d1; margin-bottom: 1rem; text-align: center; }
+.unidad-table-wrapper { overflow-x: auto; max-height: 30vh; min-height: 80px; }
+.unidad-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+.unidad-table th, .unidad-table td { border: 1px solid #e0e0e0; padding: 0.7rem 0.5rem; text-align: center; }
+.unidad-table th { background: #e0f7fa; color: #0288d1; }
+</style>
+{% endblock %}

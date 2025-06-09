@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}Reportes - SIGO{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="content-header">
+        <h1>Gestión de Reportes</h1>
+        <p>Generación y visualización de reportes del sistema</p>
+    </div>
+    
+    <div class="content-body">
+        <div class="actions-bar">
+            <div class="report-filters">
+                <select class="filter-select">
+                    <option value="">Tipo de Reporte</option>
+                    <option value="operaciones">Operaciones</option>
+                    <option value="mantenimiento">Mantenimiento</option>
+                    <option value="flota">Flota</option>
+                    <option value="usuarios">Usuarios</option>
+                </select>
+                <input type="date" class="date-input" placeholder="Fecha Inicio">
+                <input type="date" class="date-input" placeholder="Fecha Fin">
+                <button class="btn btn-primary">
+                    <i class="fas fa-filter"></i>
+                    Filtrar
+                </button>
+            </div>
+            <button class="btn btn-success">
+                <i class="fas fa-file-export"></i>
+                Exportar
+            </button>
+        </div>
+
+        <div class="reports-grid">
+            {% for reporte in reportes %}
+            <div class="report-card">
+                <div class="card-header">
+                    <div class="report-type">
+                        <i class="fas {{ 'fa-route' if reporte.tipo == 'Operaciones' else 'fa-tools' if reporte.tipo == 'Mantenimiento' else 'fa-bus' if reporte.tipo == 'Flota' else 'fa-users' }}"></i>
+                        <span class="badge {{ reporte.tipo|lower }}">
+                            {{ reporte.tipo }}
+                        </span>
+                    </div>
+                    <div class="report-date">{{ reporte.fecha }}</div>
+                </div>
+                
+                <div class="card-body">
+                    <h3 class="report-title">{{ reporte.titulo }}</h3>
+                    <div class="info-row">
+                        <span class="label">Generado por:</span>
+                        <span class="value">{{ reporte.usuario }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Período:</span>
+                        <span class="value">{{ reporte.periodo }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Estado:</span>
+                        <span class="badge {{ 'success' if reporte.estado == 'Completado' else 'warning' if reporte.estado == 'En Proceso' else 'danger' }}">
+                            {{ reporte.estado }}
+                        </span>
+                    </div>
+                    <div class="report-summary">
+                        <span class="label">Resumen:</span>
+                        <p>{{ reporte.resumen }}</p>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <button class="btn btn-icon" title="Ver Reporte">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-icon" title="Descargar">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="btn btn-icon" title="Compartir">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .content-wrapper {
+        padding: 2rem;
+        flex: 1;
+    }
+    .content-header {
+        margin-bottom: 2rem;
+    }
+    .content-header h1 {
+        color: #2c3e50;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .content-header p {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+    }
+    .actions-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    .report-filters {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+    .filter-select, .date-input {
+        padding: 0.75rem 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        min-width: 150px;
+    }
+    .reports-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    .report-card {
+        background: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+    .card-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .report-type {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .report-type i {
+        font-size: 1.5rem;
+        color: #3498db;
+    }
+    .report-date {
+        color: #7f8c8d;
+        font-size: 0.875rem;
+    }
+    .card-body {
+        padding: 1.5rem;
+    }
+    .report-title {
+        margin: 0 0 1rem;
+        font-size: 1.1rem;
+        color: #2c3e50;
+    }
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+    .label {
+        color: #7f8c8d;
+        font-size: 0.875rem;
+    }
+    .value {
+        color: #2c3e50;
+        font-weight: 500;
+    }
+    .report-summary {
+        margin-top: 1rem;
+    }
+    .report-summary p {
+        margin: 0.5rem 0 0;
+        color: #2c3e50;
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+    .card-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+    .badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    .badge.operaciones {
+        background: #e3f2fd;
+        color: #1976d2;
+    }
+    .badge.mantenimiento {
+        background: #fff3e0;
+        color: #ef6c00;
+    }
+    .badge.flota {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    .badge.usuarios {
+        background: #f3e5f5;
+        color: #7b1fa2;
+    }
+    .badge.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    .badge.warning {
+        background: #fff3e0;
+        color: #ef6c00;
+    }
+    .badge.danger {
+        background: #ffebee;
+        color: #d32f2f;
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+    .btn i {
+        margin-right: 0.5rem;
+    }
+    .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+    .btn-primary:hover {
+        background: #2980b9;
+    }
+    .btn-success {
+        background: #2ecc71;
+        color: white;
+    }
+    .btn-success:hover {
+        background: #27ae60;
+    }
+    .btn-icon {
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        color: #3498db;
+        transition: all 0.2s;
+    }
+    .btn-icon:hover {
+        background: #e3f2fd;
+    }
+    @media (max-width: 768px) {
+        .content-wrapper {
+            padding: 1rem;
+        }
+        .content-header h1 {
+            font-size: 1.5rem;
+        }
+        .content-header p {
+            font-size: 1rem;
+        }
+        .actions-bar {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .report-filters {
+            flex-direction: column;
+            width: 100%;
+        }
+        .filter-select, .date-input {
+            width: 100%;
+        }
+        .reports-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %} 

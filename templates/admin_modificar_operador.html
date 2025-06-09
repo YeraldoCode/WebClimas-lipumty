@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Modificar Operador - SIGO{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="content-header">
+        <h1>Modificar Operador</h1>
+        <p>Actualización de información de operadores</p>
+    </div>
+    
+    <div class="content-body">
+        <div class="operadores-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Unidad Actual</th>
+                        <th>Ruta Actual</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for operador in operadores %}
+                    <tr>
+                        <td>#{{ operador.id }}</td>
+                        <td>{{ operador.nombre }}</td>
+                        <td>{{ operador.unidad_actual }}</td>
+                        <td>{{ operador.ruta_actual }}</td>
+                        <td><span class="badge success">{{ operador.estado }}</span></td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="mostrarFormularioEdicion({{ operador.id }})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal de Edición -->
+        <div id="modalEdicion" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Editar Operador</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <form id="formEdicion" action="" method="POST">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="unidad">Unidad</label>
+                        <select id="unidad" name="unidad" required>
+                            <option value="ABC-123">ABC-123</option>
+                            <option value="XYZ-789">XYZ-789</option>
+                            <option value="DEF-456">DEF-456</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ruta">Ruta</label>
+                        <select id="ruta" name="ruta" required>
+                            <option value="Ruta A">Ruta A</option>
+                            <option value="Ruta B">Ruta B</option>
+                            <option value="Ruta C">Ruta C</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        <button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .content-wrapper {
+        padding: 2rem;
+        flex: 1;
+    }
+    .content-header {
+        margin-bottom: 2rem;
+    }
+    .content-header h1 {
+        color: #2c3e50;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .content-header p {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+    }
+    .operadores-table {
+        background: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        padding: 2rem;
+        overflow-x: auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    th {
+        color: #7f8c8d;
+        font-weight: 500;
+    }
+    .badge {
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .badge.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    .btn-sm {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+    }
+    .modal-content {
+        background: #fff;
+        margin: 10% auto;
+        padding: 2rem;
+        border-radius: 1rem;
+        width: 90%;
+        max-width: 500px;
+    }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    .modal-header h2 {
+        color: #2c3e50;
+        font-size: 1.5rem;
+        margin: 0;
+    }
+    .close {
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #7f8c8d;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+    }
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+    @media (max-width: 768px) {
+        .content-wrapper {
+            padding: 1rem;
+        }
+        .content-header h1 {
+            font-size: 1.5rem;
+        }
+        .content-header p {
+            font-size: 1rem;
+        }
+        .operadores-table {
+            padding: 1rem;
+        }
+        .modal-content {
+            margin: 20% auto;
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<script>
+function mostrarFormularioEdicion(id) {
+    const modal = document.getElementById('modalEdicion');
+    const form = document.getElementById('formEdicion');
+    form.action = `/admin/actualizar-operador/${id}`;
+    modal.style.display = 'block';
+}
+
+function cerrarModal() {
+    const modal = document.getElementById('modalEdicion');
+    modal.style.display = 'none';
+}
+
+// Cerrar modal al hacer clic fuera
+window.onclick = function(event) {
+    const modal = document.getElementById('modalEdicion');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Cerrar modal con el botón X
+document.querySelector('.close').onclick = cerrarModal;
+</script>
+{% endblock %} 

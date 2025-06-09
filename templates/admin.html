@@ -1,249 +1,290 @@
-{% extends 'base.html' %}
-{% block title %}Panel Administrador{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Panel de Administración - SIGO{% endblock %}
+
 {% block content %}
-<div class="admin-container">
-  <div class="admin-card">
-    <h2 class="admin-title"><span>🚍</span> Panel Administrador</h2>
-    <form method="post" action="/admin/upload" enctype="multipart/form-data" class="admin-actions admin-upload-form">
-      <div class="admin-upload-fields">
-        <label for="file" class="admin-upload-label">Actualizar base de datos:</label>
-        <input type="file" name="file" id="file" class="admin-input" accept=".xlsx">
-        <button type="submit" class="admin-btn upload">Subir Excel</button>
-      </div>
-      <div class="admin-upload-note">
-        Puedes subir <b>vehiculos.xlsx</b> para modificar la base de datos de vehículos<br>
-        o <b>servicios.xlsx</b> para modificar la base de datos de servicios.
-      </div>
-    </form>
-    <h4 class="admin-table-title">Estado de revisión de vehículos</h4>
-    <div class="admin-table-wrapper" style="max-height:60vh;overflow-y:auto;">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Serial</th>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Cliente</th>
-            <th>Estatus</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for v in vehiculos %}
-          <tr>
-            {% if v.aire and v.jala and v.mochila and v.conversion_reparacion and v.reinsidente %}
-            <td style="color: #388e3c; font-weight: bold;"> {{ v.idvehiculo }}</td>
-            <td style="color: #388e3c; font-weight: bold;">{{ v.serial }}</td>
-            <td style="color: #388e3c; font-weight: bold;">{{ v.marca }}</td>
-            <td style="color: #388e3c; font-weight: bold;">{{ v.modelo }}</td>
-            <td style="color: #388e3c; font-weight: bold;">{{ v.descripcion }}</td>
-            <td><span style="color: #388e3c; font-weight: bold;">Revisado</span> </td>
-            {% else %}
-            <td style="color:#d32f2f; font-weight: bold;"> {{ v.idvehiculo }}</td>
-            <td style="color:#d32f2f; font-weight: bold;">{{ v.serial }}</td>
-            <td style="color:#d32f2f; font-weight: bold;">{{ v.marca }}</td>
-            <td style="color:#d32f2f; font-weight: bold;">{{ v.modelo }}</td>
-            <td style="color:#d32f2f; font-weight: bold;">{{ v.descripcion }}</td>
-            <td><span style="color: #d32f2f; font-weight: bold;">Pendiente</span></td>
-          </tr>
-          {% endif %}
-        {% endfor %}
-        </tbody>
-      </table>
-      
+<div class="content-wrapper">
+    <div class="content-header">
+        <h1>Panel de Administración</h1>
+        <p>Gestión de solicitudes y flota</p>
     </div>
-      <a href="/admin/export" class="admin-btn export" style="margin:1rem auto;display:block;max-width:200px;">Exportar Excel</a>
-      <a href="/" class="admin-btn logout" style="margin:0 auto 1rem auto;display:block;max-width:200px;background:#d32f2f;">Salir</a>
-      <p class="admin-info">Desde aquí puedes cargar, exportar y revisar el estado de los vehículos.</p>
-  </div>
+    
+    <div class="content-body">
+        <!-- Resumen de Estado -->
+        <div class="status-summary">
+            <div class="status-card">
+                <div class="status-icon warning">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="status-info">
+                    <h3>Solicitudes Pendientes</h3>
+                    <span class="status-number">5</span>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-icon active">
+                    <i class="fas fa-bus"></i>
+                </div>
+                <div class="status-info">
+                    <h3>Unidades Activas</h3>
+                    <span class="status-number">12</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="dashboard-grid">
+                <!-- Solicitudes -->
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Solicitudes</h3>
+                        <p>Gestión de solicitudes pendientes</p>
+                        <div class="card-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">3</span>
+                                <span class="stat-label">Cambios de Ruta</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">2</span>
+                                <span class="stat-label">Cambios de Unidad</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="/admin/solicitudes" class="btn btn-primary">
+                                <i class="fas fa-list"></i>
+                                Ver Solicitudes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gestión de Flota -->
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-bus"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Gestión de Flota</h3>
+                        <p>Modificación directa de operadores y unidades</p>
+                        <div class="card-actions">
+                            <a href="/admin/modificar-operador" class="btn btn-primary">
+                                <i class="fas fa-user-edit"></i>
+                                Modificar Operador
+                            </a>
+                            <a href="/admin/modificar-unidad" class="btn btn-primary">
+                                <i class="fas fa-tools"></i>
+                                Modificar Unidad
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 <style>
-.admin-container {
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  width: 100vw;
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-.admin-card {
-  background: #fff;
-  border-radius: 1.2rem;
-  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15);
-  padding: 2.5rem 2rem;
-  max-width: 1200px;
-  width: 100%;
-  min-height: 90vh;
-  min-height: 90dvh;
-  display: flex;
-  flex-direction: column;
-}
-.admin-title {
-  color: #00796b;
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-.admin-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  align-items: center;
-}
-.admin-input {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #b2ebf2;
-  font-size: 1rem;
-}
-.admin-btn {
-  padding: 0.7rem 1.2rem;
-  border-radius: 0.7rem;
-  font-size: 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.2s, color 0.2s;
-  border: none;
-  cursor: pointer;
-  display: inline-block;
-}
-.admin-btn.upload {
-  background: #0288d1;
-  color: #fff;
-}
-.admin-btn.upload:hover {
-  background: #01579b;
-}
-.admin-btn.export {
-  background: #00796b;
-  color: #fff;
-}
-.admin-btn.export:hover {
-  background: #004d40;
-}
-.admin-btn.edit {
-  background: #ffa000;
-  color: #fff;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.95rem;
-}
-.admin-btn.edit:hover {
-  background: #ff6f00;
-}
-.admin-btn.logout {
-  background: #d32f2f;
-  color: #fff;
-  margin-top: 0.5rem;
-}
-.admin-btn.logout:hover {
-  background: #b71c1c;
-}
-.admin-info {
-  color: #555;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-.admin-table-title {
-  color: #0288d1;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-.admin-table-wrapper {
-  overflow-x: auto;
-  max-height: 60vh;
-  min-height: 200px;
-}
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1rem;
-}
-.admin-table th, .admin-table td {
-  border: 1px solid #e0e0e0;
-  padding: 0.7rem 0.5rem;
-  text-align: center;
-}
-.admin-table th {
-  background: #e0f7fa;
-  color: #00796b;
-}
-.admin-upload-form {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.3rem;
-  margin-bottom: 1.2rem;
-}
-.admin-upload-fields {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-}
-.admin-upload-label {
-  font-weight: 600;
-  min-width: 160px;
-}
-.admin-upload-note {
-  font-size: 0.92rem;
-  color: #666;
-  margin-top: 0.3rem;
-  line-height: 1.3;
-  text-align: center;
-}
-@media (max-width: 900px) {
-  .admin-card {
-    padding: 1.5rem 0.5rem;
-    max-width: 98vw;
-  }
-  .admin-table-wrapper {
-    max-height: 45vh;
-  }
-  .admin-table th, .admin-table td {
-    padding: 0.5rem 0.2rem;
-    font-size: 0.95rem;
-  }
-}
-@media (max-width: 700px) {
-  .admin-container {
-    padding: 0;
-    min-width: 100vw;
-    max-width: 100vw;
-  }
-  .admin-card {
-    padding: 0.7rem 0.2rem;
-    max-width: 100vw;
-    min-width: 100vw;
-    border-radius: 0;
-    box-shadow: none;
-  }
-  .admin-table-wrapper {
-    max-height: 35vh;
-    min-height: 120px;
-  }
-  .admin-table th, .admin-table td {
-    padding: 0.35rem 0.1rem;
-    font-size: 0.92rem;
-  }
-  .admin-title {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-  .admin-btn, .admin-btn.upload, .admin-btn.export, .admin-btn.logout {
-    font-size: 0.95rem;
-    padding: 0.5rem 0.7rem;
-  }
-  .admin-upload-fields {
-    gap: 0.4rem;
-  }
-  .admin-upload-note {
-    font-size: 0.85rem;
-  }
-}
+    .content-wrapper {
+        padding: 2rem;
+        flex: 1;
+    }
+    .content-header {
+        margin-bottom: 2rem;
+    }
+    .content-header h1 {
+        color: #2c3e50;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .content-header p {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+    }
+    .content-body {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .main-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    .status-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+    .status-card {
+        background: #fff;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+    }
+    .status-card:hover {
+        transform: translateY(-5px);
+    }
+    .status-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #e3f2fd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .status-icon i {
+        font-size: 1.5rem;
+        color: #3498db;
+    }
+    .status-icon.active {
+        background: #e8f5e9;
+    }
+    .status-icon.active i {
+        color: #2e7d32;
+    }
+    .status-icon.warning {
+        background: #fff3e0;
+    }
+    .status-icon.warning i {
+        color: #ef6c00;
+    }
+    .status-info h3 {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+    .status-number {
+        color: #2c3e50;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+    .dashboard-card {
+        background: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+    }
+    .card-icon {
+        width: 80px;
+        height: 80px;
+        background: #3498db;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+    .card-icon i {
+        font-size: 2rem;
+        color: white;
+    }
+    .card-content h3 {
+        color: #2c3e50;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .card-content p {
+        color: #7f8c8d;
+        margin-bottom: 1.5rem;
+    }
+    .card-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+    .stat-item {
+        text-align: center;
+    }
+    .stat-value {
+        display: block;
+        color: #2c3e50;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+    .card-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        width: 100%;
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        width: 100%;
+    }
+    .btn i {
+        margin-right: 0.5rem;
+    }
+    .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+    .btn-primary:hover {
+        background: #2980b9;
+        transform: translateX(5px);
+    }
+    .btn-secondary {
+        background: #e0e0e0;
+        color: #2c3e50;
+    }
+    .btn-secondary:hover {
+        background: #d0d0d0;
+    }
+    @media (max-width: 768px) {
+        .content-wrapper {
+            padding: 1rem;
+        }
+        .content-header h1 {
+            font-size: 1.5rem;
+        }
+        .content-header p {
+            font-size: 1rem;
+        }
+        .status-summary {
+            grid-template-columns: 1fr;
+        }
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+        .dashboard-card {
+            padding: 1.5rem;
+        }
+    }
 </style>
 {% endblock %}

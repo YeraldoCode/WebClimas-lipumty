@@ -4,54 +4,257 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Sistema de Revisión Vehicular{% endblock %}</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
-    html, body {
-      height: 100%;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
     body {
-      min-height: 100vh;
-      min-width: 100vw;
-      width: 100vw;
-      height: 100vh;
-      box-sizing: border-box;
-    }
-    #__main-content {
-      min-height: 100vh;
-      min-width: 100vw;
-      width: 100vw;
-      height: 100vh;
-      box-sizing: border-box;
-    }
-    .footer-minimal {
-      width: 100vw;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f5f7fa;
-      color: #0288d1;
-      text-align: center;
-      font-size: 1rem;
-      padding: 0.7rem 0;
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      z-index: 100;
-      letter-spacing: 0.05em;
-      border-top: 1px solid #e0e0e0;
+      display: flex;
+      min-height: 100vh;
     }
-    @media (max-width: 700px) {
-      .footer-minimal {
-        font-size: 0.92rem;
-        padding: 0.5rem 0;
+    .sidebar {
+      width: 250px;
+      background: #2c3e50;
+      color: white;
+      position: fixed;
+      height: 100vh;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+    .sidebar-header {
+      padding: 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .sidebar-header h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .sidebar-header p {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+    .menu {
+      list-style: none;
+      padding: 1rem 0;
+    }
+    .menu-item {
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .menu-item:hover {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+    .menu-item.active {
+      background: #3498db;
+      color: white;
+    }
+    .menu-item i {
+      width: 20px;
+      text-align: center;
+    }
+    .menu-section {
+      padding: 0.5rem 1.5rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 1px;
+    }
+    .sidebar-footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .content {
+      flex: 1;
+      margin-left: 250px;
+      transition: all 0.3s;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      .content {
+        margin-left: 0;
       }
     }
   </style>
 </head>
 <body>
-      <div id="__main-content">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>SIGO</h2>
+      <p>Sistema Integral de Gestión Operativa</p>
+    </div>
+    
+    <ul class="menu">
+      {% if session.get('role') == 'admin' %}
+      <!-- Secciones para Logística/Administrador -->
+      <div class="menu-section">Gestión de Flota</div>
+      <a href="/admin/flota" class="menu-item">
+        <i class="fas fa-bus"></i>
+        Flota
+      </a>
+      <a href="/admin/clientes" class="menu-item">
+        <i class="fas fa-building"></i>
+        Clientes/Empresas
+      </a>
+      
+      <div class="menu-section">Operaciones</div>
+      <a href="/admin/rutas" class="menu-item">
+        <i class="fas fa-route"></i>
+        Rutas y Programación
+      </a>
+      <a href="/admin/mantenimiento" class="menu-item">
+        <i class="fas fa-tools"></i>
+        Mantenimientos y Taller
+      </a>
+      
+      <div class="menu-section">Documentación</div>
+      <a href="/admin/contratos" class="menu-item">
+        <i class="fas fa-file-contract"></i>
+        Contratos y Pólizas
+      </a>
+      <a href="/admin/documentos" class="menu-item">
+        <i class="fas fa-file-alt"></i>
+        Documentos
+      </a>
+      
+      <div class="menu-section">KPIs y Reportes</div>
+      <a href="/admin/kpis" class="menu-item">
+        <i class="fas fa-chart-line"></i>
+        Indicadores
+      </a>
+      <a href="/admin/reportes" class="menu-item">
+        <i class="fas fa-chart-bar"></i>
+        Reportes
+      </a>
+      
+      {% elif session.get('role') == 'coordinador' %}
+      <!-- Secciones para Coordinador de Operadores -->
+      <div class="menu-section">Operaciones</div>
+      <a href="/coordinador/rutas" class="menu-item">
+        <i class="fas fa-route"></i>
+        Rutas Activas
+      </a>
+      <a href="/coordinador/programacion" class="menu-item">
+        <i class="fas fa-calendar-alt"></i>
+        Programación de Rutas
+      </a>
+      <a href="/coordinador/operadores" class="menu-item">
+        <i class="fas fa-user-tie"></i>
+        Operadores
+      </a>
+      
+      <div class="menu-section">Gestión de Unidades</div>
+      <a href="/coordinador/flota" class="menu-item">
+        <i class="fas fa-bus"></i>
+        Flota
+      </a>
+      <a href="/coordinador/cambio-unidad" class="menu-item">
+        <i class="fas fa-exchange-alt"></i>
+        Cambio de Unidad
+      </a>
+      <a href="/coordinador/solicitud-taller" class="menu-item">
+        <i class="fas fa-tools"></i>
+        Solicitud de Taller
+      </a>
+      <a href="/coordinador/solicitudes-pendientes" class="menu-item">
+        <i class="fas fa-clock"></i>
+        Solicitudes Pendientes
+      </a>
+      
+      <div class="menu-section">Supervisión</div>
+      <a href="/coordinador/incidentes" class="menu-item">
+        <i class="fas fa-exclamation-triangle"></i>
+        Incidentes/Alertas
+      </a>
+      <a href="/coordinador/asistencia" class="menu-item">
+        <i class="fas fa-clipboard-check"></i>
+        Asistencia de Operadores
+      </a>
+      
+      {% elif session.get('role') == 'taller' %}
+      <!-- Secciones para Taller -->
+      <div class="menu-section">Mantenimiento</div>
+      <a href="/taller" class="menu-item">
+        <i class="fas fa-clipboard-check"></i>
+        Órdenes Activas
+      </a>
+      <a href="/taller/preventivo" class="menu-item">
+        <i class="fas fa-calendar-check"></i>
+        Programación Preventiva
+      </a>
+      <a href="/taller/diagnosticos" class="menu-item">
+        <i class="fas fa-clipboard-list"></i>
+        Diagnósticos
+      </a>
+      
+      <div class="menu-section">Recursos</div>
+      <a href="/taller/inventario" class="menu-item">
+        <i class="fas fa-boxes"></i>
+        Inventario de Repuestos
+      </a>
+      <a href="/taller/documentos" class="menu-item">
+        <i class="fas fa-file-alt"></i>
+        Manuales y Documentos
+      </a>
+      {% endif %}
+      
+      <div class="menu-section">Cuenta</div>
+      <a href="/perfil" class="menu-item">
+        <i class="fas fa-user"></i>
+        Mi Perfil
+      </a>
+      <a href="/logout" class="menu-item">
+        <i class="fas fa-sign-out-alt"></i>
+        Cerrar Sesión
+      </a>
+    </ul>
+    
+    <div class="sidebar-footer">
+      <p>&copy; 2024 SIGO. Todos los derechos reservados.</p>
+    </div>
+  </div>
+
+  <div class="content">
     {% block content %}{% endblock %}
   </div>
-  <footer class="footer-minimal">
-    <span>LIPU by Traxión</span>
-  </footer>
+
+  <script>
+    // Toggle sidebar on mobile
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebar = document.querySelector('.sidebar');
+      const content = document.querySelector('.content');
+      
+      // Add click event to close sidebar when clicking outside
+      document.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768) {
+          if (!sidebar.contains(e.target) && !e.target.classList.contains('menu-toggle')) {
+            sidebar.classList.remove('active');
+          }
+        }
+      });
+    });
+  </script>
 </body>
 </html>
