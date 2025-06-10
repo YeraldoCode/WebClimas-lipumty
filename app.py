@@ -1,31 +1,37 @@
 # App principal para el control y mantenimiento de climas de unidades de transporte.
-# Roles: coordinador, logística (admin), próximamente taller.
+# Roles: coordinador (sin login), logística (admin), próximamente taller.
 # Funcionalidades: revisión, edición, trazabilidad, carga/exportación Excel.
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, jsonify
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, CSRFProtect
 from wtforms import StringField, PasswordField, FileField, SubmitField
 from wtforms.validators import DataRequired
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
+from forms import LoginForm
 import os
-from models import db, Vehiculo, Servicios, Usuario, SolicitudTaller
+from models import db, Vehiculo, Servicio, Usuario, ReporteClima
 import pandas as pd
 from io import BytesIO
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+from config import Config
 
 # =============================
 # Configuración e inicialización
 # =============================
 app = Flask(__name__)
-app.config.from_object('config.Config')
-db.init_app(app)
+app.config.from_object(Config)
 
-login_manager = LoginManager(app)
+# Inicializar extensiones
+db.init_app(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
 login_manager.login_view = 'login'
+csrf = CSRFProtect(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return Usuario.query.get(int(user_id))
+    return db.session.get(Usuario, int(user_id))
 
 # =============================
 # Rutas principales
@@ -33,129 +39,206 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    # Página de inicio/login general
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Login unificado para logística y taller
-    error = None
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        user = Usuario.query.filter_by(username=username, password_hash=password).first()
-        if user:
-            session['admin_autenticado'] = True
-            session['rol'] = user.rol
-            if user.rol == 'logistica':
-                return redirect(url_for('admin_panel'))
-            elif user.rol == 'taller':
-                return redirect(url_for('taller_panel'))
-            else:
-                error = 'Rol no soportado.'
-        else:
-            error = 'Usuario o contraseña incorrectos.'
-    return render_template('login.html', error=error)
+    if request.method == 'GET':
+        return render_template('login.html', form=LoginForm())
+    
+    form = LoginForm()
+    if not form.validate():
+        flash('Por favor complete todos los campos')
+        return render_template('login.html', form=form)
+    
+    user = Usuario.query.filter_by(username=form.username.data).first()
+    if not user or not user.check_password(form.password.data):
+        flash('Usuario o contraseña incorrectos')
+        return render_template('login.html', form=form)
+    
+    login_user(user)
+    session['role'] = user.rol
+    
+    if user.rol == 'logistica':
+        return redirect('/admin')
+    elif user.rol == 'taller':
+        return redirect('/taller')
+    
+    return redirect('/')
+
+@app.route('/logout')
+@login_required
+def logout():
+    session.pop('role', None)
+    logout_user()
+    return redirect('/')
 
 @app.route('/taller')
-def taller_panel():
-    # Panel principal de taller
-    if not session.get('admin_autenticado') or session.get('rol') != 'taller':
-        return redirect(url_for('login'))
-    vehiculos = Vehiculo.query.filter(
-        Vehiculo.gpo_estatus == 'Activo',
-        Vehiculo.uso == 'Operaciones',
-        Vehiculo.estatus == 'Operando',
-        Vehiculo.descripcion != None,
-        Vehiculo.descripcion != ''
-    ).all()
-    filtrados = sorted(vehiculos, key=lambda v: (v.descripcion or '').lower())
-    return render_template('taller.html', vehiculos=filtrados)
-
-@app.route('/coordinador/select', methods=['GET', 'POST'])
-def coordinador_select():
-    # Selección de unidades por cliente para coordinador
-    clientes = Vehiculo.query.all()
-    selected_cliente = request.args.get('cliente')
-    unidades = []
-    if selected_cliente:
-        unidades = Vehiculo.query.filter_by(descripcion=selected_cliente).all()
-        for v in unidades:
-            v.revisado = all(getattr(v, campo) not in [None, '', ' '] for campo in ['aire', 'jala', 'mochila', 'conversion_reparacion'])
-    if request.method == 'POST' and request.form.get('idvehiculo'):
-        return redirect(url_for('coordinador', idvehiculo=request.form.get('idvehiculo')))
-    return render_template('coordinador_select.html', clientes=clientes, unidades=unidades, selected_cliente=selected_cliente)
+@login_required
+def taller():
+    if current_user.rol != 'taller':
+        flash('No tienes permiso para acceder a esta sección')
+        return redirect('/')
+    
+    reportes = ReporteClima.query.filter_by(estado='pendiente').all()
+    return render_template('taller/index.html', reportes=reportes)
 
 @app.route('/coordinador')
 def coordinador():
-    return render_template('coordinador.html')
+    vehiculos = Vehiculo.query.all()
+    return render_template('coordinador/index.html', vehiculos=vehiculos)
 
-@app.route('/admin', methods=['GET', 'POST'])
-def admin_panel():
-    # Panel principal de administración (logística)
-    if not session.get('admin_autenticado'):
-        return redirect(url_for('login'))
-    vehiculos = Vehiculo.query.filter(
-        Vehiculo.gpo_estatus == 'Activo',
-        Vehiculo.uso == 'Operaciones',
-        Vehiculo.estatus == 'Operando',
-        Vehiculo.descripcion != None,
-        Vehiculo.descripcion != ''
-    ).all()
-    filtrados = sorted(vehiculos, key=lambda v: (v.descripcion or '').lower())
-    return render_template('admin.html', vehiculos=filtrados)
+@app.route('/coordinador/reportar')
+def reportar():
+    vehiculos = Vehiculo.query.all()
+    return render_template('coordinador/reportar.html', vehiculos=vehiculos)
+
+@app.route('/coordinador/reportar-clima', methods=['POST'])
+@csrf.exempt
+def reportar_clima():
+    print("\n=== Datos recibidos en reportar-clima ===")
+    print(f"Form data completo: {request.form}")
+    print(f"Headers: {request.headers}")
+    
+    vehiculo_id = request.form.get('vehiculo_id')
+    descripcion = request.form.get('descripcion')
+    
+    if not vehiculo_id or not descripcion:
+        print("Error: Faltan datos requeridos")
+        return jsonify({
+            'success': False, 
+            'error': 'Faltan datos requeridos'
+        }), 400
+    
+    try:
+        # Verificar que el vehículo existe usando Session.get()
+        vehiculo = db.session.get(Vehiculo, vehiculo_id)
+        if not vehiculo:
+            print(f"Error: Vehículo {vehiculo_id} no encontrado")
+            return jsonify({
+                'success': False,
+                'error': 'Vehículo no encontrado'
+            }), 404
+        
+        # Ahora que sabemos que el vehículo existe, podemos acceder a sus propiedades
+        print(f"Vehículo ID: {vehiculo_id}")
+        print(f"Planta: {vehiculo.descripcion}")
+        print(f"Descripción del problema: {descripcion}")
+        
+        reporte = ReporteClima(
+            vehiculo_id=vehiculo_id,
+            descripcion=descripcion,
+            estado='pendiente'
+        )
+        
+        db.session.add(reporte)
+        db.session.commit()
+        print("Reporte guardado exitosamente")
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error al guardar reporte: {str(e)}")
+        db.session.rollback()
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/admin')
+@login_required
+def admin():
+    if current_user.rol != 'logistica':
+        flash('No tienes permiso para acceder a esta sección')
+        return redirect('/')
+    
+    return render_template('logistica/index.html')
+
+@app.route('/taller/revisar/<int:reporte_id>')
+@login_required
+def revisar_reporte(reporte_id):
+    if current_user.rol != 'taller':
+        flash('No tienes permiso para acceder a esta sección')
+        return redirect(url_for('index'))
+    
+    reporte = ReporteClima.query.get_or_404(reporte_id)
+    return render_template('taller/revisar.html', reporte=reporte)
+
+@app.route('/taller/completar/<int:reporte_id>', methods=['POST'])
+@login_required
+def completar_reporte(reporte_id):
+    print("\n=== Datos recibidos en completar-reporte ===")
+    print(f"Form data completo: {request.form}")
+    print(f"Reporte ID: {reporte_id}")
+    
+    if current_user.rol != 'taller':
+        print("Acceso denegado: Usuario no es de taller")
+        return jsonify({'success': False, 'error': 'No autorizado'})
+    
+    reporte = ReporteClima.query.get_or_404(reporte_id)
+    solucion = request.form.get('solucion')
+    print(f"Solución: {solucion}")
+    
+    try:
+        reporte.estado = 'completado'
+        reporte.solucion = solucion
+        reporte.tecnico_id = current_user.id
+        reporte.fecha_revision = datetime.utcnow()
+        
+        db.session.commit()
+        print("Reporte completado exitosamente")
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error al completar reporte: {str(e)}")
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/admin/upload', methods=['POST'])
 def upload_excel():
-    # Carga de archivos Excel para actualizar la base de datos
-    file = request.files.get('file')
-    if not file:
+    if 'file' not in request.files:
         flash('No se ha seleccionado ningún archivo.', 'danger')
-        return redirect(url_for('admin_panel'))
-    filename = file.filename.lower()
-    try:
-        import pandas as pd
-        import math
-        def clean_nan(val):
-            return None if (isinstance(val, float) and math.isnan(val)) else val
-        df = pd.read_excel(file)
-        if 'vehiculos' in filename:
+        return redirect(url_for('admin'))
+    
+    file = request.files['file']
+    if file.filename == '':
+        flash('No se ha seleccionado ningún archivo.', 'danger')
+        return redirect(url_for('admin'))
+    
+    if file and file.filename.endswith('.xlsx'):
+        try:
+            df = pd.read_excel(file)
+            
             for _, row in df.iterrows():
-                vehiculo = Vehiculo.query.filter_by(idvehiculo=row['idvehiculo']).first()
+                vehiculo = Vehiculo.query.filter_by(idvehiculo=row['IdVehiculo']).first()
+                
                 if vehiculo:
-                    for col in ['serial', 'marca', 'modelo', 'asientos', 'motor', 'anio', 'tipo_vehiculo', 'gpo_estatus', 'uso', 'estatus', 'combustible', 'eco', 'placas', 'placas_federales', 'descripcion', 'aire', 'jala', 'mochila', 'conversion_reparacion', 'reinsidente']:
-                        if col in row:
-                            setattr(vehiculo, col, clean_nan(row[col]))
+                    # Actualizar vehículo existente
+                    for col in df.columns:
+                        if col in row and not pd.isna(row[col]):
+                            setattr(vehiculo, col.lower().replace(' ', '_'), row[col])
                 else:
-                    vehiculo = Vehiculo(**{col: clean_nan(row.get(col)) for col in ['idvehiculo', 'serial', 'marca', 'modelo', 'asientos', 'motor', 'anio', 'tipo_vehiculo', 'gpo_estatus', 'uso', 'estatus', 'combustible', 'eco', 'placas', 'placas_federales', 'descripcion', 'aire', 'jala', 'mochila', 'conversion_reparacion', 'reinsidente']})
+                    # Crear nuevo vehículo
+                    vehiculo_data = {}
+                    for col in df.columns:
+                        if col in row and not pd.isna(row[col]):
+                            vehiculo_data[col.lower().replace(' ', '_')] = row[col]
+                    
+                    vehiculo = Vehiculo(**vehiculo_data)
                     db.session.add(vehiculo)
+            
             db.session.commit()
-            flash('Vehículos actualizados correctamente.', 'success')
-        elif 'servicios' in filename:
-            for _, row in df.iterrows():
-                servicio = Servicios.query.filter_by(id=row['id']).first()
-                if servicio:
-                    for col in ['marca_ac']:
-                        if col in row:
-                            setattr(servicio, col, row[col])
-                else:
-                    servicio = Servicios(**{col: row.get(col) for col in ['id', 'marca_ac']})
-                    db.session.add(servicio)
-            db.session.commit()
-            flash('Servicios actualizados correctamente.', 'success')
-        else:
-            flash('El archivo debe llamarse vehiculos.xlsx o servicios.xlsx.', 'danger')
-    except Exception as e:
-        flash(f'Error procesando el archivo: {e}', 'danger')
-    return redirect(url_for('admin_panel'))
+            flash('Datos cargados correctamente.', 'success')
+            
+        except Exception as e:
+            flash(f'Error al procesar el archivo: {str(e)}', 'danger')
+            
+    return redirect(url_for('admin'))
 
 @app.route('/admin/export')
 def export():
     # Exporta la información consolidada de vehículos y servicios a Excel
     results = db.session.query(
         Vehiculo,
-        Servicios.marca_ac
-    ).join(Servicios, Vehiculo.idvehiculo == Servicios.id).all()
+        Servicio.marca_ac
+    ).join(Servicio, Vehiculo.idvehiculo == Servicio.id).all()
     data = []
     for v, marca_ac in results:
         row = {col: getattr(v, col) for col in [
@@ -168,367 +251,155 @@ def export():
     output.seek(0)
     return send_file(output, download_name='sigo_climas.xlsx', as_attachment=True)
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('index'))
+@app.route('/crear-usuario-prueba')
+def crear_usuario_prueba():
+    # Solo para pruebas, eliminar en producción
+    if not Usuario.query.filter_by(username='admin').first():
+        usuario = Usuario(
+            username='admin',
+            password_hash=generate_password_hash('admin123'),
+            rol='logistica'
+        )
+        db.session.add(usuario)
+        db.session.commit()
+        return 'Usuario creado: admin/admin123'
+    return 'Usuario ya existe'
 
-@app.route('/solicitud-taller', methods=['GET', 'POST'])
-def solicitud_taller():
-    if request.method == 'POST':
-        # Simular éxito en el envío
-        return jsonify({'success': True, 'message': 'Solicitud enviada correctamente'})
-    return render_template('solicitud_taller.html', unidades=UNIDADES)
+@app.route('/fix-password/<username>')
+def fix_password(username):
+    user = Usuario.query.filter_by(username=username).first()
+    if user:
+        # Guardamos la contraseña actual
+        current_password = user.password_hash
+        # Generamos el hash correcto
+        user.password_hash = generate_password_hash(current_password)
+        db.session.commit()
+        return f'Hash corregido para {username}'
+    return 'Usuario no encontrado'
 
-@app.route('/taller/solicitudes')
-def taller_solicitudes():
-    # Datos falsos para las solicitudes pendientes
-    solicitudes = [
-        {
-            'id': 1,
-            'unidad': 'Mercedes Benz O500',
-            'tipo_servicio': 'Preventivo',
-            'descripcion': 'Cambio de aceite y filtros',
-            'fecha_estimada': '2024-02-25',
-            'prioridad': 'Media',
-            'estado': 'pendiente'
-        },
-        {
-            'id': 2,
-            'unidad': 'Volvo B7R',
-            'tipo_servicio': 'Correctivo',
-            'descripcion': 'Reparación de frenos',
-            'fecha_estimada': '2024-02-26',
-            'prioridad': 'Alta',
-            'estado': 'pendiente'
-        }
-    ]
-    return render_template('taller_solicitudes.html', solicitudes=solicitudes)
+@app.route('/check-user/<username>')
+def check_user(username):
+    user = Usuario.query.filter_by(username=username).first()
+    if user:
+        return f'''
+        Usuario encontrado:
+        ID: {user.id}
+        Username: {user.username}
+        Password Hash: {user.password_hash}
+        Rol: {user.rol}
+        '''
+    return 'Usuario no encontrado'
 
-@app.route('/admin/solicitudes')
+@app.route('/create-test-user')
+def create_test_user():
+    try:
+        # Eliminar usuario de prueba si existe
+        test_user = Usuario.query.filter_by(username='test').first()
+        if test_user:
+            db.session.delete(test_user)
+            db.session.commit()
+        
+        # Crear nuevo usuario de prueba
+        password = 'test123'
+        password_hash = generate_password_hash(password)
+        
+        new_user = Usuario(
+            username='test',
+            password_hash=password_hash,
+            rol='logistica'
+        )
+        
+        db.session.add(new_user)
+        db.session.commit()
+        
+        # Verificar que se creó correctamente
+        created_user = Usuario.query.filter_by(username='test').first()
+        if created_user:
+            return f'''
+            Usuario de prueba creado exitosamente:
+            Username: {created_user.username}
+            Password: {password}
+            Rol: {created_user.rol}
+            Hash: {created_user.password_hash}
+            '''
+        else:
+            return 'Error: Usuario no se creó correctamente'
+            
+    except Exception as e:
+        db.session.rollback()
+        return f'Error al crear usuario: {str(e)}'
+
+@app.route('/crear-usuario-taller')
+def crear_usuario_taller():
+    print("\n=== Creando Usuario Taller ===")
+    # Verificar si ya existe el usuario
+    user = Usuario.query.filter_by(username='taller').first()
+    if user:
+        print("Eliminando usuario existente")
+        db.session.delete(user)
+        db.session.commit()
+    
+    # Crear nuevo usuario
+    user = Usuario(
+        username='taller',
+        rol='taller',
+        email='taller@empresa.com'
+    )
+    user.set_password('taller123')
+    
+    print(f"Usuario creado: {user.username}")
+    print(f"Rol: {user.rol}")
+    print(f"Hash: {user.password_hash}")
+    
+    db.session.add(user)
+    db.session.commit()
+    
+    return "Usuario de taller creado. Username: taller, Password: taller123"
+
+@app.route('/admin/db-view')
 @login_required
-def admin_solicitudes():
-    return render_template('admin_solicitudes.html', solicitudes=SOLICITUDES)
-
-@app.route('/admin/modificar-unidad')
-@login_required
-def admin_modificar_unidad():
-    return render_template('admin_modificar_unidad.html', unidades=UNIDADES, operadores=OPERADORES, rutas=RUTAS)
-
-@app.route('/admin/actualizar-unidad', methods=['POST'])
-@login_required
-def actualizar_unidad():
-    data = request.get_json()
-    # Simular actualización exitosa
-    return jsonify({
-        'success': True,
-        'message': 'Unidad actualizada correctamente'
-    })
-
-@app.route('/admin/aprobar-solicitud/<int:id>', methods=['POST'])
-@login_required
-def aprobar_solicitud(id):
-    # Simular aprobación exitosa
-    return jsonify({
-        'success': True,
-        'message': 'Solicitud aprobada correctamente'
-    })
-
-@app.route('/admin/rechazar-solicitud/<int:id>', methods=['POST'])
-@login_required
-def rechazar_solicitud(id):
-    # Simular rechazo exitoso
-    return jsonify({
-        'success': True,
-        'message': 'Solicitud rechazada correctamente'
-    })
-
-# Rutas para el coordinador
-@app.route('/coordinador/rutas')
-def coordinador_rutas():
-    rutas = [
-        {
-            'id': 1,
-            'nombre': 'Ruta 1',
-            'origen': 'Ciudad A',
-            'destino': 'Ciudad B',
-            'operador': 'Juan Pérez',
-            'unidad': 'Mercedes Benz O500'
-        },
-        {
-            'id': 2,
-            'nombre': 'Ruta 2',
-            'origen': 'Ciudad C',
-            'destino': 'Ciudad D',
-            'operador': 'María García',
-            'unidad': 'Volvo B7R'
-        }
-    ]
-    return render_template('coordinador_rutas.html', rutas=rutas)
-
-@app.route('/coordinador/operadores')
-def coordinador_operadores():
-    operadores = [
-        {
-            'id': 1,
-            'nombre': 'Juan Pérez',
-            'estado': 'Activo',
-            'unidad': 'ABC-123',
-            'rutas_activas': 2
-        },
-        {
-            'id': 2,
-            'nombre': 'María García',
-            'estado': 'Activo',
-            'unidad': 'XYZ-789',
-            'rutas_activas': 1
-        }
-    ]
-    return render_template('coordinador_operadores.html', operadores=operadores)
-
-@app.route('/coordinador/flota')
-def coordinador_flota():
-    flota = [
-        {
-            'id': 1,
-            'placa': 'ABC-123',
-            'modelo': 'Mercedes-Benz O500',
-            'operador': 'Juan Pérez',
-            'estado': 'En Servicio'
-        },
-        {
-            'id': 2,
-            'placa': 'XYZ-789',
-            'modelo': 'Volvo B340',
-            'operador': 'María García',
-            'estado': 'En Taller'
-        }
-    ]
-    return render_template('coordinador_flota.html', flota=flota)
-
-# Rutas para el taller
-@app.route('/taller/servicios')
-@login_required
-def taller_servicios():
-    servicios = [
-        {
-            'id': 1,
-            'unidad': 'ABC-123',
-            'tipo': 'Mantenimiento Preventivo',
-            'descripcion': 'Cambio de aceite y filtros',
-            'fecha': '2024-03-15',
-            'estado': 'Completado'
-        },
-        {
-            'id': 2,
-            'unidad': 'XYZ-789',
-            'tipo': 'Reparación',
-            'descripcion': 'Cambio de frenos',
-            'fecha': '2024-03-16',
-            'estado': 'En Progreso'
-        }
-    ]
-    return render_template('taller_servicios.html', servicios=servicios)
-
-@app.route('/taller/inventario')
-@login_required
-def taller_inventario():
-    inventario = [
-        {
-            'id': 1,
-            'nombre': 'Aceite Motor',
-            'cantidad': 50,
-            'unidad': 'L',
-            'minimo': 20
-        },
-        {
-            'id': 2,
-            'nombre': 'Filtros de Aire',
-            'cantidad': 15,
-            'unidad': 'Unidad',
-            'minimo': 10
-        }
-    ]
-    return render_template('taller_inventario.html', inventario=inventario)
-
-@app.route('/taller/diagnosticos')
-@login_required
-def taller_diagnosticos():
-    diagnosticos = [
-        {
-            'id': 1,
-            'unidad': 'ABC-123',
-            'fecha': '2024-03-15',
-            'tecnico': 'Carlos Rodríguez',
-            'tipo': 'Mecánico',
-            'descripcion': 'Revisión general del motor',
-            'estado': 'Completado'
-        },
-        {
-            'id': 2,
-            'unidad': 'XYZ-789',
-            'fecha': '2024-03-16',
-            'tecnico': 'Ana Martínez',
-            'tipo': 'Eléctrico',
-            'descripcion': 'Diagnóstico del sistema eléctrico',
-            'estado': 'En Progreso'
-        }
-    ]
-    return render_template('taller_diagnosticos.html', diagnosticos=diagnosticos)
-
-# Rutas para el administrador
-@app.route('/admin/usuarios')
-@login_required
-def admin_usuarios():
-    usuarios = [
-        {
-            'id': 1,
-            'username': 'admin',
-            'nombre': 'Administrador',
-            'rol': 'Administrador',
-            'activo': True,
-            'ultimo_acceso': '2024-03-15 10:30'
-        },
-        {
-            'id': 2,
-            'username': 'coordinador',
-            'nombre': 'Coordinador',
-            'rol': 'Coordinador',
-            'activo': True,
-            'ultimo_acceso': '2024-03-15 09:15'
-        }
-    ]
-    return render_template('admin_usuarios.html', usuarios=usuarios)
-
-@app.route('/admin/documentos')
-@login_required
-def admin_documentos():
-    documentos = [
-        {
-            'id': 1,
-            'nombre': 'Manual de Operaciones',
-            'tipo': 'PDF',
-            'categoria': 'Manuales',
-            'usuario': 'admin',
-            'fecha': '2024-03-15',
-            'tamano': '2.5 MB'
-        },
-        {
-            'id': 2,
-            'nombre': 'Reporte Mensual',
-            'tipo': 'XLS',
-            'categoria': 'Reportes',
-            'usuario': 'coordinador',
-            'fecha': '2024-03-14',
-            'tamano': '1.8 MB'
-        }
-    ]
-    return render_template('admin_documentos.html', documentos=documentos)
-
-@app.route('/admin/reportes')
-@login_required
-def admin_reportes():
-    reportes = [
-        {
-            'id': 1,
-            'tipo': 'Operaciones',
-            'titulo': 'Reporte de Rutas Mensual',
-            'usuario': 'coordinador',
-            'fecha': '2024-03-15',
-            'periodo': 'Marzo 2024',
-            'estado': 'Completado',
-            'resumen': 'Análisis de rendimiento de rutas y operadores'
-        },
-        {
-            'id': 2,
-            'tipo': 'Mantenimiento',
-            'titulo': 'Reporte de Servicios',
-            'usuario': 'taller',
-            'fecha': '2024-03-14',
-            'periodo': 'Marzo 2024',
-            'estado': 'En Proceso',
-            'resumen': 'Estado de servicios y mantenimientos realizados'
-        }
-    ]
-    return render_template('admin_reportes.html', reportes=reportes)
-
-# Datos falsos para el prototipo
-OPERADORES = [
-    {'id': 1, 'nombre': 'Juan Pérez', 'ruta': 'Ruta 1', 'estado': 'Activo'},
-    {'id': 2, 'nombre': 'María García', 'ruta': 'Ruta 2', 'estado': 'Activo'},
-    {'id': 3, 'nombre': 'Carlos López', 'ruta': 'Ruta 3', 'estado': 'Inactivo'}
-]
-
-UNIDADES = [
-    {'id': 1, 'placas': 'ABC123', 'operador': 'Juan Pérez', 'ruta': 'Ruta 1', 'estado': 'Activo'},
-    {'id': 2, 'placas': 'DEF456', 'operador': 'María García', 'ruta': 'Ruta 2', 'estado': 'Mantenimiento'},
-    {'id': 3, 'placas': 'GHI789', 'operador': 'Carlos López', 'ruta': 'Ruta 3', 'estado': 'Inactivo'}
-]
-
-RUTAS = [
-    {'id': 1, 'nombre': 'Ruta 1', 'origen': 'Ciudad A', 'destino': 'Ciudad B'},
-    {'id': 2, 'nombre': 'Ruta 2', 'origen': 'Ciudad C', 'destino': 'Ciudad D'},
-    {'id': 3, 'nombre': 'Ruta 3', 'origen': 'Ciudad E', 'destino': 'Ciudad F'}
-]
-
-SOLICITUDES = [
-    {
-        'id': 1,
-        'tipo': 'cambio_ruta',
-        'operador': 'Juan Pérez',
-        'ruta_actual': 'Ruta 1',
-        'ruta_solicitada': 'Ruta 2',
-        'razon': 'Mejor ruta para mi residencia',
-        'fecha': '2024-02-20',
-        'estado': 'Pendiente'
-    },
-    {
-        'id': 2,
-        'tipo': 'cambio_unidad',
-        'operador': 'María García',
-        'unidad_actual': 'DEF456',
-        'unidad_solicitada': 'ABC123',
-        'razon': 'Problemas con el aire acondicionado',
-        'fecha': '2024-02-21',
-        'estado': 'Pendiente'
-    },
-    {
-        'id': 3,
-        'tipo': 'taller',
-        'unidad': 'GHI789',
-        'tipo_mantenimiento': 'Preventivo',
-        'descripcion': 'Cambio de aceite y filtros',
-        'fecha_estimada': '2024-02-25',
-        'fecha': '2024-02-22',
-        'estado': 'Pendiente'
+def db_view():
+    if current_user.rol != 'logistica':
+        flash('No tienes permiso para acceder a esta sección')
+        return redirect(url_for('index'))
+    
+    # Obtener datos de cada tabla
+    usuarios = Usuario.query.all()
+    vehiculos = Vehiculo.query.all()
+    reportes = ReporteClima.query.all()
+    
+    # Preparar datos para mostrar
+    data = {
+        'usuarios': [{
+            'id': u.id,
+            'username': u.username,
+            'rol': u.rol,
+            'email': u.email
+        } for u in usuarios],
+        'vehiculos': [{
+            'id': v.idvehiculo,
+            'serial': v.serial,
+            'marca': v.marca,
+            'modelo': v.modelo,
+            'estatus': v.estatus
+        } for v in vehiculos],
+        'reportes': [{
+            'id': r.id,
+            'vehiculo_id': r.vehiculo_id,
+            'fecha': r.fecha_reporte.strftime('%Y-%m-%d %H:%M') if r.fecha_reporte else None,
+            'descripcion': r.descripcion,
+            'estado': r.estado,
+            'tecnico': r.tecnico.username if r.tecnico else None
+        } for r in reportes]
     }
-]
-
-@app.route('/solicitud-cambio-ruta')
-def solicitud_cambio_ruta():
-    return render_template('solicitud_cambio_ruta.html', operadores=OPERADORES, rutas=RUTAS)
-
-@app.route('/solicitud-cambio-unidad')
-def solicitud_cambio_unidad():
-    return render_template('solicitud_cambio_unidad.html', operadores=OPERADORES, unidades=UNIDADES)
-
-@app.route('/solicitudes-pendientes')
-def solicitudes_pendientes():
-    return render_template('solicitudes_pendientes.html', solicitudes=SOLICITUDES)
-
-@app.route('/enviar-solicitud', methods=['POST'])
-def enviar_solicitud():
-    data = request.get_json()
-    # Simular éxito en el envío
-    return jsonify({'success': True, 'message': 'Solicitud enviada correctamente'})
-
-@app.route('/admin/modificar-operador')
-def admin_modificar_operador():
-    return render_template('admin_modificar_operador.html', operadores=OPERADORES)
+    
+    return render_template('admin/db_view.html', data=data)
 
 # =============================
 # Fin del archivo principal
 # =============================
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)

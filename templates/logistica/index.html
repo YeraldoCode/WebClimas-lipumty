@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de Administración - SIGO{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="content-header">
+        <h1>Panel de Administración</h1>
+        <p>Gestión de solicitudes y flota</p>
+    </div>
+    
+    <div class="content-body">
+        <!-- Resumen de Estado -->
+        <div class="status-summary">
+            <div class="status-card">
+                <div class="status-icon warning">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="status-info">
+                    <h3>Solicitudes Pendientes</h3>
+                    <span class="status-number">0</span>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-icon active">
+                    <i class="fas fa-bus"></i>
+                </div>
+                <div class="status-info">
+                    <h3>Unidades Activas</h3>
+                    <span class="status-number">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="dashboard-grid">
+                <!-- Gestión de Flota -->
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-bus"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Gestión de Flota</h3>
+                        <p>Modificación directa de operadores y unidades</p>
+                        <div class="card-actions">
+                            <a href="{{ url_for('admin') }}" class="btn btn-primary">
+                                <i class="fas fa-tools"></i>
+                                Gestionar Flota
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.content-wrapper {
+    padding: 2rem;
+    flex: 1;
+}
+.content-header {
+    margin-bottom: 2rem;
+}
+.content-header h1 {
+    color: #2c3e50;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+.content-header p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+.content-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+.status-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+.status-card {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+.status-card:hover {
+    transform: translateY(-5px);
+}
+.status-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #e3f2fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.status-icon i {
+    font-size: 1.5rem;
+    color: #3498db;
+}
+.status-icon.active {
+    background: #e8f5e9;
+}
+.status-icon.active i {
+    color: #2e7d32;
+}
+.status-icon.warning {
+    background: #fff3e0;
+}
+.status-icon.warning i {
+    color: #ef6c00;
+}
+.status-info h3 {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+.status-number {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+.dashboard-card {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+}
+.card-icon {
+    width: 80px;
+    height: 80px;
+    background: #3498db;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+.card-icon i {
+    font-size: 2rem;
+    color: white;
+}
+.card-content h3 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.card-content p {
+    color: #7f8c8d;
+    margin-bottom: 1.5rem;
+}
+.card-actions {
+    display: flex;
+    gap: 1rem;
+}
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+.btn-primary:hover {
+    background: #2980b9;
+}
+.btn i {
+    font-size: 1.1rem;
+}
+</style>
+{% endblock %}

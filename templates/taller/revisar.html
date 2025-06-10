@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Revisar Reporte - SIGO{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Revisar Reporte de Clima</h2>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">
+                Vehículo: {{ reporte.vehiculo.placas }} - {{ reporte.vehiculo.descripcion }}
+            </h5>
+            <p class="card-text">
+                <strong>Descripción del problema:</strong><br>
+                {{ reporte.descripcion }}
+            </p>
+            <p class="card-text">
+                <small>Reportado: {{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</small>
+            </p>
+            <p class="card-text">
+                <span class="badge bg-{{ 'warning' if reporte.estado == 'pendiente' else 'info' }}">
+                    {{ reporte.estado }}
+                </span>
+            </p>
+
+            {% if reporte.estado == 'pendiente' %}
+            <form id="completarForm" class="mt-3">
+                <div class="mb-3">
+                    <label for="solucion" class="form-label">Solución aplicada:</label>
+                    <textarea class="form-control" id="solucion" name="solucion" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Completar Reporte</button>
+            </form>
+            {% else %}
+            <div class="mt-3">
+                <h6>Solución aplicada:</h6>
+                <p>{{ reporte.solucion }}</p>
+                <p><small>Completado: {{ reporte.fecha_revision.strftime('%d/%m/%Y %H:%M') }}</small></p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if reporte.estado == 'pendiente' %}
+<script>
+document.getElementById('completarForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch('/taller/completar/{{ reporte.id }}', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '/taller';
+        } else {
+            alert('Error al completar el reporte: ' + (data.error || 'Error desconocido'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al completar el reporte');
+    });
+});
+</script>
+{% endif %}
+{% endblock %}
+
+

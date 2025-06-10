@@ -1,82 +1,98 @@
 {% extends "base.html" %}
 
-{% block title %}Panel de Administración - SIGO{% endblock %}
+{% block title %}Panel de Coordinador de Operaciones - SIGO{% endblock %}
 
 {% block content %}
 <div class="content-wrapper">
     <div class="content-header">
-        <h1>Panel de Administración</h1>
-        <p>Gestión de solicitudes y flota</p>
+        <h1>Panel de Coordinador de Operaciones</h1>
+        <p>Gestión de operadores y unidades para transporte de personal</p>
     </div>
     
     <div class="content-body">
         <!-- Resumen de Estado -->
         <div class="status-summary">
             <div class="status-card">
-                <div class="status-icon warning">
-                    <i class="fas fa-clipboard-list"></i>
-                </div>
-                <div class="status-info">
-                    <h3>Solicitudes Pendientes</h3>
-                    <span class="status-number">5</span>
-                </div>
-            </div>
-            <div class="status-card">
                 <div class="status-icon active">
                     <i class="fas fa-bus"></i>
                 </div>
                 <div class="status-info">
-                    <h3>Unidades Activas</h3>
-                    <span class="status-number">12</span>
+                    <h3>Unidades en Servicio</h3>
+                    <span class="status-number">8</span>
                 </div>
+            </div>
+            <div class="status-card">
+                <div class="status-icon warning">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="status-info">
+                    <h3>En Mantenimiento</h3>
+                    <span class="status-number">3</span>
+                </div>
+            </div>
+            <!-- Nuevo botón de Reportar Clima -->
+            <div class="status-card action-card">
+                <a href="/coordinador/reportar" class="btn-reportar-clima">
+                    <div class="status-icon primary">
+                        <i class="fas fa-snowflake"></i>
+                    </div>
+                    <div class="status-info">
+                        <h3>Reportar Problema de Clima</h3>
+                        <span class="action-text">Nuevo Reporte</span>
+                    </div>
+                </a>
             </div>
         </div>
 
         <div class="main-content">
             <div class="dashboard-grid">
-                <!-- Solicitudes -->
+                <!-- Operadores -->
                 <div class="dashboard-card">
                     <div class="card-icon">
-                        <i class="fas fa-clipboard-list"></i>
+                        <i class="fas fa-user-tie"></i>
                     </div>
                     <div class="card-content">
-                        <h3>Solicitudes</h3>
-                        <p>Gestión de solicitudes pendientes</p>
-                        <div class="card-stats">
-                            <div class="stat-item">
-                                <span class="stat-value">3</span>
-                                <span class="stat-label">Cambios de Ruta</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-value">2</span>
-                                <span class="stat-label">Cambios de Unidad</span>
-                            </div>
-                        </div>
+                        <h3>Operadores</h3>
+                        <p>Gestión de cambios de ruta y unidad</p>
                         <div class="card-actions">
-                            <a href="/admin/solicitudes" class="btn btn-primary">
-                                <i class="fas fa-list"></i>
-                                Ver Solicitudes
+                            <a href="/solicitud-cambio-ruta" class="btn btn-primary">
+                                <i class="fas fa-route"></i>
+                                Solicitar Cambio de Ruta
+                            </a>
+                            <a href="/solicitud-cambio-unidad" class="btn btn-primary">
+                                <i class="fas fa-exchange-alt"></i>
+                                Solicitar Cambio de Unidad
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Gestión de Flota -->
+                <!-- Gestión de Unidades -->
                 <div class="dashboard-card">
                     <div class="card-icon">
-                        <i class="fas fa-bus"></i>
+                        <i class="fas fa-tools"></i>
                     </div>
                     <div class="card-content">
-                        <h3>Gestión de Flota</h3>
-                        <p>Modificación directa de operadores y unidades</p>
+                        <h3>Gestión de Unidades</h3>
+                        <p>Cambio y solicitud de unidades</p>
+                        <div class="card-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">2</span>
+                                <span class="stat-label">Cambios Pendientes</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">1</span>
+                                <span class="stat-label">En Taller</span>
+                            </div>
+                        </div>
                         <div class="card-actions">
-                            <a href="/admin/modificar-operador" class="btn btn-primary">
-                                <i class="fas fa-user-edit"></i>
-                                Modificar Operador
-                            </a>
-                            <a href="/admin/modificar-unidad" class="btn btn-primary">
+                            <a href="/solicitud-taller" class="btn btn-primary">
                                 <i class="fas fa-tools"></i>
-                                Modificar Unidad
+                                Solicitar Taller
+                            </a>
+                            <a href="/solicitudes-pendientes" class="btn btn-secondary">
+                                <i class="fas fa-clipboard-list"></i>
+                                Ver Solicitudes
                             </a>
                         </div>
                     </div>
@@ -156,6 +172,10 @@
     }
     .status-icon.warning i {
         color: #ef6c00;
+    }
+    .status-icon.primary {
+        background: #e0f2fe;
+        color: #0284c7;
     }
     .status-info h3 {
         color: #7f8c8d;
@@ -265,6 +285,27 @@
     }
     .btn-secondary:hover {
         background: #d0d0d0;
+    }
+    .action-card {
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .action-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .btn-reportar-clima {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+    }
+    .action-text {
+        font-size: 0.875rem;
+        color: #0284c7;
+        font-weight: 500;
     }
     @media (max-width: 768px) {
         .content-wrapper {

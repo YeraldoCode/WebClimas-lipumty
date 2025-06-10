@@ -17,25 +17,30 @@
             <div class="login-divider"></div>
             <h2 class="login-section-title">Acceso Logística / Taller</h2>
             <form method="post" action="/login" class="login-form">
+                {{ form.csrf_token }}
                 <div class="form-group">
                     <label for="username" class="login-label">Usuario</label>
-                    <input type="text" name="username" id="username" class="login-input" required autocomplete="off">
+                    {{ form.username(class="login-input", id="username") }}
                 </div>
                 <div class="form-group">
                     <label for="password" class="login-label">Contraseña</label>
-                    <input type="password" name="password" id="password" class="login-input" required autocomplete="off">
+                    {{ form.password(class="login-input", id="password") }}
                 </div>
                 <button type="submit" class="login-btn logistica">
                     <i class="fas fa-sign-in-alt icon"></i>
                     <span>Entrar</span>
                 </button>
             </form>
-            {% if error %}
-            <div class="login-error">
-                <i class="fas fa-exclamation-circle"></i>
-                <span>{{ error }}</span>
-            </div>
-            {% endif %}
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="login-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <a href="/" class="login-link">
                 <i class="fas fa-arrow-left icon"></i>
                 <span>Volver al inicio</span>
@@ -45,6 +50,7 @@
             </div>
         </div>
     </div>
+
     <style>
         * {
             margin: 0;

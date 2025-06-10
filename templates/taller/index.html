@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Reportes de Clima Pendientes</h2>
+    <div class="row">
+        {% for reporte in reportes %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ reporte.vehiculo.placas }} - {{ reporte.vehiculo.descripcion }}
+                    </h5>
+                    <p class="card-text">{{ reporte.descripcion }}</p>
+                    <p class="card-text">
+                        <small>Reportado: {{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</small>
+                    </p>
+                    <p class="card-text">
+                        <span class="badge bg-{{ 'warning' if reporte.estado == 'pendiente' else 'info' }}">
+                            {{ reporte.estado }}
+                        </span>
+                    </p>
+                    <a href="/taller/revisar/{{ reporte.id }}" class="btn btn-primary">
+                        {{ 'Revisar' if reporte.estado == 'pendiente' else 'Ver Detalles' }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

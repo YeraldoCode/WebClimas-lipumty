@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}Reportar Clima - SIGO{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Reportar Problema de Climas</h1>
+        <p class="subtitle">Complete el formulario para reportar un problema con el sistema de clima de una unidad</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form id="reporteForm" method="POST" action="/coordinador/reportar-clima">
+                <div class="form-section">
+                    <h3>Selección de Unidad</h3>
+                    <div class="form-group">
+                        <label for="vehiculo_id">
+                            <i class="fas fa-bus"></i>
+                            Unidad
+                        </label>
+                        <select name="vehiculo_id" id="vehiculo_id" class="form-control" required>
+                            <option value="">Seleccione una unidad</option>
+                            {% for vehiculo in vehiculos %}
+                                {% if vehiculo.estatus == 'Operando' %}
+                                <option value="{{ vehiculo.idvehiculo }}" 
+                                        data-descripcion="{{ vehiculo.descripcion }}"
+                                        data-placas="{{ vehiculo.placas }}"
+                                        data-serial="{{ vehiculo.serial }}">
+                                    {{ vehiculo.idvehiculo }} - {{ vehiculo.estatus }}
+                                </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div id="vehiculo-info" class="form-section" style="display: none;">
+                    <h3>Información de la Unidad</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Placa</label>
+                            <span id="vehiculo_placas"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Serial</label>
+                            <span id="vehiculo_serial"></span>
+                        </div>
+                        <div class="info-item full-width">
+                            <label>Planta de Operación</label>
+                            <p id="vehiculo_descripcion"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Detalles del Problema</h3>
+                    <div class="form-group">
+                        <label for="descripcion">
+                            <i class="fas fa-exclamation-circle"></i>
+                            Descripción del problema
+                        </label>
+                        <textarea name="descripcion" id="descripcion" class="form-control" rows="4" required 
+                                placeholder="Describa detalladamente el problema con el clima..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span class="btn-text">Enviar Reporte</span>
+                        <span class="spinner" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                    </button>
+                </div>
+            </form>
+
+            <div id="error-message" class="alert alert-danger" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span></span>
+            </div>
+            <div id="success-message" class="alert alert-success" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span>Reporte enviado correctamente</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-header .subtitle {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.form-section h3 {
+    color: #2c3e50;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background-color: #f8fafc;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
+    background-color: white;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    background-color: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.info-item label {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.info-item span,
+.info-item p {
+    color: #1e293b;
+    font-size: 1rem;
+}
+
+.form-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+}
+
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.alert-danger {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.alert-success {
+    background: #dcfce7;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+@media (max-width: 640px) {
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+document.getElementById('vehiculo_id').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const vehiculoInfo = document.getElementById('vehiculo-info');
+    
+    if (this.value) {
+        const descripcion = selectedOption.getAttribute('data-descripcion') || 'Sin información de planta disponible';
+        const placas = selectedOption.getAttribute('data-placas') || 'N/A';
+        const serial = selectedOption.getAttribute('data-serial') || 'N/A';
+        
+        document.getElementById('vehiculo_descripcion').textContent = descripcion;
+        document.getElementById('vehiculo_placas').textContent = placas;
+        document.getElementById('vehiculo_serial').textContent = serial;
+        
+        vehiculoInfo.style.display = 'block';
+    } else {
+        vehiculoInfo.style.display = 'none';
+    }
+});
+
+document.getElementById('reporteForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const spinner = submitBtn.querySelector('.spinner');
+    const errorMessage = document.getElementById('error-message');
+    const successMessage = document.getElementById('success-message');
+    
+    // Mostrar spinner y deshabilitar botón
+    btnText.style.display = 'none';
+    spinner.style.display = 'inline-block';
+    submitBtn.disabled = true;
+    
+    // Ocultar mensajes anteriores
+    errorMessage.style.display = 'none';
+    successMessage.style.display = 'none';
+    
+    const formData = new FormData(this);
+    
+    fetch('/coordinador/reportar-clima', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            successMessage.style.display = 'flex';
+            this.reset();
+            document.getElementById('vehiculo-info').style.display = 'none';
+        } else {
+            errorMessage.querySelector('span').textContent = data.error || 'Error al enviar el reporte';
+            errorMessage.style.display = 'flex';
+        }
+    })
+    .catch(error => {
+        errorMessage.querySelector('span').textContent = 'Error al enviar el reporte';
+        errorMessage.style.display = 'flex';
+    })
+    .finally(() => {
+        // Restaurar botón
+        btnText.style.display = 'inline';
+        spinner.style.display = 'none';
+        submitBtn.disabled = false;
+    });
+});
+</script>
+{% endblock %}

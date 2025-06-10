@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Sistema de Revisión Vehicular{% endblock %}</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>{% block title %}Sistema Integral de Gestión Operativa{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -14,7 +17,6 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f5f7fa;
-      display: flex;
       min-height: 100vh;
     }
     .sidebar {
@@ -85,6 +87,41 @@
       flex: 1;
       margin-left: 250px;
       transition: all 0.3s;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .content.no-sidebar {
+      margin-left: 0;
+      padding: 2rem;
+    }
+    .alert {
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+    }
+    .alert-info {
+      background-color: #e3f2fd;
+      color: #0d47a1;
+      border: 1px solid #bbdefb;
+    }
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #3498db;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      transition: all 0.2s;
+    }
+    .back-button:hover {
+      background: #2980b9;
+      color: white;
+    }
+    .back-button i {
+      font-size: 1.1rem;
     }
     @media (max-width: 768px) {
       .sidebar {
@@ -95,11 +132,16 @@
       }
       .content {
         margin-left: 0;
+        padding: 1rem;
+      }
+      .content.no-sidebar {
+        padding: 1rem;
       }
     }
   </style>
 </head>
 <body>
+  {% if current_user.is_authenticated and not request.path.startswith('/coordinador') %}
   <div class="sidebar">
     <div class="sidebar-header">
       <h2>SIGO</h2>
@@ -107,136 +149,60 @@
     </div>
     
     <ul class="menu">
-      {% if session.get('role') == 'admin' %}
+      {% if current_user.rol == 'logistica' %}
       <!-- Secciones para Logística/Administrador -->
-      <div class="menu-section">Gestión de Flota</div>
-      <a href="/admin/flota" class="menu-item">
-        <i class="fas fa-bus"></i>
-        Flota
+      <div class="menu-section">Panel Principal</div>
+      <a href="/admin" class="menu-item {% if request.path == '/admin' %}active{% endif %}">
+        <i class="fas fa-home"></i>
+        Inicio
       </a>
-      <a href="/admin/clientes" class="menu-item">
-        <i class="fas fa-building"></i>
-        Clientes/Empresas
-      </a>
-      
-      <div class="menu-section">Operaciones</div>
-      <a href="/admin/rutas" class="menu-item">
-        <i class="fas fa-route"></i>
-        Rutas y Programación
-      </a>
-      <a href="/admin/mantenimiento" class="menu-item">
-        <i class="fas fa-tools"></i>
-        Mantenimientos y Taller
-      </a>
-      
-      <div class="menu-section">Documentación</div>
-      <a href="/admin/contratos" class="menu-item">
-        <i class="fas fa-file-contract"></i>
-        Contratos y Pólizas
-      </a>
-      <a href="/admin/documentos" class="menu-item">
-        <i class="fas fa-file-alt"></i>
-        Documentos
-      </a>
-      
-      <div class="menu-section">KPIs y Reportes</div>
-      <a href="/admin/kpis" class="menu-item">
-        <i class="fas fa-chart-line"></i>
-        Indicadores
-      </a>
-      <a href="/admin/reportes" class="menu-item">
-        <i class="fas fa-chart-bar"></i>
-        Reportes
-      </a>
-      
-      {% elif session.get('role') == 'coordinador' %}
-      <!-- Secciones para Coordinador de Operadores -->
-      <div class="menu-section">Operaciones</div>
-      <a href="/coordinador/rutas" class="menu-item">
-        <i class="fas fa-route"></i>
-        Rutas Activas
-      </a>
-      <a href="/coordinador/programacion" class="menu-item">
-        <i class="fas fa-calendar-alt"></i>
-        Programación de Rutas
-      </a>
-      <a href="/coordinador/operadores" class="menu-item">
-        <i class="fas fa-user-tie"></i>
-        Operadores
-      </a>
-      
-      <div class="menu-section">Gestión de Unidades</div>
-      <a href="/coordinador/flota" class="menu-item">
-        <i class="fas fa-bus"></i>
-        Flota
-      </a>
-      <a href="/coordinador/cambio-unidad" class="menu-item">
-        <i class="fas fa-exchange-alt"></i>
-        Cambio de Unidad
-      </a>
-      <a href="/coordinador/solicitud-taller" class="menu-item">
-        <i class="fas fa-tools"></i>
-        Solicitud de Taller
-      </a>
-      <a href="/coordinador/solicitudes-pendientes" class="menu-item">
-        <i class="fas fa-clock"></i>
-        Solicitudes Pendientes
-      </a>
-      
-      <div class="menu-section">Supervisión</div>
-      <a href="/coordinador/incidentes" class="menu-item">
-        <i class="fas fa-exclamation-triangle"></i>
-        Incidentes/Alertas
-      </a>
-      <a href="/coordinador/asistencia" class="menu-item">
-        <i class="fas fa-clipboard-check"></i>
-        Asistencia de Operadores
-      </a>
-      
-      {% elif session.get('role') == 'taller' %}
-      <!-- Secciones para Taller -->
-      <div class="menu-section">Mantenimiento</div>
-      <a href="/taller" class="menu-item">
-        <i class="fas fa-clipboard-check"></i>
-        Órdenes Activas
-      </a>
-      <a href="/taller/preventivo" class="menu-item">
-        <i class="fas fa-calendar-check"></i>
-        Programación Preventiva
-      </a>
-      <a href="/taller/diagnosticos" class="menu-item">
-        <i class="fas fa-clipboard-list"></i>
-        Diagnósticos
-      </a>
-      
-      <div class="menu-section">Recursos</div>
-      <a href="/taller/inventario" class="menu-item">
-        <i class="fas fa-boxes"></i>
-        Inventario de Repuestos
-      </a>
-      <a href="/taller/documentos" class="menu-item">
-        <i class="fas fa-file-alt"></i>
-        Manuales y Documentos
-      </a>
-      {% endif %}
       
       <div class="menu-section">Cuenta</div>
-      <a href="/perfil" class="menu-item">
-        <i class="fas fa-user"></i>
-        Mi Perfil
-      </a>
       <a href="/logout" class="menu-item">
         <i class="fas fa-sign-out-alt"></i>
         Cerrar Sesión
       </a>
+      
+      {% elif current_user.rol == 'taller' %}
+      <!-- Secciones para Taller -->
+      <div class="menu-section">Mantenimiento</div>
+      <a href="/taller" class="menu-item {% if request.path == '/taller' %}active{% endif %}">
+        <i class="fas fa-clipboard-check"></i>
+        Reportes Pendientes
+      </a>
+      
+      <div class="menu-section">Cuenta</div>
+      <a href="/logout" class="menu-item">
+        <i class="fas fa-sign-out-alt"></i>
+        Cerrar Sesión
+      </a>
+      {% endif %}
     </ul>
     
     <div class="sidebar-footer">
-      <p>&copy; 2024 SIGO. Todos los derechos reservados.</p>
+      <p>LIPU by Traxión &copy; 2025</p>
     </div>
   </div>
+  {% endif %}
 
-  <div class="content">
+  <div class="content {% if not current_user.is_authenticated or request.path.startswith('/coordinador') %}no-sidebar{% endif %}">
+    {% if request.path.startswith('/coordinador') %}
+    <a href="{% if request.path == '/coordinador' %}/{% else %}/coordinador{% endif %}" class="back-button">
+      <i class="fas fa-arrow-left"></i>
+      Regresar
+    </a>
+    {% endif %}
+    
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-info">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
     {% block content %}{% endblock %}
   </div>
 
