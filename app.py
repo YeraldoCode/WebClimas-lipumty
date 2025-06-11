@@ -70,7 +70,8 @@ app = create_app()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    form = LoginForm()
+    return render_template('login.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -94,6 +95,8 @@ def login():
         return redirect('/admin')
     elif user.rol == 'taller':
         return redirect('/taller')
+    elif user.rol == 'coordinador':  # Agregar esta condición
+        return redirect('/coordinador')
     
     return redirect('/')
 
@@ -127,7 +130,11 @@ def taller():
                          reportes=reportes)
 
 @app.route('/coordinador')
+@login_required
 def coordinador():
+    if current_user.rol != 'coordinador':
+        flash('No tienes permiso para acceder a esta sección', 'error')
+        return redirect(url_for('index'))
     # Obtener solo las unidades con estatus 'Operando'
     unidades_activas = Vehiculo.query.filter_by(estatus='Operando').all()
     return render_template('coordinador/index.html', unidades_activas=unidades_activas)

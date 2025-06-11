@@ -63,7 +63,6 @@ class ReporteClima(db.Model):
     estado = db.Column(db.String(20))
     tecnico_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     fecha_revision = db.Column(db.DateTime)
-    solucion = db.Column(db.Text)
     coordinador_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     fecha_solicitud_taller = db.Column(db.DateTime)
     fecha_asignacion_taller = db.Column(db.DateTime)

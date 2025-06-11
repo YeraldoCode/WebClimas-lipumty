@@ -7,4 +7,4 @@ ADD COLUMN IF NOT EXISTS fecha_llamada_taller TIMESTAMP;
 
 -- Actualizar tabla servicios
 ALTER TABLE servicios 
-ADD COLUMN IF NOT EXISTS vehiculo_id INTEGER REFERENCES vehiculos(idvehiculo); 
+ADD COLUMN IF NOT EXISTS vehiculo_id INTEGER REFERENCES vehiculos(idvehiculo);
