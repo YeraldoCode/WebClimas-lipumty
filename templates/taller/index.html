@@ -1,32 +1,569 @@
 {% extends "base.html" %}
 
+{% block title %}Panel de Taller - SIGO{% endblock %}
+
 {% block content %}
 <div class="container">
-    <h2>Reportes de Clima Pendientes</h2>
-    <div class="row">
-        {% for reporte in reportes %}
-        <div class="col-md-4 mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        {{ reporte.vehiculo.placas }} - {{ reporte.vehiculo.descripcion }}
-                    </h5>
-                    <p class="card-text">{{ reporte.descripcion }}</p>
-                    <p class="card-text">
-                        <small>Reportado: {{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</small>
-                    </p>
-                    <p class="card-text">
-                        <span class="badge bg-{{ 'warning' if reporte.estado == 'pendiente' else 'info' }}">
-                            {{ reporte.estado }}
-                        </span>
-                    </p>
-                    <a href="/taller/revisar/{{ reporte.id }}" class="btn btn-primary">
-                        {{ 'Revisar' if reporte.estado == 'pendiente' else 'Ver Detalles' }}
-                    </a>
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1>Panel de Taller</h1>
+            <p class="subtitle">Gestión de mantenimiento de unidades</p>
+        </div>
+        <div class="status-cards">
+            <div class="status-card">
+                <div class="status-icon espera">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="status-info">
+                    <h3>En Espera</h3>
+                    <p class="status-number">{{ vehiculos_espera|length }}</p>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-icon proceso">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="status-info">
+                    <h3>En Proceso</h3>
+                    <p class="status-number">{{ reportes|selectattr('estado', 'equalto', 'en_proceso')|list|length }}</p>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-icon completado">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="status-info">
+                    <h3>Completados</h3>
+                    <p class="status-number">{{ reportes|selectattr('estado', 'equalto', 'completado')|list|length }}</p>
                 </div>
             </div>
         </div>
-        {% endfor %}
+    </div>
+
+    <div class="dashboard-content">
+        <div class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-bus"></i> Unidades en Espera</h2>
+                <span class="badge">{{ vehiculos_espera|length }}</span>
+            </div>
+            <div class="vehiculos-grid">
+                {% for vehiculo in vehiculos_espera %}
+                <div class="vehiculo-card">
+                    <div class="vehiculo-header">
+                        <h3>Unidad {{ vehiculo.idvehiculo }}</h3>
+                        <span class="status-badge espera">En Espera</span>
+                    </div>
+                    <div class="vehiculo-info">
+                        <div class="info-row">
+                            <i class="fas fa-car"></i>
+                            <span>{{ vehiculo.placas }}</span>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-barcode"></i>
+                            <span>{{ vehiculo.serial }}</span>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-building"></i>
+                            <span>{{ vehiculo.descripcion }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-clipboard-list"></i> Reportes de Mantenimiento</h2>
+                <span class="badge">{{ reportes|length }}</span>
+            </div>
+            <div class="reportes-grid">
+                {% if reportes %}
+                    {% for reporte in reportes %}
+                    <div class="reporte-card">
+                        <div class="reporte-header">
+                            <div class="reporte-title">
+                                <h3>Reporte #{{ reporte.id }}</h3>
+                                <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
+                            </div>
+                            <span class="status-badge {{ reporte.estado }}">{{ reporte.estado|replace('_', ' ')|title }}</span>
+                        </div>
+                        
+                        <div class="reporte-info">
+                            <div class="info-row">
+                                <i class="fas fa-bus"></i>
+                                <span>Unidad {{ reporte.vehiculo_id }}</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fas fa-car"></i>
+                                <span>{{ reporte.vehiculo.placas }}</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fas fa-barcode"></i>
+                                <span>{{ reporte.vehiculo.serial }}</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fas fa-building"></i>
+                                <span>{{ reporte.vehiculo.descripcion }}</span>
+                            </div>
+                        </div>
+
+                        <div class="reporte-descripcion">
+                            <label><i class="fas fa-exclamation-circle"></i> Descripción del problema:</label>
+                            <p>{{ reporte.descripcion }}</p>
+                        </div>
+
+                        <div class="reporte-actions">
+                            {% if reporte.estado == 'aprobado' %}
+                            <button class="btn btn-primary btn-en-proceso" data-reporte-id="{{ reporte.id }}">
+                                <i class="fas fa-tools"></i>
+                                Iniciar Mantenimiento
+                            </button>
+                            {% elif reporte.estado == 'en_proceso' %}
+                            <button class="btn btn-success btn-completado" data-reporte-id="{{ reporte.id }}">
+                                <i class="fas fa-check"></i>
+                                Completar Mantenimiento
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-reportes">
+                        <i class="fas fa-clipboard-check"></i>
+                        <p>No hay reportes pendientes de mantenimiento</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+.container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.header-content {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header-content h1 {
+    color: #1a365d;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.header-content .subtitle {
+    color: #4a5568;
+    font-size: 1.2rem;
+}
+
+.status-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.status-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.status-card:hover {
+    transform: translateY(-2px);
+}
+
+.status-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.status-icon.espera {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-icon.proceso {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.status-icon.completado {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-info h3 {
+    color: #4b5563;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.status-number {
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.section {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.section-header h2 {
+    color: #1a365d;
+    font-size: 1.5rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.badge {
+    background: #e5e7eb;
+    color: #4b5563;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.vehiculos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.vehiculo-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+}
+
+.vehiculo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.vehiculo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.vehiculo-header h3 {
+    color: #1a365d;
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-badge.espera {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-badge.aprobado {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.status-badge.en_proceso {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-badge.completado {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: #4b5563;
+}
+
+.info-row i {
+    color: #6b7280;
+    width: 20px;
+}
+
+.reportes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.reporte-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+}
+
+.reporte-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.reporte-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.reporte-title h3 {
+    color: #1a365d;
+    font-size: 1.25rem;
+    margin: 0 0 0.25rem 0;
+}
+
+.fecha {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.reporte-info {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.reporte-descripcion {
+    margin-bottom: 1.5rem;
+}
+
+.reporte-descripcion label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #4b5563;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.reporte-descripcion p {
+    color: #1f2937;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+}
+
+.reporte-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-success {
+    background: #16a34a;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #15803d;
+}
+
+.no-reportes {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.no-reportes i {
+    font-size: 3rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+}
+
+.no-reportes p {
+    color: #64748b;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .status-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .reportes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .reporte-actions {
+        flex-direction: column;
+    }
+    
+    .header-content h1 {
+        font-size: 2rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Event listeners para botones de "En Proceso"
+    document.querySelectorAll('.btn-en-proceso').forEach(button => {
+        button.addEventListener('click', function() {
+            const reporteId = this.getAttribute('data-reporte-id');
+            if (confirm('¿Deseas iniciar el mantenimiento de este reporte?')) {
+                marcarEnProceso(reporteId);
+            }
+        });
+    });
+
+    // Event listeners para botones de "Completado"
+    document.querySelectorAll('.btn-completado').forEach(button => {
+        button.addEventListener('click', function() {
+            const reporteId = this.getAttribute('data-reporte-id');
+            if (confirm('¿Deseas marcar este mantenimiento como completado?')) {
+                marcarCompletado(reporteId);
+            }
+        });
+    });
+});
+
+function marcarEnProceso(reporteId) {
+    const button = document.querySelector(`[data-reporte-id="${reporteId}"]`);
+    const originalText = button.innerHTML;
+    
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+    
+    fetch(`/taller/reporte/${reporteId}/en-proceso`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            button.disabled = false;
+            button.innerHTML = originalText;
+            alert('Error al actualizar el estado: ' + (data.error || 'Error desconocido'));
+        }
+    })
+    .catch(error => {
+        button.disabled = false;
+        button.innerHTML = originalText;
+        alert('Error al actualizar el estado: ' + error);
+    });
+}
+
+function marcarCompletado(reporteId) {
+    const button = document.querySelector(`[data-reporte-id="${reporteId}"]`);
+    const originalText = button.innerHTML;
+    
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+    
+    fetch(`/taller/reporte/${reporteId}/completado`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            button.disabled = false;
+            button.innerHTML = originalText;
+            alert('Error al actualizar el estado: ' + (data.error || 'Error desconocido'));
+        }
+    })
+    .catch(error => {
+        button.disabled = false;
+        button.innerHTML = originalText;
+        alert('Error al actualizar el estado: ' + error);
+    });
+}
+</script>
 {% endblock %}

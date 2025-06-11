@@ -1,331 +1,154 @@
 {% extends "base.html" %}
 
-{% block title %}Panel de Coordinador de Operaciones - SIGO{% endblock %}
+{% block title %}Panel de Coordinador - SIGO{% endblock %}
 
 {% block content %}
-<div class="content-wrapper">
-    <div class="content-header">
-        <h1>Panel de Coordinador de Operaciones</h1>
-        <p>Gestión de operadores y unidades para transporte de personal</p>
+<div class="container">
+    <div class="page-header">
+        <h1>Panel de Coordinador</h1>
+        <p class="subtitle">Bienvenido al panel de control de coordinador</p>
     </div>
-    
-    <div class="content-body">
-        <!-- Resumen de Estado -->
-        <div class="status-summary">
-            <div class="status-card">
-                <div class="status-icon active">
-                    <i class="fas fa-bus"></i>
-                </div>
-                <div class="status-info">
-                    <h3>Unidades en Servicio</h3>
-                    <span class="status-number">8</span>
-                </div>
+
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i class="fas fa-bus"></i>
             </div>
-            <div class="status-card">
-                <div class="status-icon warning">
-                    <i class="fas fa-tools"></i>
-                </div>
-                <div class="status-info">
-                    <h3>En Mantenimiento</h3>
-                    <span class="status-number">3</span>
-                </div>
-            </div>
-            <!-- Nuevo botón de Reportar Clima -->
-            <div class="status-card action-card">
-                <a href="/coordinador/reportar" class="btn-reportar-clima">
-                    <div class="status-icon primary">
-                        <i class="fas fa-snowflake"></i>
-                    </div>
-                    <div class="status-info">
-                        <h3>Reportar Problema de Clima</h3>
-                        <span class="action-text">Nuevo Reporte</span>
-                    </div>
-                </a>
+            <div class="card-content">
+                <h3>Unidades Activas</h3>
+                <p class="count">{{ unidades_activas|length }}</p>
             </div>
         </div>
 
-        <div class="main-content">
-            <div class="dashboard-grid">
-                <!-- Operadores -->
-                <div class="dashboard-card">
-                    <div class="card-icon">
-                        <i class="fas fa-user-tie"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3>Operadores</h3>
-                        <p>Gestión de cambios de ruta y unidad</p>
-                        <div class="card-actions">
-                            <a href="/solicitud-cambio-ruta" class="btn btn-primary">
-                                <i class="fas fa-route"></i>
-                                Solicitar Cambio de Ruta
-                            </a>
-                            <a href="/solicitud-cambio-unidad" class="btn btn-primary">
-                                <i class="fas fa-exchange-alt"></i>
-                                Solicitar Cambio de Unidad
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gestión de Unidades -->
-                <div class="dashboard-card">
-                    <div class="card-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3>Gestión de Unidades</h3>
-                        <p>Cambio y solicitud de unidades</p>
-                        <div class="card-stats">
-                            <div class="stat-item">
-                                <span class="stat-value">2</span>
-                                <span class="stat-label">Cambios Pendientes</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-value">1</span>
-                                <span class="stat-label">En Taller</span>
-                            </div>
-                        </div>
-                        <div class="card-actions">
-                            <a href="/solicitud-taller" class="btn btn-primary">
-                                <i class="fas fa-tools"></i>
-                                Solicitar Taller
-                            </a>
-                            <a href="/solicitudes-pendientes" class="btn btn-secondary">
-                                <i class="fas fa-clipboard-list"></i>
-                                Ver Solicitudes
-                            </a>
-                        </div>
-                    </div>
-                </div>
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div class="card-content">
+                <h3>Reportar Clima</h3>
+                <a href="{{ url_for('reportar_clima') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Nuevo Reporte
+                </a>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-    .content-wrapper {
-        padding: 2rem;
-        flex: 1;
-    }
-    .content-header {
-        margin-bottom: 2rem;
-    }
-    .content-header h1 {
-        color: #2c3e50;
-        font-size: 2rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-    .content-header p {
-        color: #7f8c8d;
-        font-size: 1.1rem;
-    }
-    .content-body {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-    }
-    .main-content {
-        display: grid;
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-header .subtitle {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.dashboard-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background: #3498db;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-content h3 {
+    color: #2c3e50;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.count {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #3498db;
+    margin: 0;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+    .dashboard-grid {
         grid-template-columns: 1fr;
-        gap: 2rem;
     }
-    .status-summary {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
+    
+    .dashboard-card {
+        padding: 1rem;
     }
-    .status-card {
-        background: #fff;
-        border-radius: 1rem;
-        padding: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        transition: transform 0.2s;
-    }
-    .status-card:hover {
-        transform: translateY(-5px);
-    }
-    .status-icon {
+    
+    .card-icon {
         width: 50px;
         height: 50px;
-        border-radius: 50%;
-        background: #e3f2fd;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
-    .status-icon i {
-        font-size: 1.5rem;
-        color: #3498db;
-    }
-    .status-icon.active {
-        background: #e8f5e9;
-    }
-    .status-icon.active i {
-        color: #2e7d32;
-    }
-    .status-icon.warning {
-        background: #fff3e0;
-    }
-    .status-icon.warning i {
-        color: #ef6c00;
-    }
-    .status-icon.primary {
-        background: #e0f2fe;
-        color: #0284c7;
-    }
-    .status-info h3 {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-        margin-bottom: 0.25rem;
-    }
-    .status-number {
-        color: #2c3e50;
-        font-size: 1.5rem;
-        font-weight: 600;
-    }
-    .dashboard-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-    }
-    .dashboard-card {
-        background: #fff;
-        border-radius: 1rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .dashboard-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 12px rgba(0,0,0,0.1);
-    }
-    .card-icon {
-        width: 80px;
-        height: 80px;
-        background: #3498db;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.5rem;
-    }
-    .card-icon i {
-        font-size: 2rem;
-        color: white;
-    }
-    .card-content h3 {
-        color: #2c3e50;
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-    }
-    .card-content p {
-        color: #7f8c8d;
-        margin-bottom: 1.5rem;
-    }
-    .card-stats {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-        width: 100%;
-    }
-    .stat-item {
-        text-align: center;
-    }
-    .stat-value {
-        display: block;
-        color: #2c3e50;
-        font-size: 1.5rem;
-        font-weight: 600;
-    }
-    .stat-label {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-    }
-    .card-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        width: 100%;
-    }
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.5rem;
-        font-size: 1rem;
-        font-weight: 500;
-        text-decoration: none;
-        transition: all 0.2s;
-        width: 100%;
-    }
-    .btn i {
-        margin-right: 0.5rem;
-    }
-    .btn-primary {
-        background: #3498db;
-        color: white;
-    }
-    .btn-primary:hover {
-        background: #2980b9;
-        transform: translateX(5px);
-    }
-    .btn-secondary {
-        background: #e0e0e0;
-        color: #2c3e50;
-    }
-    .btn-secondary:hover {
-        background: #d0d0d0;
-    }
-    .action-card {
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .action-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    .btn-reportar-clima {
-        text-decoration: none;
-        color: inherit;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        width: 100%;
-    }
-    .action-text {
-        font-size: 0.875rem;
-        color: #0284c7;
-        font-weight: 500;
-    }
-    @media (max-width: 768px) {
-        .content-wrapper {
-            padding: 1rem;
-        }
-        .content-header h1 {
-            font-size: 1.5rem;
-        }
-        .content-header p {
-            font-size: 1rem;
-        }
-        .status-summary {
-            grid-template-columns: 1fr;
-        }
-        .dashboard-grid {
-            grid-template-columns: 1fr;
-        }
-        .dashboard-card {
-            padding: 1.5rem;
-        }
-    }
+}
 </style>
 {% endblock %}

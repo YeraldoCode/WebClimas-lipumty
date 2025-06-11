@@ -1,206 +1,345 @@
 {% extends "base.html" %}
 
-{% block title %}Panel de Administración - SIGO{% endblock %}
+{% block title %}Panel de Logística - SIGO{% endblock %}
 
 {% block content %}
-<div class="content-wrapper">
-    <div class="content-header">
-        <h1>Panel de Administración</h1>
-        <p>Gestión de solicitudes y flota</p>
+<div class="container">
+    <div class="page-header">
+        <h1>Panel de Logística</h1>
+        <p class="subtitle">Gestión de reportes de clima y vehículos en espera</p>
     </div>
-    
-    <div class="content-body">
-        <!-- Resumen de Estado -->
-        <div class="status-summary">
-            <div class="status-card">
-                <div class="status-icon warning">
-                    <i class="fas fa-clipboard-list"></i>
-                </div>
-                <div class="status-info">
-                    <h3>Solicitudes Pendientes</h3>
-                    <span class="status-number">0</span>
-                </div>
+
+    <div class="dashboard-grid">
+        <div class="status-card">
+            <div class="status-icon">
+                <i class="fas fa-exclamation-circle"></i>
             </div>
-            <div class="status-card">
-                <div class="status-icon active">
-                    <i class="fas fa-bus"></i>
-                </div>
-                <div class="status-info">
-                    <h3>Unidades Activas</h3>
-                    <span class="status-number">0</span>
-                </div>
+            <div class="status-info">
+                <h3>Reportes Pendientes</h3>
+                <p class="status-number">{{ reportes_pendientes|length }}</p>
             </div>
         </div>
+    </div>
 
-        <div class="main-content">
-            <div class="dashboard-grid">
-                <!-- Gestión de Flota -->
-                <div class="dashboard-card">
-                    <div class="card-icon">
-                        <i class="fas fa-bus"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3>Gestión de Flota</h3>
-                        <p>Modificación directa de operadores y unidades</p>
-                        <div class="card-actions">
-                            <a href="{{ url_for('admin') }}" class="btn btn-primary">
-                                <i class="fas fa-tools"></i>
-                                Gestionar Flota
-                            </a>
-                        </div>
-                    </div>
+
+    <div class="section">
+        <h2>Reportes de Clima Pendientes</h2>
+        <div class="reportes-grid">
+            {% for reporte in reportes_pendientes %}
+            <div class="reporte-card" id="reporte-{{ reporte.id }}">
+                <div class="reporte-header">
+                    <h3>Reporte #{{ reporte.id }}</h3>
+                    <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
+                </div>
+                <div class="reporte-info">
+                    <p><strong>Unidad:</strong> {{ reporte.vehiculo_id }}</p>
+                    <p><strong>Descripción:</strong> {{ reporte.descripcion }}</p>
+                </div>
+                <div class="reporte-actions">
+                    <button class="btn btn-success btn-aprobar" data-reporte-id="{{ reporte.id }}">
+                        <i class="fas fa-check"></i> Aprobar
+                    </button>
+                    <button class="btn btn-danger btn-rechazar" data-reporte-id="{{ reporte.id }}">
+                        <i class="fas fa-times"></i> Rechazar
+                    </button>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </div>
 </div>
 
 <style>
-.content-wrapper {
-    padding: 2rem;
-    flex: 1;
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
 }
-.content-header {
+
+.page-header {
+    text-align: center;
     margin-bottom: 2rem;
 }
-.content-header h1 {
+
+.page-header h1 {
     color: #2c3e50;
     font-size: 2rem;
-    font-weight: 600;
     margin-bottom: 0.5rem;
 }
-.content-header p {
+
+.page-header .subtitle {
     color: #7f8c8d;
     font-size: 1.1rem;
 }
-.content-body {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-.main-content {
+
+.dashboard-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-}
-.status-summary {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
+    margin-bottom: 2rem;
 }
+
 .status-card {
-    background: #fff;
-    border-radius: 1rem;
+    background: white;
+    border-radius: 12px;
     padding: 1.5rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-.status-card:hover {
-    transform: translateY(-5px);
-}
+
 .status-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #e3f2fd;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-.status-icon i {
     font-size: 1.5rem;
+}
+
+.status-icon i {
     color: #3498db;
 }
-.status-icon.active {
-    background: #e8f5e9;
-}
-.status-icon.active i {
-    color: #2e7d32;
-}
-.status-icon.warning {
-    background: #fff3e0;
-}
-.status-icon.warning i {
-    color: #ef6c00;
-}
+
 .status-info h3 {
-    color: #7f8c8d;
-    font-size: 0.9rem;
+    color: #2c3e50;
+    font-size: 1rem;
     margin-bottom: 0.25rem;
 }
+
 .status-number {
-    color: #2c3e50;
+    color: #3498db;
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: bold;
 }
-.dashboard-grid {
+
+.section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.section h2 {
+    color: #2c3e50;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.vehiculos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-}
-.dashboard-card {
-    background: #fff;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.dashboard-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0,0,0,0.1);
-}
-.card-icon {
-    width: 80px;
-    height: 80px;
-    background: #3498db;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-}
-.card-icon i {
-    font-size: 2rem;
-    color: white;
-}
-.card-content h3 {
-    color: #2c3e50;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-}
-.card-content p {
-    color: #7f8c8d;
-    margin-bottom: 1.5rem;
-}
-.card-actions {
-    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1rem;
 }
+
+.vehiculo-card {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+.vehiculo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.vehiculo-header h3 {
+    color: #2c3e50;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-badge.espera {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.vehiculo-info p {
+    margin: 0.25rem 0;
+    color: #4b5563;
+    font-size: 0.875rem;
+}
+
+.reportes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.reporte-card {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+.reporte-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.reporte-header h3 {
+    color: #2c3e50;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.fecha {
+    color: #6b7280;
+    font-size: 0.75rem;
+}
+
+.reporte-info p {
+    margin: 0.25rem 0;
+    color: #4b5563;
+    font-size: 0.875rem;
+}
+
+.reporte-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
 .btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
     transition: all 0.2s;
 }
-.btn-primary {
-    background: #3498db;
+
+.btn-success {
+    background: #10b981;
     color: white;
 }
-.btn-primary:hover {
-    background: #2980b9;
+
+.btn-success:hover {
+    background: #059669;
 }
-.btn i {
-    font-size: 1.1rem;
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+@media (max-width: 640px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .vehiculos-grid,
+    .reportes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .reporte-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Manejar aprobación de reportes
+    document.querySelectorAll('.btn-aprobar').forEach(button => {
+        button.addEventListener('click', function() {
+            const reporteId = this.dataset.reporteId;
+            if (confirm('¿Estás seguro de que deseas aprobar este reporte?')) {
+                aprobarReporte(reporteId);
+            }
+        });
+    });
+
+    // Manejar rechazo de reportes
+    document.querySelectorAll('.btn-rechazar').forEach(button => {
+        button.addEventListener('click', function() {
+            const reporteId = this.dataset.reporteId;
+            if (confirm('¿Estás seguro de que deseas rechazar este reporte?')) {
+                rechazarReporte(reporteId);
+            }
+        });
+    });
+});
+
+function aprobarReporte(reporteId) {
+    fetch(`/logistica/aprobar-reporte/${reporteId}`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const reporteCard = document.getElementById(`reporte-${reporteId}`);
+            reporteCard.style.opacity = '0';
+            setTimeout(() => {
+                reporteCard.remove();
+                actualizarContador();
+            }, 300);
+        } else {
+            alert(data.error || 'Error al aprobar el reporte');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al aprobar el reporte');
+    });
+}
+
+function rechazarReporte(reporteId) {
+    fetch(`/logistica/rechazar-reporte/${reporteId}`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const reporteCard = document.getElementById(`reporte-${reporteId}`);
+            reporteCard.style.opacity = '0';
+            setTimeout(() => {
+                reporteCard.remove();
+                actualizarContador();
+            }, 300);
+        } else {
+            alert(data.error || 'Error al rechazar el reporte');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al rechazar el reporte');
+    });
+}
+
+function actualizarContador() {
+    const contador = document.querySelector('.status-number');
+    const reportes = document.querySelectorAll('.reporte-card');
+    contador.textContent = reportes.length;
+}
+</script>
 {% endblock %}

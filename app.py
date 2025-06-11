@@ -15,23 +15,54 @@ from io import BytesIO
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
+from werkzeug.utils import secure_filename
+import json
+from flask_sqlalchemy import SQLAlchemy
 
 # =============================
 # Configuración e inicialización
 # =============================
-app = Flask(__name__)
-app.config.from_object(Config)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
+    app.config['SECRET_KEY'] = 'tu_clave_secreta'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://lipu_admin:XTHV02bIaM8kXSVuMsZ2Sg7FzZQ5HoQr@dpg-d0qvdpripnbc73ept3m0-a.oregon-postgres.render.com/lipuclimas'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
-# Inicializar extensiones
-db.init_app(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
-csrf = CSRFProtect(app)
+    # Deshabilitar CSRF para rutas del coordinador
+    app.config['WTF_CSRF_ENABLED'] = False
 
-@login_manager.user_loader
-def load_user(user_id):
-    return db.session.get(Usuario, int(user_id))
+    # Inicializar extensiones
+    db.init_app(app)
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'login'
+    csrf = CSRFProtect(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return db.session.get(Usuario, int(user_id))
+
+    # Manejador de errores global
+    @app.errorhandler(Exception)
+    def handle_error(error):
+        print(f"Error global: {str(error)}")
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}")
+        
+        if request.is_json or request.path.startswith('/coordinador/'):
+            return jsonify({
+                'success': False,
+                'error': str(error)
+            }), getattr(error, 'code', 500)
+        
+        flash(str(error), 'error')
+        return redirect(url_for('index'))
+
+    return app
+
+app = create_app()
 
 # =============================
 # Rutas principales
@@ -77,80 +108,127 @@ def logout():
 @login_required
 def taller():
     if current_user.rol != 'taller':
-        flash('No tienes permiso para acceder a esta sección')
-        return redirect('/')
+        flash('No tienes permiso para acceder a esta sección', 'error')
+        return redirect(url_for('index'))
     
-    reportes = ReporteClima.query.filter_by(estado='pendiente').all()
-    return render_template('taller/index.html', reportes=reportes)
+    # Obtener reportes aprobados y en proceso
+    reportes = db.session.query(ReporteClima).filter(
+        ReporteClima.estado.in_(['aprobado', 'en_proceso'])
+    ).all()
+        # Obtener reportes de clima pendientes
+    reportes_pendientes = ReporteClima.query.filter_by(estado='pendiente').order_by(ReporteClima.fecha_reporte.desc()).all()
+    
+    # Obtener vehículos en espera
+    vehiculos_espera = Vehiculo.query.filter_by(estatus='Espera').all()
+    
+    return render_template('taller/index.html', 
+                         reportes_pendientes=reportes_pendientes,
+                         vehiculos_espera=vehiculos_espera,
+                         reportes=reportes)
 
 @app.route('/coordinador')
 def coordinador():
-    vehiculos = Vehiculo.query.all()
-    return render_template('coordinador/index.html', vehiculos=vehiculos)
+    # Obtener solo las unidades con estatus 'Operando'
+    unidades_activas = Vehiculo.query.filter_by(estatus='Operando').all()
+    return render_template('coordinador/index.html', unidades_activas=unidades_activas)
 
-@app.route('/coordinador/reportar')
-def reportar():
-    vehiculos = Vehiculo.query.all()
-    return render_template('coordinador/reportar.html', vehiculos=vehiculos)
-
-@app.route('/coordinador/reportar-clima', methods=['POST'])
-@csrf.exempt
+@app.route('/coordinador/reportar-clima', methods=['GET', 'POST'])
 def reportar_clima():
-    print("\n=== Datos recibidos en reportar-clima ===")
-    print(f"Form data completo: {request.form}")
-    print(f"Headers: {request.headers}")
-    
-    vehiculo_id = request.form.get('vehiculo_id')
-    descripcion = request.form.get('descripcion')
-    
-    if not vehiculo_id or not descripcion:
-        print("Error: Faltan datos requeridos")
-        return jsonify({
-            'success': False, 
-            'error': 'Faltan datos requeridos'
-        }), 400
-    
-    try:
-        # Verificar que el vehículo existe usando Session.get()
-        vehiculo = db.session.get(Vehiculo, vehiculo_id)
-        if not vehiculo:
-            print(f"Error: Vehículo {vehiculo_id} no encontrado")
+    if request.method == 'POST':
+        try:
+            # Obtener y validar datos del formulario
+            print("Datos recibidos:", request.form)
+            vehiculo_id = request.form.get('vehiculo_id')
+            descripcion = request.form.get('descripcion')
+            
+            print(f"Recibido - vehiculo_id: {vehiculo_id}, descripcion: {descripcion}")
+            
+            if not vehiculo_id or not descripcion:
+                print("Error: Campos vacíos")
+                return jsonify({
+                    'success': False, 
+                    'error': 'Todos los campos son requeridos'
+                }), 400
+            
+            try:
+                vehiculo_id = int(vehiculo_id)
+            except ValueError as e:
+                print(f"Error: ID de vehículo inválido - {vehiculo_id}")
+                print(f"Error detallado: {str(e)}")
+                return jsonify({
+                    'success': False, 
+                    'error': 'ID de vehículo inválido'
+                }), 400
+            
+            # Verificar que el vehículo existe y está operando
+            vehiculo = Vehiculo.query.filter_by(idvehiculo=vehiculo_id, estatus='Operando').first()
+            print(f"Vehículo encontrado: {vehiculo}")
+            
+            if not vehiculo:
+                print(f"Error: Vehículo no encontrado o no está operando - {vehiculo_id}")
+                return jsonify({
+                    'success': False, 
+                    'error': 'Vehículo no encontrado o no está operando'
+                }), 400
+            
+            # Actualizar estatus del vehículo a 'Espera'
+            vehiculo.estatus = 'Espera'
+            print(f"Estatus del vehículo actualizado a Espera")
+            
+            # Crear nuevo reporte
+            nuevo_reporte = ReporteClima(
+                vehiculo_id=vehiculo_id,
+                descripcion=descripcion,
+                estado='pendiente',
+                fecha_reporte=datetime.now()
+            )
+            
+            db.session.add(nuevo_reporte)
+            db.session.commit()
+            
+            print(f"Reporte creado exitosamente para vehículo {vehiculo_id} y estatus actualizado a Espera")
             return jsonify({
-                'success': False,
-                'error': 'Vehículo no encontrado'
-            }), 404
-        
-        # Ahora que sabemos que el vehículo existe, podemos acceder a sus propiedades
-        print(f"Vehículo ID: {vehiculo_id}")
-        print(f"Planta: {vehiculo.descripcion}")
-        print(f"Descripción del problema: {descripcion}")
-        
-        reporte = ReporteClima(
-            vehiculo_id=vehiculo_id,
-            descripcion=descripcion,
-            estado='pendiente'
-        )
-        
-        db.session.add(reporte)
-        db.session.commit()
-        print("Reporte guardado exitosamente")
-        return jsonify({'success': True})
+                'success': True, 
+                'message': 'Reporte creado exitosamente y vehículo puesto en espera'
+            })
+            
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error al crear reporte: {str(e)}")
+            print(f"Tipo de error: {type(e)}")
+            import traceback
+            print(f"Traceback: {traceback.format_exc()}")
+            return jsonify({
+                'success': False, 
+                'error': f'Error al crear el reporte: {str(e)}'
+            }), 500
+    
+    # GET request - mostrar formulario
+    try:
+        vehiculos = Vehiculo.query.filter_by(estatus='Operando').all()
+        print(f"Vehículos operando encontrados: {len(vehiculos)}")
+        return render_template('coordinador/reportar.html', vehiculos=vehiculos)
     except Exception as e:
-        print(f"Error al guardar reporte: {str(e)}")
-        db.session.rollback()
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+        print(f"Error al cargar vehículos: {str(e)}")
+        flash('Error al cargar la lista de vehículos', 'error')
+        return redirect(url_for('coordinador'))
 
 @app.route('/admin')
 @login_required
 def admin():
     if current_user.rol != 'logistica':
-        flash('No tienes permiso para acceder a esta sección')
-        return redirect('/')
+        flash('No tienes permiso para acceder a esta página', 'error')
+        return redirect(url_for('index'))
     
-    return render_template('logistica/index.html')
+    # Obtener reportes de clima pendientes
+    reportes_pendientes = ReporteClima.query.filter_by(estado='pendiente').order_by(ReporteClima.fecha_reporte.desc()).all()
+    
+    # Obtener vehículos en espera
+    vehiculos_espera = Vehiculo.query.filter_by(estatus='Espera').all()
+    
+    return render_template('logistica/index.html', 
+                         reportes_pendientes=reportes_pendientes,
+                         vehiculos_espera=vehiculos_espera)
 
 @app.route('/taller/revisar/<int:reporte_id>')
 @login_required
@@ -162,32 +240,49 @@ def revisar_reporte(reporte_id):
     reporte = ReporteClima.query.get_or_404(reporte_id)
     return render_template('taller/revisar.html', reporte=reporte)
 
-@app.route('/taller/completar/<int:reporte_id>', methods=['POST'])
+@app.route('/taller/reporte/<int:reporte_id>/en-proceso', methods=['POST'])
 @login_required
-def completar_reporte(reporte_id):
-    print("\n=== Datos recibidos en completar-reporte ===")
-    print(f"Form data completo: {request.form}")
-    print(f"Reporte ID: {reporte_id}")
-    
+def taller_en_proceso(reporte_id):
     if current_user.rol != 'taller':
-        print("Acceso denegado: Usuario no es de taller")
         return jsonify({'success': False, 'error': 'No autorizado'})
     
-    reporte = ReporteClima.query.get_or_404(reporte_id)
-    solucion = request.form.get('solucion')
-    print(f"Solución: {solucion}")
-    
     try:
-        reporte.estado = 'completado'
-        reporte.solucion = solucion
-        reporte.tecnico_id = current_user.id
-        reporte.fecha_revision = datetime.utcnow()
+        reporte = db.session.query(ReporteClima).get(reporte_id)
+        if not reporte:
+            return jsonify({'success': False, 'error': 'Reporte no encontrado'})
         
+        if reporte.estado != 'aprobado':
+            return jsonify({'success': False, 'error': 'El reporte no está aprobado'})
+        
+        reporte.estado = 'en_proceso'
+        reporte.fecha_inicio = datetime.now()
         db.session.commit()
-        print("Reporte completado exitosamente")
+        
         return jsonify({'success': True})
     except Exception as e:
-        print(f"Error al completar reporte: {str(e)}")
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/taller/reporte/<int:reporte_id>/completado', methods=['POST'])
+@login_required
+def taller_completado(reporte_id):
+    if current_user.rol != 'taller':
+        return jsonify({'success': False, 'error': 'No autorizado'})
+    
+    try:
+        reporte = db.session.query(ReporteClima).get(reporte_id)
+        if not reporte:
+            return jsonify({'success': False, 'error': 'Reporte no encontrado'})
+        
+        if reporte.estado not in ['aprobado', 'en_proceso']:
+            return jsonify({'success': False, 'error': 'El reporte no está en un estado válido'})
+        
+        reporte.estado = 'completado'
+        reporte.fecha_completado = datetime.now()
+        db.session.commit()
+        
+        return jsonify({'success': True})
+    except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
 
@@ -394,6 +489,57 @@ def db_view():
     }
     
     return render_template('admin/db_view.html', data=data)
+
+@app.route('/admin/reportes-clima', methods=['GET'])
+@login_required
+def admin_reportes_clima():
+    if current_user.rol != 'logistica':
+        flash('No tienes permiso para acceder a esta sección', 'error')
+        return redirect(url_for('index'))
+    
+    # Obtener todos los reportes pendientes
+    reportes = db.session.query(ReporteClima).filter_by(estado='pendiente').all()
+    return render_template('logistica/reportes_clima.html', reportes=reportes)
+
+@app.route('/admin/reportes-clima/<int:reporte_id>/aprobar', methods=['POST'])
+@login_required
+def aprobar_reporte_clima(reporte_id):
+    if current_user.rol != 'logistica':
+        return jsonify({'success': False, 'error': 'No autorizado'})
+    
+    try:
+        reporte = db.session.query(ReporteClima).get(reporte_id)
+        if not reporte:
+            return jsonify({'success': False, 'error': 'Reporte no encontrado'})
+        
+        reporte.estado = 'aprobado'
+        reporte.fecha_aprobacion = datetime.now()
+        db.session.commit()
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/admin/reportes-clima/<int:reporte_id>/rechazar', methods=['POST'])
+@login_required
+def rechazar_reporte_clima(reporte_id):
+    if current_user.rol != 'logistica':
+        return jsonify({'success': False, 'error': 'No autorizado'})
+    
+    try:
+        reporte = db.session.query(ReporteClima).get(reporte_id)
+        if not reporte:
+            return jsonify({'success': False, 'error': 'Reporte no encontrado'})
+        
+        reporte.estado = 'rechazado'
+        reporte.fecha_aprobacion = datetime.now()
+        db.session.commit()
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)})
 
 # =============================
 # Fin del archivo principal

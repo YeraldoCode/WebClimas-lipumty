@@ -314,12 +314,39 @@ document.getElementById('reporteForm').addEventListener('submit', function(e) {
     
     const formData = new FormData(this);
     
+    // Depurar datos del formulario
+    console.log('Datos del formulario:');
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
+    
     fetch('/coordinador/reportar-clima', {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(async response => {
+        console.log('Status:', response.status);
+        const contentType = response.headers.get('content-type');
+        console.log('Content-Type:', contentType);
+        
+        let data;
+        try {
+            const text = await response.text();
+            console.log('Respuesta del servidor:', text);
+            data = JSON.parse(text);
+        } catch (e) {
+            console.error('Error al parsear respuesta:', e);
+            throw new Error('Error al procesar la respuesta del servidor');
+        }
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Error al enviar el reporte');
+        }
+        
+        return data;
+    })
     .then(data => {
+        console.log('Datos procesados:', data);
         if (data.success) {
             successMessage.style.display = 'flex';
             this.reset();
@@ -330,7 +357,8 @@ document.getElementById('reporteForm').addEventListener('submit', function(e) {
         }
     })
     .catch(error => {
-        errorMessage.querySelector('span').textContent = 'Error al enviar el reporte';
+        console.error('Error:', error);
+        errorMessage.querySelector('span').textContent = error.message || 'Error al enviar el reporte. Por favor, intente nuevamente.';
         errorMessage.style.display = 'flex';
     })
     .finally(() => {
