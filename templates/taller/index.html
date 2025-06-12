@@ -4,141 +4,103 @@
 
 {% block content %}
 <div class="container">
-    <div class="dashboard-header">
-        <div class="header-content">
-            <h1>Panel de Taller</h1>
-            <p class="subtitle">Gestión de mantenimiento de unidades</p>
-        </div>
-        <div class="status-cards">
-            <div class="status-card">
-                <div class="status-icon espera">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="status-info">
-                    <h3>En Espera</h3>
-                    <p class="status-number">{{ vehiculos_espera|length }}</p>
-                </div>
-            </div>
-            <div class="status-card">
-                <div class="status-icon proceso">
-                    <i class="fas fa-tools"></i>
-                </div>
-                <div class="status-info">
-                    <h3>En Proceso</h3>
-                    <p class="status-number">{{ reportes|selectattr('estado', 'equalto', 'en_proceso')|list|length }}</p>
-                </div>
-            </div>
-            <div class="status-card">
-                <div class="status-icon completado">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="status-info">
-                    <h3>Completados</h3>
-                    <p class="status-number">{{ reportes|selectattr('estado', 'equalto', 'completado')|list|length }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="dashboard-content">
         <div class="section">
             <div class="section-header">
-                <h2><i class="fas fa-bus"></i> Unidades en Espera</h2>
-                <span class="badge">{{ vehiculos_espera|length }}</span>
-            </div>
-            <div class="vehiculos-grid">
-                {% for vehiculo in vehiculos_espera %}
-                <div class="vehiculo-card">
-                    <div class="vehiculo-header">
-                        <h3>Unidad {{ vehiculo.idvehiculo }}</h3>
-                        <span class="status-badge espera">En Espera</span>
-                    </div>
-                    <div class="vehiculo-info">
-                        <div class="info-row">
-                            <i class="fas fa-car"></i>
-                            <span>{{ vehiculo.placas }}</span>
-                        </div>
-                        <div class="info-row">
-                            <i class="fas fa-barcode"></i>
-                            <span>{{ vehiculo.serial }}</span>
-                        </div>
-                        <div class="info-row">
-                            <i class="fas fa-building"></i>
-                            <span>{{ vehiculo.descripcion }}</span>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">
-                <h2><i class="fas fa-clipboard-list"></i> Reportes de Mantenimiento</h2>
-                <span class="badge">{{ reportes|length }}</span>
+                <h2><i class="fas fa-tools"></i> Reportes de Reparación</h2>
+                <span class="badge">{{ reportes_reparacion|length }}</span>
             </div>
             <div class="reportes-grid">
-                {% if reportes %}
-                    {% for reporte in reportes %}
+                {% if reportes_reparacion %}
+                    {% for reporte in reportes_reparacion %}
                     <div class="reporte-card">
                         <div class="reporte-header">
-                            <div class="reporte-title">
-                                <h3>Reporte #{{ reporte.id }}</h3>
-                                <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
-                            </div>
-                            <span class="status-badge {{ reporte.estado }}">{{ reporte.estado|replace('_', ' ')|title }}</span>
+                            <h3>Reporte #{{ reporte.id }}</h3>
+                            <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
                         </div>
-                        
                         <div class="reporte-info">
-                            <div class="info-row">
-                                <i class="fas fa-bus"></i>
-                                <span>Unidad {{ reporte.vehiculo_id }}</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fas fa-car"></i>
-                                <span>{{ reporte.vehiculo.placas }}</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fas fa-barcode"></i>
-                                <span>{{ reporte.vehiculo.serial }}</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fas fa-building"></i>
-                                <span>{{ reporte.vehiculo.descripcion }}</span>
-                            </div>
+                            <p><strong>Unidad:</strong> {{ reporte.vehiculo_id }}</p>
+                            <p><strong>Descripción:</strong> {{ reporte.descripcion }}</p>
                         </div>
-
-                        <div class="reporte-descripcion">
-                            <label><i class="fas fa-exclamation-circle"></i> Descripción del problema:</label>
-                            <p>{{ reporte.descripcion }}</p>
-                        </div>
-
                         <div class="reporte-actions">
-                            {% if reporte.estado == 'aprobado' %}
                             <button class="btn btn-primary btn-en-proceso" data-reporte-id="{{ reporte.id }}">
-                                <i class="fas fa-tools"></i>
-                                Iniciar Mantenimiento
+                                <i class="fas fa-tools"></i> Iniciar Mantenimiento
                             </button>
-                            {% elif reporte.estado == 'en_proceso' %}
-                            <button class="btn btn-success btn-completado" data-reporte-id="{{ reporte.id }}">
-                                <i class="fas fa-check"></i>
-                                Completar Mantenimiento
-                            </button>
-                            {% endif %}
                         </div>
                     </div>
                     {% endfor %}
                 {% else %}
                     <div class="no-reportes">
                         <i class="fas fa-clipboard-check"></i>
-                        <p>No hay reportes pendientes de mantenimiento</p>
+                        <p>No hay reportes de reparación pendientes</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-exchange-alt"></i> Reportes de Conversión</h2>
+                <span class="badge">{{ reportes_conversion|length }}</span>
+            </div>
+            <div class="reportes-grid">
+                {% if reportes_conversion %}
+                    {% for reporte in reportes_conversion %}
+                    <div class="reporte-card">
+                        <div class="reporte-header">
+                            <h3>Reporte #{{ reporte.id }}</h3>
+                            <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
+                        </div>
+                        <div class="reporte-info">
+                            <p><strong>Unidad:</strong> {{ reporte.vehiculo_id }}</p>
+                            <p><strong>Descripción:</strong> {{ reporte.descripcion }}</p>
+                        </div>
+                        <div class="reporte-actions">
+                            <button class="btn btn-primary btn-en-proceso" data-reporte-id="{{ reporte.id }}">
+                                <i class="fas fa-tools"></i> Iniciar Conversión
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-reportes">
+                        <i class="fas fa-clipboard-check"></i>
+                        <p>No hay reportes de conversión pendientes</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-check-circle"></i> Reportes Aceptados</h2>
+                <span class="badge">{{ reportes_aceptados|length }}</span>
+            </div>
+            <div class="reportes-grid">
+                {% if reportes_aceptados %}
+                    {% for reporte in reportes_aceptados %}
+                    <div class="reporte-card" id="reporte-{{ reporte.id }}">
+                        <div class="reporte-header">
+                            <h3>Reporte #{{ reporte.id }}</h3>
+                            <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
+                        </div>
+                        <div class="reporte-info">
+                            <p><strong>Unidad:</strong> {{ reporte.vehiculo_id }}</p>
+                            <p><strong>Descripción:</strong> {{ reporte.descripcion }}</p>
+                            <p><strong>Tipo de Problema:</strong> {{ reporte.tipo_problema }}</p> <!-- Mostrar tipo_problema -->
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-reportes">
+                        <i class="fas fa-clipboard-check"></i>
+                        <p>No hay reportes aceptados por logística</p>
                     </div>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
-
 <style>
 .container {
     max-width: 1400px;

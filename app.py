@@ -113,33 +113,33 @@ def taller():
     if current_user.rol != 'taller':
         flash('No tienes permiso para acceder a esta sección', 'error')
         return redirect(url_for('index'))
-    
-    # Obtener reportes aprobados y en proceso
-    reportes = db.session.query(ReporteClima).filter(
-        ReporteClima.estado.in_(['aprobado', 'en_proceso'])
-    ).all()
-        # Obtener reportes de clima pendientes
-    reportes_pendientes = ReporteClima.query.filter_by(estado='pendiente').order_by(ReporteClima.fecha_reporte.desc()).all()
-    
-    # Obtener vehículos en espera
-    vehiculos_espera = Vehiculo.query.filter_by(estatus='Espera').all()
-    
+
+    # Obtener reportes aceptados por logística
+    reportes_aceptados = ReporteClima.query.filter_by(estado='aprobado').order_by(ReporteClima.fecha_reporte.desc()).all()
+
+    # Depurar datos de los reportes
+    for reporte in reportes_aceptados:
+        print(f"Reporte ID: {reporte.id}, Coordinador: {reporte.coordinador.username if reporte.coordinador else 'Desconocido'}, Tipo de Problema: {reporte.tipo_problema}")
+
     return render_template('taller/index.html', 
-                         reportes_pendientes=reportes_pendientes,
-                         vehiculos_espera=vehiculos_espera,
-                         reportes=reportes)
+                        reportes_aceptados=reportes_aceptados)
 
 @app.route('/coordinador')
 @login_required
 def coordinador():
+    print(f"Usuario actual: {current_user.username}, Rol: {current_user.rol}")
     if current_user.rol != 'coordinador':
         flash('No tienes permiso para acceder a esta sección', 'error')
         return redirect(url_for('index'))
-    # Obtener solo las unidades con estatus 'Operando'
-    unidades_activas = Vehiculo.query.filter_by(estatus='Operando').all()
-    return render_template('coordinador/index.html', unidades_activas=unidades_activas)
+    
+    unidades_operando = Vehiculo.query.filter_by(estatus='Operando').all()
+    total_unidades_operando = len(unidades_operando)
+    print(f"Total de unidades operando: {total_unidades_operando}")
+    
+    return render_template('coordinador/index.html', unidades_operando=unidades_operando, total_unidades_operando=total_unidades_operando)
 
 @app.route('/coordinador/reportar-clima', methods=['GET', 'POST'])
+@login_required
 def reportar_clima():
     if request.method == 'POST':
         try:
@@ -147,10 +147,12 @@ def reportar_clima():
             print("Datos recibidos:", request.form)
             vehiculo_id = request.form.get('vehiculo_id')
             descripcion = request.form.get('descripcion')
+            tipo_problema = request.form.get('tipo_problema')  # Nuevo campo
             
-            print(f"Recibido - vehiculo_id: {vehiculo_id}, descripcion: {descripcion}")
+            print(f"Recibido - vehiculo_id: {vehiculo_id}, descripcion: {descripcion}, tipo_problema: {tipo_problema}")
             
-            if not vehiculo_id or not descripcion:
+            # Validar campos requeridos
+            if not vehiculo_id or not descripcion or not tipo_problema:
                 print("Error: Campos vacíos")
                 return jsonify({
                     'success': False, 
@@ -186,8 +188,10 @@ def reportar_clima():
             nuevo_reporte = ReporteClima(
                 vehiculo_id=vehiculo_id,
                 descripcion=descripcion,
+                tipo_problema=tipo_problema,  # Guardar el tipo de problema
                 estado='pendiente',
-                fecha_reporte=datetime.now()
+                fecha_reporte=datetime.now(),
+                coordinador_id=current_user.id  # Asignar automáticamente el coordinador actual
             )
             
             db.session.add(nuevo_reporte)
@@ -220,22 +224,35 @@ def reportar_clima():
         flash('Error al cargar la lista de vehículos', 'error')
         return redirect(url_for('coordinador'))
 
-@app.route('/admin')
+@app.route('/admin', methods=['GET'])
 @login_required
 def admin():
-    if current_user.rol != 'logistica':
-        flash('No tienes permiso para acceder a esta página', 'error')
+    try:
+        if not current_user.is_authenticated:
+            flash('Debes iniciar sesión para acceder a esta página', 'error')
+            return redirect(url_for('login'))
+
+        if current_user.rol != 'logistica':
+            flash('No tienes permiso para acceder a esta página', 'error')
+            return redirect(url_for('index'))
+
+        # Obtener el número de página actual desde los parámetros de la URL
+        page_reparacion = request.args.get('page_reparacion', 1, type=int)
+        page_conversion = request.args.get('page_conversion', 1, type=int)
+        per_page = 25  # Número de reportes por página
+
+        # Filtrar reportes con estado pendiente
+        reportes_reparacion = ReporteClima.query.filter_by(tipo_problema='reparacion', estado='pendiente').order_by(ReporteClima.fecha_reporte.desc()).paginate(page=page_reparacion, per_page=per_page)
+        reportes_conversion = ReporteClima.query.filter_by(tipo_problema='conversion', estado='pendiente').order_by(ReporteClima.fecha_reporte.desc()).paginate(page=page_conversion, per_page=per_page)
+
+        return render_template('logistica/index.html', 
+                               reportes_reparacion=reportes_reparacion,
+                               reportes_conversion=reportes_conversion)
+    except Exception as e:
+        print(f"Error en la ruta /admin: {str(e)}")
+        flash('Ocurrió un error al cargar la página de administración', 'error')
         return redirect(url_for('index'))
     
-    # Obtener reportes de clima pendientes
-    reportes_pendientes = ReporteClima.query.filter_by(estado='pendiente').order_by(ReporteClima.fecha_reporte.desc()).all()
-    
-    # Obtener vehículos en espera
-    vehiculos_espera = Vehiculo.query.filter_by(estatus='Espera').all()
-    
-    return render_template('logistica/index.html', 
-                         reportes_pendientes=reportes_pendientes,
-                         vehiculos_espera=vehiculos_espera)
 
 @app.route('/taller/revisar/<int:reporte_id>')
 @login_required
@@ -269,6 +286,9 @@ def taller_en_proceso(reporte_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
+    
+
+
 
 @app.route('/taller/reporte/<int:reporte_id>/completado', methods=['POST'])
 @login_required
@@ -284,14 +304,25 @@ def taller_completado(reporte_id):
         if reporte.estado not in ['aprobado', 'en_proceso']:
             return jsonify({'success': False, 'error': 'El reporte no está en un estado válido'})
         
+        # Cambiar el estado del reporte a "completado"
         reporte.estado = 'completado'
         reporte.fecha_completado = datetime.now()
+        
+        # Cambiar el estatus del vehículo asociado a "Operando"
+        vehiculo = Vehiculo.query.get(reporte.vehiculo_id)
+        if vehiculo:
+            vehiculo.estatus = 'Operando'
+        
         db.session.commit()
         
         return jsonify({'success': True})
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
+    
+
+
+
 
 @app.route('/admin/upload', methods=['POST'])
 def upload_excel():
@@ -353,149 +384,7 @@ def export():
     output.seek(0)
     return send_file(output, download_name='sigo_climas.xlsx', as_attachment=True)
 
-@app.route('/crear-usuario-prueba')
-def crear_usuario_prueba():
-    # Solo para pruebas, eliminar en producción
-    if not Usuario.query.filter_by(username='admin').first():
-        usuario = Usuario(
-            username='admin',
-            password_hash=generate_password_hash('admin123'),
-            rol='logistica'
-        )
-        db.session.add(usuario)
-        db.session.commit()
-        return 'Usuario creado: admin/admin123'
-    return 'Usuario ya existe'
 
-@app.route('/fix-password/<username>')
-def fix_password(username):
-    user = Usuario.query.filter_by(username=username).first()
-    if user:
-        # Guardamos la contraseña actual
-        current_password = user.password_hash
-        # Generamos el hash correcto
-        user.password_hash = generate_password_hash(current_password)
-        db.session.commit()
-        return f'Hash corregido para {username}'
-    return 'Usuario no encontrado'
-
-@app.route('/check-user/<username>')
-def check_user(username):
-    user = Usuario.query.filter_by(username=username).first()
-    if user:
-        return f'''
-        Usuario encontrado:
-        ID: {user.id}
-        Username: {user.username}
-        Password Hash: {user.password_hash}
-        Rol: {user.rol}
-        '''
-    return 'Usuario no encontrado'
-
-@app.route('/create-test-user')
-def create_test_user():
-    try:
-        # Eliminar usuario de prueba si existe
-        test_user = Usuario.query.filter_by(username='test').first()
-        if test_user:
-            db.session.delete(test_user)
-            db.session.commit()
-        
-        # Crear nuevo usuario de prueba
-        password = 'test123'
-        password_hash = generate_password_hash(password)
-        
-        new_user = Usuario(
-            username='test',
-            password_hash=password_hash,
-            rol='logistica'
-        )
-        
-        db.session.add(new_user)
-        db.session.commit()
-        
-        # Verificar que se creó correctamente
-        created_user = Usuario.query.filter_by(username='test').first()
-        if created_user:
-            return f'''
-            Usuario de prueba creado exitosamente:
-            Username: {created_user.username}
-            Password: {password}
-            Rol: {created_user.rol}
-            Hash: {created_user.password_hash}
-            '''
-        else:
-            return 'Error: Usuario no se creó correctamente'
-            
-    except Exception as e:
-        db.session.rollback()
-        return f'Error al crear usuario: {str(e)}'
-
-@app.route('/crear-usuario-taller')
-def crear_usuario_taller():
-    print("\n=== Creando Usuario Taller ===")
-    # Verificar si ya existe el usuario
-    user = Usuario.query.filter_by(username='taller').first()
-    if user:
-        print("Eliminando usuario existente")
-        db.session.delete(user)
-        db.session.commit()
-    
-    # Crear nuevo usuario
-    user = Usuario(
-        username='taller',
-        rol='taller',
-        email='taller@empresa.com'
-    )
-    user.set_password('taller123')
-    
-    print(f"Usuario creado: {user.username}")
-    print(f"Rol: {user.rol}")
-    print(f"Hash: {user.password_hash}")
-    
-    db.session.add(user)
-    db.session.commit()
-    
-    return "Usuario de taller creado. Username: taller, Password: taller123"
-
-@app.route('/admin/db-view')
-@login_required
-def db_view():
-    if current_user.rol != 'logistica':
-        flash('No tienes permiso para acceder a esta sección')
-        return redirect(url_for('index'))
-    
-    # Obtener datos de cada tabla
-    usuarios = Usuario.query.all()
-    vehiculos = Vehiculo.query.all()
-    reportes = ReporteClima.query.all()
-    
-    # Preparar datos para mostrar
-    data = {
-        'usuarios': [{
-            'id': u.id,
-            'username': u.username,
-            'rol': u.rol,
-            'email': u.email
-        } for u in usuarios],
-        'vehiculos': [{
-            'id': v.idvehiculo,
-            'serial': v.serial,
-            'marca': v.marca,
-            'modelo': v.modelo,
-            'estatus': v.estatus
-        } for v in vehiculos],
-        'reportes': [{
-            'id': r.id,
-            'vehiculo_id': r.vehiculo_id,
-            'fecha': r.fecha_reporte.strftime('%Y-%m-%d %H:%M') if r.fecha_reporte else None,
-            'descripcion': r.descripcion,
-            'estado': r.estado,
-            'tecnico': r.tecnico.username if r.tecnico else None
-        } for r in reportes]
-    }
-    
-    return render_template('admin/db_view.html', data=data)
 
 @app.route('/admin/reportes-clima', methods=['GET'])
 @login_required

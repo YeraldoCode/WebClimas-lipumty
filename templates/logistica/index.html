@@ -9,45 +9,127 @@
         <p class="subtitle">Gestión de reportes de clima y vehículos en espera</p>
     </div>
 
+    <!-- Resumen de reportes -->
     <div class="dashboard-grid">
-        <div class="status-card">
-            <div class="status-icon">
-                <i class="fas fa-exclamation-circle"></i>
-            </div>
-            <div class="status-info">
-                <h3>Reportes Pendientes</h3>
-                <p class="status-number">{{ reportes_pendientes|length }}</p>
-            </div>
+    <div class="status-card">
+        <div class="status-icon">
+            <i class="fas fa-tools"></i>
+        </div>
+        <div class="status-info">
+            <h3>Reportes de Reparación</h3>
+            <p class="status-number">{{ reportes_reparacion.total }}</p>
         </div>
     </div>
+    <div class="status-card">
+        <div class="status-icon">
+            <i class="fas fa-exchange-alt"></i>
+        </div>
+        <div class="status-info">
+            <h3>Reportes de Conversión</h3>
+            <p class="status-number">{{ reportes_conversion.total }}</p>
+        </div>
+    </div>
+</div>
 
-
+    <!-- Reportes de Reparación -->
     <div class="section">
-        <h2>Reportes de Clima Pendientes</h2>
+        <h2>Reportes de Reparación</h2>
         <div class="reportes-grid">
-            {% for reporte in reportes_pendientes %}
-            <div class="reporte-card" id="reporte-{{ reporte.id }}">
+            {% for reporte in reportes_reparacion %}
+            <div class="reporte-card">
                 <div class="reporte-header">
-                    <h3>Reporte #{{ reporte.id }}</h3>
+                    <h4>Reporte #{{ reporte.id }}</h4>
                     <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
                 </div>
                 <div class="reporte-info">
                     <p><strong>Unidad:</strong> {{ reporte.vehiculo_id }}</p>
-                    <p><strong>Descripción:</strong> {{ reporte.descripcion }}</p>
+                    <p><strong>Descripción del Vehículo:</strong> {{ reporte.vehiculo.descripcion }}</p>
+                    <p><strong>Descripción del Problema:</strong> {{ reporte.descripcion }}</p>
+                    <p><strong>Creado por:</strong> {{ reporte.coordinador.username if reporte.coordinador else 'Desconocido' }}</p>
                 </div>
                 <div class="reporte-actions">
-                    <button class="btn btn-success btn-aprobar" data-reporte-id="{{ reporte.id }}">
-                        <i class="fas fa-check"></i> Aprobar
-                    </button>
-                    <button class="btn btn-danger btn-rechazar" data-reporte-id="{{ reporte.id }}">
-                        <i class="fas fa-times"></i> Rechazar
-                    </button>
+                    <button class="btn btn-success btn-aprobar" data-reporte-id="{{ reporte.id }}">Aprobar</button>
+                    <button class="btn btn-danger btn-rechazar" data-reporte-id="{{ reporte.id }}">Rechazar</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Reportes de Conversión -->
+    <div class="section">
+        <h2>Reportes de Conversión</h2>
+        <div class="reportes-grid">
+            {% for reporte in reportes_conversion %}
+            <div class="reporte-card">
+                <div class="reporte-header">
+                    <h4>Reporte #{{ reporte.id }}</h4>
+                    <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
+                </div>
+                <div class="reporte-info">
+                    <p><strong>Unidad:</strong> {{ reporte.vehiculo_id }}</p>
+                    <p><strong>Descripción del Vehículo:</strong> {{ reporte.vehiculo.descripcion }}</p>
+                    <p><strong>Descripción del Problema:</strong> {{ reporte.descripcion }}</p>
+                    <p><strong>Creado por:</strong> {{ reporte.coordinador.username if reporte.coordinador else 'Desconocido' }}</p>
+                </div>
+                <div class="reporte-actions">
+                    <button class="btn btn-success btn-aprobar" data-reporte-id="{{ reporte.id }}">Aprobar</button>
+                    <button class="btn btn-danger btn-rechazar" data-reporte-id="{{ reporte.id }}">Rechazar</button>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
 </div>
+<script>
+    // Función para aceptar un reporte
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('btn-aprobar')) {
+            const reporteId = event.target.getAttribute('data-reporte-id');
+            fetch(`/admin/reportes-clima/${reporteId}/aprobar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    alert('Reporte aceptado correctamente.');
+                    location.reload(); // Recargar la página para reflejar los cambios
+                } else {
+                    response.json().then(data => {
+                        alert(`Error al aceptar el reporte: ${data.error}`);
+                    });
+                }
+            }).catch(error => {
+                alert(`Error de conexión: ${error}`);
+            });
+        }
+    });
+
+    // Función para rechazar un reporte
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('btn-rechazar')) {
+            const reporteId = event.target.getAttribute('data-reporte-id');
+            fetch(`/admin/reportes-clima/${reporteId}/rechazar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    alert('Reporte rechazado correctamente.');
+                    location.reload(); // Recargar la página para reflejar los cambios
+                } else {
+                    response.json().then(data => {
+                        alert(`Error al rechazar el reporte: ${data.error}`);
+                    });
+                }
+            }).catch(error => {
+                alert(`Error de conexión: ${error}`);
+            });
+        }
+    });
+</script>
 
 <style>
 .container {
@@ -123,56 +205,6 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.section h2 {
-    color: #2c3e50;
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-}
-
-.vehiculos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
-}
-
-.vehiculo-card {
-    background: #f8fafc;
-    border-radius: 8px;
-    padding: 1rem;
-    border: 1px solid #e2e8f0;
-}
-
-.vehiculo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-
-.vehiculo-header h3 {
-    color: #2c3e50;
-    font-size: 1rem;
-    margin: 0;
-}
-
-.status-badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-.status-badge.espera {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.vehiculo-info p {
-    margin: 0.25rem 0;
-    color: #4b5563;
-    font-size: 0.875rem;
-}
-
 .reportes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -193,7 +225,7 @@
     margin-bottom: 0.5rem;
 }
 
-.reporte-header h3 {
+.reporte-header h4 {
     color: #2c3e50;
     font-size: 1rem;
     margin: 0;
@@ -246,100 +278,5 @@
 .btn-danger:hover {
     background: #dc2626;
 }
-
-@media (max-width: 640px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .vehiculos-grid,
-    .reportes-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .reporte-actions {
-        flex-direction: column;
-    }
-    
-    .btn {
-        width: 100%;
-    }
-}
 </style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Manejar aprobación de reportes
-    document.querySelectorAll('.btn-aprobar').forEach(button => {
-        button.addEventListener('click', function() {
-            const reporteId = this.dataset.reporteId;
-            if (confirm('¿Estás seguro de que deseas aprobar este reporte?')) {
-                aprobarReporte(reporteId);
-            }
-        });
-    });
-
-    // Manejar rechazo de reportes
-    document.querySelectorAll('.btn-rechazar').forEach(button => {
-        button.addEventListener('click', function() {
-            const reporteId = this.dataset.reporteId;
-            if (confirm('¿Estás seguro de que deseas rechazar este reporte?')) {
-                rechazarReporte(reporteId);
-            }
-        });
-    });
-});
-
-function aprobarReporte(reporteId) {
-    fetch(`/logistica/aprobar-reporte/${reporteId}`, {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            const reporteCard = document.getElementById(`reporte-${reporteId}`);
-            reporteCard.style.opacity = '0';
-            setTimeout(() => {
-                reporteCard.remove();
-                actualizarContador();
-            }, 300);
-        } else {
-            alert(data.error || 'Error al aprobar el reporte');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error al aprobar el reporte');
-    });
-}
-
-function rechazarReporte(reporteId) {
-    fetch(`/logistica/rechazar-reporte/${reporteId}`, {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            const reporteCard = document.getElementById(`reporte-${reporteId}`);
-            reporteCard.style.opacity = '0';
-            setTimeout(() => {
-                reporteCard.remove();
-                actualizarContador();
-            }, 300);
-        } else {
-            alert(data.error || 'Error al rechazar el reporte');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error al rechazar el reporte');
-    });
-}
-
-function actualizarContador() {
-    const contador = document.querySelector('.status-number');
-    const reportes = document.querySelectorAll('.reporte-card');
-    contador.textContent = reportes.length;
-}
-</script>
 {% endblock %}

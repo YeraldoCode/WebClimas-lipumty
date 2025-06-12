@@ -60,6 +60,7 @@ class ReporteClima(db.Model):
     vehiculo_id = db.Column(db.Integer, db.ForeignKey('vehiculos.idvehiculo'))
     fecha_reporte = db.Column(db.DateTime, default=datetime.utcnow)
     descripcion = db.Column(db.Text)
+    tipo_problema = db.Column(db.String(50))  # Asegurar que el tipo_problema esté definido
     estado = db.Column(db.String(20))
     tecnico_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     fecha_revision = db.Column(db.DateTime)
