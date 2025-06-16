@@ -68,9 +68,21 @@ class ReporteClima(db.Model):
     fecha_solicitud_taller = db.Column(db.DateTime)
     fecha_asignacion_taller = db.Column(db.DateTime)
     fecha_llamada_taller = db.Column(db.DateTime)
+    fecha_inicio = db.Column(db.DateTime)  # Fecha de inicio del servicio 
+    fecha_completado = db.Column(db.DateTime)  # Fecha de finalización del servicio
     vehiculo = db.relationship('Vehiculo', backref='reportes_clima')
     coordinador = db.relationship('Usuario', foreign_keys=[coordinador_id], backref='reportes_creados')
     tecnico = db.relationship('Usuario', foreign_keys=[tecnico_id], backref='reportes_revisados')
 
 
 
+class HistorialReporte(db.Model):
+    __tablename__ = 'historial_reportes'
+    id = db.Column(db.Integer, primary_key=True)
+    reporte_id = db.Column(db.Integer, db.ForeignKey('reportes_clima.id'))
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
+    accion = db.Column(db.String(50))  # Ejemplo: "en_proceso", "completado"
+    fecha = db.Column(db.DateTime, default=datetime.utcnow)
+
+    reporte = db.relationship('ReporteClima', backref='historial')
+    usuario = db.relationship('Usuario', backref='acciones')

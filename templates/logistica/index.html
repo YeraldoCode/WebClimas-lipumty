@@ -79,7 +79,10 @@
             </div>
             {% endfor %}
         </div>
+    
     </div>
+        <a href="{{ url_for('admin_unidades') }}" class="btn btn-secondary">Visualizar Unidades</a>
+        <a href="{{ url_for('export') }}" class="btn btn-secondary">Exportar Datos</a>
 </div>
 <script>
     // Función para aceptar un reporte
@@ -277,6 +280,15 @@
 
 .btn-danger:hover {
     background: #dc2626;
+}
+
+.btn-secondary {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #2563eb;
 }
 </style>
 {% endblock %}

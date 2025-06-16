@@ -144,10 +144,11 @@
   {% if current_user.is_authenticated and not request.path.startswith('/coordinador') %}
   <div class="sidebar">
     <div class="sidebar-header">
+      <!-- Logo arriba del título -->
+      <img src="{{ url_for('static', filename='img/logolipu.svg') }}" alt="Logo SIGO" style="max-width: 90px; margin-bottom: 0.5rem; display: block; margin-left: auto; margin-right: auto;">
       <h2>SIGO</h2>
-      <p>Sistema Integral de Gestión Operativa</p>
     </div>
-    
+
     <ul class="menu">
       {% if current_user.rol == 'logistica' %}
       <!-- Secciones para Logística/Administrador -->

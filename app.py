@@ -9,10 +9,10 @@ from wtforms.validators import DataRequired
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
 from forms import LoginForm
 import os
-from models import db, Vehiculo, Servicio, Usuario, ReporteClima
+from models import db, Vehiculo, Servicio, Usuario, ReporteClima, HistorialReporte
 import pandas as pd
 from io import BytesIO
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 from werkzeug.utils import secure_filename
@@ -107,22 +107,71 @@ def logout():
     logout_user()
     return redirect('/')
 
-@app.route('/taller')
+@app.route('/taller', methods=['GET', 'POST'])
 @login_required
-def taller():
+def panel_taller():
     if current_user.rol != 'taller':
-        flash('No tienes permiso para acceder a esta sección', 'error')
+        flash('No tienes permiso para acceder a esta sección')
         return redirect(url_for('index'))
 
-    # Obtener reportes aceptados por logística
-    reportes_aceptados = ReporteClima.query.filter_by(estado='aprobado').order_by(ReporteClima.fecha_reporte.desc()).all()
+    # Filtrar reportes aceptados por logística
+    reportes_aceptados = ReporteClima.query.filter_by(estado='aprobado').all()
 
-    # Depurar datos de los reportes
+    # Dividir reportes por tipo
+    reportes_por_tipo = {}
+    eventos = []
     for reporte in reportes_aceptados:
-        print(f"Reporte ID: {reporte.id}, Coordinador: {reporte.coordinador.username if reporte.coordinador else 'Desconocido'}, Tipo de Problema: {reporte.tipo_problema}")
+        tipo = reporte.tipo_problema
+        if tipo not in reportes_por_tipo:
+            reportes_por_tipo[tipo] = []
+        reportes_por_tipo[tipo].append(reporte)
+
+        # Crear eventos para el calendario
+        eventos.append({
+            "titulo": f"{tipo.capitalize()} - Unidad {reporte.vehiculo_id}",
+            "fecha_inicio": reporte.fecha_reporte.strftime('%Y-%m-%dT%H:%M:%S'),
+            "fecha_fin": (reporte.fecha_reporte + timedelta(hours=2)).strftime('%Y-%m-%dT%H:%M:%S'),
+            "descripcion": reporte.descripcion,
+            "tipo": tipo,
+            "estado": reporte.estado
+        })
+
+    # Estadísticas
+    estadisticas = {
+        'reparacion': len(reportes_por_tipo.get('reparacion', [])),
+        'conversion': len(reportes_por_tipo.get('conversion', []))
+    }
+
+    # Planificación: manejar datos del calendario
+    if request.method == 'POST':
+        try:
+            fecha_planificada = request.form.get('fecha_planificada')
+            tareas = request.form.get('tareas')
+
+            # Validar campos requeridos
+            if not fecha_planificada or not tareas:
+                flash('Todos los campos son requeridos', 'error')
+                return redirect(url_for('panel_taller'))
+
+            # Guardar planificación en la base de datos (ejemplo)
+            nueva_planificacion = HistorialReporte(
+                usuario_id=current_user.id,
+                accion='planificacion',
+                descripcion=f"Tareas: {tareas}, Fecha: {fecha_planificada}"
+            )
+            db.session.add(nueva_planificacion)
+            db.session.commit()
+
+            flash('Planificación guardada exitosamente', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al guardar la planificación: {str(e)}', 'error')
 
     return render_template('taller/index.html', 
-                        reportes_aceptados=reportes_aceptados)
+                            reportes_por_tipo=reportes_por_tipo,
+                            estadisticas=estadisticas,
+                            eventos=eventos)
+
 
 @app.route('/coordinador')
 @login_required
@@ -246,144 +295,182 @@ def admin():
         reportes_conversion = ReporteClima.query.filter_by(tipo_problema='conversion', estado='pendiente').order_by(ReporteClima.fecha_reporte.desc()).paginate(page=page_conversion, per_page=per_page)
 
         return render_template('logistica/index.html', 
-                               reportes_reparacion=reportes_reparacion,
-                               reportes_conversion=reportes_conversion)
+                                reportes_reparacion=reportes_reparacion,
+                                reportes_conversion=reportes_conversion)
     except Exception as e:
         print(f"Error en la ruta /admin: {str(e)}")
         flash('Ocurrió un error al cargar la página de administración', 'error')
         return redirect(url_for('index'))
     
 
-@app.route('/taller/revisar/<int:reporte_id>')
-@login_required
-def revisar_reporte(reporte_id):
-    if current_user.rol != 'taller':
-        flash('No tienes permiso para acceder a esta sección')
-        return redirect(url_for('index'))
-    
-    reporte = ReporteClima.query.get_or_404(reporte_id)
-    return render_template('taller/revisar.html', reporte=reporte)
-
 @app.route('/taller/reporte/<int:reporte_id>/en-proceso', methods=['POST'])
 @login_required
 def taller_en_proceso(reporte_id):
     if current_user.rol != 'taller':
         return jsonify({'success': False, 'error': 'No autorizado'})
-    
+
     try:
         reporte = db.session.query(ReporteClima).get(reporte_id)
         if not reporte:
             return jsonify({'success': False, 'error': 'Reporte no encontrado'})
-        
+
+        # Validar que el estado actual sea 'aprobado'
         if reporte.estado != 'aprobado':
             return jsonify({'success': False, 'error': 'El reporte no está aprobado'})
-        
+
+        # Actualizar estado del reporte
         reporte.estado = 'en_proceso'
         reporte.fecha_inicio = datetime.now()
+
+        # Actualizar estado de la unidad asociada
+        vehiculo = Vehiculo.query.get(reporte.vehiculo_id)
+        if vehiculo:
+            vehiculo.estatus = 'Mantenimiento'
+
         db.session.commit()
-        
         return jsonify({'success': True})
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
-    
-
-
 
 @app.route('/taller/reporte/<int:reporte_id>/completado', methods=['POST'])
 @login_required
 def taller_completado(reporte_id):
     if current_user.rol != 'taller':
         return jsonify({'success': False, 'error': 'No autorizado'})
-    
+
     try:
         reporte = db.session.query(ReporteClima).get(reporte_id)
         if not reporte:
             return jsonify({'success': False, 'error': 'Reporte no encontrado'})
-        
-        if reporte.estado not in ['aprobado', 'en_proceso']:
-            return jsonify({'success': False, 'error': 'El reporte no está en un estado válido'})
-        
-        # Cambiar el estado del reporte a "completado"
+
+        # Validar que el estado actual sea 'en_proceso'
+        if reporte.estado != 'en_proceso':
+            return jsonify({'success': False, 'error': 'El reporte no está en proceso'})
+
+        # Actualizar estado del reporte
         reporte.estado = 'completado'
         reporte.fecha_completado = datetime.now()
-        
+
         # Cambiar el estatus del vehículo asociado a "Operando"
         vehiculo = Vehiculo.query.get(reporte.vehiculo_id)
         if vehiculo:
             vehiculo.estatus = 'Operando'
-        
+
+        # Registrar en el historial
+        historial = HistorialReporte(
+            reporte_id=reporte.id,
+            usuario_id=current_user.id,
+            accion='completado'
+        )
+        db.session.add(historial)
         db.session.commit()
-        
         return jsonify({'success': True})
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
     
+@app.route('/taller/planificar', methods=['POST'])
+@login_required
+def planificar_taller():
+    if current_user.rol != 'taller':
+        return jsonify({'success': False, 'error': 'No autorizado'})
 
+    try:
+        data = request.json
+        reportes = data.get('reportes', [])
+        fecha_inicio = data.get('fecha_inicio')
 
+        if not reportes or not fecha_inicio:
+            return jsonify({'success': False, 'error': 'Todos los campos son requeridos'})
 
-
-@app.route('/admin/upload', methods=['POST'])
-def upload_excel():
-    if 'file' not in request.files:
-        flash('No se ha seleccionado ningún archivo.', 'danger')
-        return redirect(url_for('admin'))
-    
-    file = request.files['file']
-    if file.filename == '':
-        flash('No se ha seleccionado ningún archivo.', 'danger')
-        return redirect(url_for('admin'))
-    
-    if file and file.filename.endswith('.xlsx'):
+        # Acepta formato 'YYYY-MM-DDTHH:MM'
         try:
-            df = pd.read_excel(file)
-            
-            for _, row in df.iterrows():
-                vehiculo = Vehiculo.query.filter_by(idvehiculo=row['IdVehiculo']).first()
-                
-                if vehiculo:
-                    # Actualizar vehículo existente
-                    for col in df.columns:
-                        if col in row and not pd.isna(row[col]):
-                            setattr(vehiculo, col.lower().replace(' ', '_'), row[col])
-                else:
-                    # Crear nuevo vehículo
-                    vehiculo_data = {}
-                    for col in df.columns:
-                        if col in row and not pd.isna(row[col]):
-                            vehiculo_data[col.lower().replace(' ', '_')] = row[col]
-                    
-                    vehiculo = Vehiculo(**vehiculo_data)
-                    db.session.add(vehiculo)
-            
-            db.session.commit()
-            flash('Datos cargados correctamente.', 'success')
-            
-        except Exception as e:
-            flash(f'Error al procesar el archivo: {str(e)}', 'danger')
-            
-    return redirect(url_for('admin'))
+            fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%dT%H:%M')
+        except ValueError:
+            return jsonify({'success': False, 'error': 'Formato de fecha/hora inválido'})
 
-@app.route('/admin/export')
+        for reporte_id in reportes:
+            reporte = ReporteClima.query.get(reporte_id)
+            if reporte:
+                reporte.fecha_inicio = fecha_inicio_dt
+                reporte.estado = 'planificado'
+
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Planeación guardada exitosamente'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)})
+@app.route('/taller/reporte/<int:reporte_id>/finalizar', methods=['POST'])
+@login_required
+def finalizar_mantenimiento(reporte_id):
+    if current_user.rol != 'taller':
+        return jsonify({'success': False, 'error': 'No autorizado'})
+
+    try:
+        reporte = ReporteClima.query.get(reporte_id)
+        if not reporte:
+            return jsonify({'success': False, 'error': 'Reporte no encontrado'})
+
+        # Actualizar estado y asignar fecha de finalización
+        reporte.estado = 'completado'
+        reporte.fecha_fin = datetime.now()
+
+        historial = HistorialReporte(
+            reporte_id=reporte.id,
+            usuario_id=current_user.id,
+            accion='completado'
+        )
+        db.session.add(historial)
+        db.session.commit()
+
+        return jsonify({'success': True, 'message': 'Mantenimiento finalizado exitosamente'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/admin/export', methods=['GET'])
+@login_required
 def export():
-    # Exporta la información consolidada de vehículos y servicios a Excel
-    results = db.session.query(
-        Vehiculo,
-        Servicio.marca_ac
-    ).join(Servicio, Vehiculo.idvehiculo == Servicio.id).all()
-    data = []
-    for v, marca_ac in results:
-        row = {col: getattr(v, col) for col in [
-            'idvehiculo', 'serial', 'marca', 'modelo', 'asientos', 'motor', 'anio', 'tipo_vehiculo', 'gpo_estatus', 'uso', 'estatus', 'combustible', 'eco', 'placas', 'placas_federales', 'descripcion', 'aire', 'jala', 'mochila', 'conversion_reparacion', 'reinsidente']}
-        row['marca_ac'] = marca_ac
-        data.append(row)
-    df = pd.DataFrame(data)
-    output = BytesIO()
-    df.to_excel(output, index=False, engine='openpyxl')
-    output.seek(0)
-    return send_file(output, download_name='sigo_climas.xlsx', as_attachment=True)
-
+    if current_user.rol != 'logistica':
+        flash('No tienes permiso para acceder a esta sección', 'error')
+        return redirect(url_for('index'))
+    
+    try:
+        # Exportar datos de reportes y unidades
+        reportes = ReporteClima.query.all()
+        vehiculos = Vehiculo.query.all()
+        
+        # Crear DataFrame para reportes
+        reportes_data = [{
+            'ID Reporte': r.id,
+            'ID Vehículo': r.vehiculo_id,
+            'Descripción': r.descripcion,
+            'Tipo Problema': r.tipo_problema,
+            'Estado': r.estado,
+            'Fecha Reporte': r.fecha_reporte
+        } for r in reportes]
+        df_reportes = pd.DataFrame(reportes_data)
+        
+        # Crear DataFrame para vehículos
+        vehiculos_data = [{
+            'ID Vehículo': v.idvehiculo,
+            'Descripción': v.descripcion,
+            'Estado Actual': v.estatus
+        } for v in vehiculos]
+        df_vehiculos = pd.DataFrame(vehiculos_data)
+        
+        # Escribir ambos DataFrames en un archivo Excel
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df_reportes.to_excel(writer, sheet_name='Reportes', index=False)
+            df_vehiculos.to_excel(writer, sheet_name='Vehículos', index=False)
+        output.seek(0)
+        
+        return send_file(output, download_name='logistica_datos.xlsx', as_attachment=True)
+    except Exception as e:
+        flash(f'Error al exportar datos: {str(e)}', 'error')
+        return redirect(url_for('admin'))
 
 
 @app.route('/admin/reportes-clima', methods=['GET'])
@@ -436,6 +523,50 @@ def rechazar_reporte_clima(reporte_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
+    
+@app.route('/admin/unidades', methods=['GET'])
+@login_required
+def admin_unidades():
+    if current_user.rol != 'logistica':
+        flash('No tienes permiso para acceder a esta sección', 'error')
+        return redirect(url_for('index'))
+
+    # Obtener parámetros de búsqueda
+    id_vehiculo = request.args.get('id_vehiculo', type=int)
+    planta = request.args.get('planta', type=str)
+    estado_actual = request.args.get('estado_actual', type=str)
+
+    # Filtrar unidades según los parámetros 
+    query = Vehiculo.query.filter(Vehiculo.estatus.in_(['Operando', 'Espera', 'Mantenimiento']))
+    if id_vehiculo:
+        query = query.filter_by(idvehiculo=id_vehiculo)
+    if planta:
+        query = query.filter(Vehiculo.descripcion.ilike(f'%{planta}%'))
+    if estado_actual:
+        query = query.filter_by(estatus=estado_actual)
+
+    unidades = query.all()  # Obtener todos los registros sin paginación
+    return render_template('logistica/unidades.html', unidades=unidades)
+
+@app.route('/api/eventos', methods=['GET'])
+@login_required
+def api_eventos():
+    reportes = ReporteClima.query.filter(
+        ReporteClima.estado.in_(['planificado', 'completado'])
+    ).all()
+    eventos = []
+    for reporte in reportes:
+        if not reporte.fecha_inicio:
+            continue  # Ignora reportes sin fecha de inicio
+        eventos.append({
+            "id": reporte.id,
+            "title": f"Reporte #{reporte.id} - {reporte.tipo_problema.capitalize()}",
+            "start": reporte.fecha_inicio.strftime('%Y-%m-%dT%H:%M:%S'),
+            "description": reporte.descripcion,
+            "estado": reporte.estado,
+            "color": "green" if reporte.estado == 'completado' else "orange"
+        })
+    return jsonify(eventos)
 
 # =============================
 # Fin del archivo principal

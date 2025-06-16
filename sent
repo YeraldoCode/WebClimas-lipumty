@@ -1,0 +1,7 @@
+ id |  username   |                                                                           password_hash                                                                            |     rol     |          email          
+----+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+-------------------------
+  5 | KEVIN       | scrypt:32768:8:1$wjJY2p015IpxG0OH$ef8a595a75dcb1aba5c765f0beea05781721cd21725318a3ff37a41307e1c2c7443dbd4a4b6dc068f410e67026d2eb80fa4265de587e129981fe2dd9fa18a0e9 | coordinador | coordinador@empresa.com
+  9 | coordinador | scrypt:32768:8:1$Y3TGfq4SHbwtHVjn$24a8718cf41ddc9d8bd70e60cc2d7e915f899737cacb64b0c56e9d9d488126019f77016d3f107f28b0d1aed5bad8ee0200635d009e979da507921538343c73fa | coordinador | coordi@empresa.com
+ 10 | jesus       | coo123                                                                                                                                                             | coordinador | coordinador@example.com
+(3 rows)
+

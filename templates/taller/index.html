@@ -3,529 +3,186 @@
 {% block title %}Panel de Taller - SIGO{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-4">
     <div class="dashboard-content">
-        <div class="section">
-            <div class="section-header">
-                <h2><i class="fas fa-tools"></i> Reportes de Reparación</h2>
-                <span class="badge">{{ reportes_reparacion|length }}</span>
+        <!-- Planificación de Mantenimiento -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white d-flex align-items-center">
+                <i class="fas fa-tasks me-2"></i>
+                <h5 class="mb-0">Planificar Mantenimiento</h5>
             </div>
-            <div class="reportes-grid">
-                {% if reportes_reparacion %}
-                    {% for reporte in reportes_reparacion %}
-                    <div class="reporte-card">
-                        <div class="reporte-header">
-                            <h3>Reporte #{{ reporte.id }}</h3>
-                            <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
-                        </div>
-                        <div class="reporte-info">
-                            <p><strong>Unidad:</strong> {{ reporte.vehiculo_id }}</p>
-                            <p><strong>Descripción:</strong> {{ reporte.descripcion }}</p>
-                        </div>
-                        <div class="reporte-actions">
-                            <button class="btn btn-primary btn-en-proceso" data-reporte-id="{{ reporte.id }}">
-                                <i class="fas fa-tools"></i> Iniciar Mantenimiento
-                            </button>
-                        </div>
+            <div class="card-body">
+                <form id="planificacion-form" class="row g-3 needs-validation" novalidate>
+                    <div class="col-md-5">
+                        <label for="reportes" class="form-label fw-bold">Reporte a planificar:</label>
+                        <select id="reportes" name="reportes" class="form-select" required>
+                            <option value="" disabled hidden selected>Selecciona un reporte...</option>
+                            {% for tipo, reportes in reportes_por_tipo.items() %}
+                                <optgroup label="{{ tipo|capitalize }}">
+                                    {% for reporte in reportes %}
+                                    <option value="{{ reporte.id }}">
+                                        #{{ reporte.id }} - Unidad: {{ reporte.vehiculo_id }} - {{ reporte.descripcion|truncate(40) }}
+                                    </option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">Selecciona un reporte.</div>
                     </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="no-reportes">
-                        <i class="fas fa-clipboard-check"></i>
-                        <p>No hay reportes de reparación pendientes</p>
+                    <div class="col-md-3">
+                        <label for="fecha" class="form-label fw-bold">Fecha de inicio:</label>
+                        <input type="date" id="fecha" name="fecha" class="form-control" required>
+                        <div class="form-text">Selecciona la <b>fecha</b> de inicio.</div>
+                        <div class="invalid-feedback">Selecciona la fecha de inicio.</div>
                     </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">
-                <h2><i class="fas fa-exchange-alt"></i> Reportes de Conversión</h2>
-                <span class="badge">{{ reportes_conversion|length }}</span>
-            </div>
-            <div class="reportes-grid">
-                {% if reportes_conversion %}
-                    {% for reporte in reportes_conversion %}
-                    <div class="reporte-card">
-                        <div class="reporte-header">
-                            <h3>Reporte #{{ reporte.id }}</h3>
-                            <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
-                        </div>
-                        <div class="reporte-info">
-                            <p><strong>Unidad:</strong> {{ reporte.vehiculo_id }}</p>
-                            <p><strong>Descripción:</strong> {{ reporte.descripcion }}</p>
-                        </div>
-                        <div class="reporte-actions">
-                            <button class="btn btn-primary btn-en-proceso" data-reporte-id="{{ reporte.id }}">
-                                <i class="fas fa-tools"></i> Iniciar Conversión
-                            </button>
-                        </div>
+                    <div class="col-md-2">
+                        <label for="hora" class="form-label fw-bold">Hora de inicio:</label>
+                        <select id="hora" name="hora" class="form-select" required>
+                            <option value="" disabled hidden selected>Selecciona la hora...</option>
+                            {% for h in range(0,24) %}
+                                <option value="{{ "%02d:00"|format(h) }}">{{ "%02d:00"|format(h) }}</option>
+                                <option value="{{ "%02d:30"|format(h) }}">{{ "%02d:30"|format(h) }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">Selecciona la <b>hora</b> de inicio.</div>
+                        <div class="invalid-feedback">Selecciona la hora de inicio.</div>
                     </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="no-reportes">
-                        <i class="fas fa-clipboard-check"></i>
-                        <p>No hay reportes de conversión pendientes</p>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="button" class="btn btn-success w-100" id="guardar-planificacion">
+                            <i class="fas fa-save me-1"></i>Guardar
+                        </button>
                     </div>
-                {% endif %}
+                </form>
             </div>
         </div>
 
-        <div class="section">
-            <div class="section-header">
-                <h2><i class="fas fa-check-circle"></i> Reportes Aceptados</h2>
-                <span class="badge">{{ reportes_aceptados|length }}</span>
+        <!-- Calendario -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning text-dark d-flex align-items-center">
+                <i class="fas fa-calendar-alt me-2"></i>
+                <h5 class="mb-0">Calendario de Mantenimientos</h5>
             </div>
-            <div class="reportes-grid">
-                {% if reportes_aceptados %}
-                    {% for reporte in reportes_aceptados %}
-                    <div class="reporte-card" id="reporte-{{ reporte.id }}">
-                        <div class="reporte-header">
-                            <h3>Reporte #{{ reporte.id }}</h3>
-                            <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
-                        </div>
-                        <div class="reporte-info">
-                            <p><strong>Unidad:</strong> {{ reporte.vehiculo_id }}</p>
-                            <p><strong>Descripción:</strong> {{ reporte.descripcion }}</p>
-                            <p><strong>Tipo de Problema:</strong> {{ reporte.tipo_problema }}</p> <!-- Mostrar tipo_problema -->
-                        </div>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="no-reportes">
-                        <i class="fas fa-clipboard-check"></i>
-                        <p>No hay reportes aceptados por logística</p>
-                    </div>
-                {% endif %}
+            <div class="card-body">
+                <div id="calendar"></div>
             </div>
         </div>
     </div>
 </div>
-<style>
-.container {
-    max-width: 1400px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
-}
 
-.dashboard-header {
-    margin-bottom: 2rem;
-}
-
-.header-content {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.header-content h1 {
-    color: #1a365d;
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.header-content .subtitle {
-    color: #4a5568;
-    font-size: 1.2rem;
-}
-
-.status-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.status-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
-}
-
-.status-card:hover {
-    transform: translateY(-2px);
-}
-
-.status-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-}
-
-.status-icon.espera {
-    background: #fef3c7;
-    color: #d97706;
-}
-
-.status-icon.proceso {
-    background: #dbeafe;
-    color: #2563eb;
-}
-
-.status-icon.completado {
-    background: #dcfce7;
-    color: #16a34a;
-}
-
-.status-info h3 {
-    color: #4b5563;
-    font-size: 1rem;
-    margin: 0;
-}
-
-.status-number {
-    color: #1f2937;
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0;
-}
-
-.section {
-    background: white;
-    border-radius: 16px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #e5e7eb;
-}
-
-.section-header h2 {
-    color: #1a365d;
-    font-size: 1.5rem;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.badge {
-    background: #e5e7eb;
-    color: #4b5563;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.vehiculos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-}
-
-.vehiculo-card {
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 1.5rem;
-    transition: all 0.2s;
-}
-
-.vehiculo-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.vehiculo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.vehiculo-header h3 {
-    color: #1a365d;
-    font-size: 1.25rem;
-    margin: 0;
-}
-
-.status-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.status-badge.espera {
-    background: #fef3c7;
-    color: #d97706;
-}
-
-.status-badge.aprobado {
-    background: #dbeafe;
-    color: #2563eb;
-}
-
-.status-badge.en_proceso {
-    background: #fef3c7;
-    color: #d97706;
-}
-
-.status-badge.completado {
-    background: #dcfce7;
-    color: #16a34a;
-}
-
-.info-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
-    color: #4b5563;
-}
-
-.info-row i {
-    color: #6b7280;
-    width: 20px;
-}
-
-.reportes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
-}
-
-.reporte-card {
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 1.5rem;
-    transition: all 0.2s;
-}
-
-.reporte-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.reporte-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.reporte-title h3 {
-    color: #1a365d;
-    font-size: 1.25rem;
-    margin: 0 0 0.25rem 0;
-}
-
-.fecha {
-    color: #6b7280;
-    font-size: 0.875rem;
-}
-
-.reporte-info {
-    background: white;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-}
-
-.reporte-descripcion {
-    margin-bottom: 1.5rem;
-}
-
-.reporte-descripcion label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #4b5563;
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-}
-
-.reporte-descripcion p {
-    color: #1f2937;
-    font-size: 1rem;
-    line-height: 1.5;
-    margin: 0;
-    padding: 0.75rem;
-    background: white;
-    border-radius: 8px;
-}
-
-.reporte-actions {
-    display: flex;
-    gap: 1rem;
-}
-
-.btn {
-    flex: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-primary {
-    background: #2563eb;
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #1d4ed8;
-}
-
-.btn-success {
-    background: #16a34a;
-    color: white;
-}
-
-.btn-success:hover {
-    background: #15803d;
-}
-
-.no-reportes {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.no-reportes i {
-    font-size: 3rem;
-    color: #94a3b8;
-    margin-bottom: 1rem;
-}
-
-.no-reportes p {
-    color: #64748b;
-    font-size: 1.1rem;
-    margin: 0;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 0 1rem;
-    }
-    
-    .status-cards {
-        grid-template-columns: 1fr;
-    }
-    
-    .reportes-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .reporte-actions {
-        flex-direction: column;
-    }
-    
-    .header-content h1 {
-        font-size: 2rem;
-    }
-}
-</style>
+<!-- FullCalendar & Bootstrap Scripts -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Event listeners para botones de "En Proceso"
-    document.querySelectorAll('.btn-en-proceso').forEach(button => {
-        button.addEventListener('click', function() {
-            const reporteId = this.getAttribute('data-reporte-id');
-            if (confirm('¿Deseas iniciar el mantenimiento de este reporte?')) {
-                marcarEnProceso(reporteId);
+    // Calendario
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridWeek',
+        locale: 'es',
+        height: 600,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridWeek,timeGridDay'
+        },
+        events: '/api/eventos',
+        eventClick: function(info) {
+            let fin = info.event.extendedProps.estado === 'completado';
+            let msg = fin
+                ? 'Este mantenimiento ya fue finalizado.'
+                : '¿Deseas finalizar el mantenimiento para este reporte?';
+            if (fin) {
+                alert(msg);
+                return;
             }
-        });
+            if (confirm(msg)) {
+                fetch(`/taller/reporte/${info.event.id}/finalizar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        calendar.refetchEvents();
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => alert('Error: ' + error));
+            }
+        },
+        eventDidMount: function(info) {
+            var tooltip = new bootstrap.Tooltip(info.el, {
+                title: `<b>${info.event.title}</b><br>${info.event.extendedProps.description || ''}<br>
+                        <span class='badge bg-${info.event.extendedProps.estado === 'completado' ? 'success' : 'warning'}'>
+                        ${info.event.extendedProps.estado || ''}</span>`,
+                html: true,
+                placement: 'top',
+                trigger: 'hover'
+            });
+        }
     });
+    calendar.render();
 
-    // Event listeners para botones de "Completado"
-    document.querySelectorAll('.btn-completado').forEach(button => {
-        button.addEventListener('click', function() {
-            const reporteId = this.getAttribute('data-reporte-id');
-            if (confirm('¿Deseas marcar este mantenimiento como completado?')) {
-                marcarCompletado(reporteId);
+    // Validación y envío del formulario
+    document.getElementById('guardar-planificacion').addEventListener('click', function() {
+        var form = document.getElementById('planificacion-form');
+        var reporte = document.getElementById('reportes').value;
+        var fecha = document.getElementById('fecha').value;
+        var hora = document.getElementById('hora').value;
+
+        // Validación visual Bootstrap
+        if (!reporte || reporte === "" || !fecha || !hora) {
+            form.classList.add('was-validated');
+            return;
+        }
+
+        // Unir fecha y hora en formato ISO para el backend
+        var fecha_inicio = fecha + 'T' + hora;
+
+        fetch('/taller/planificar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reportes: [reporte], fecha_inicio })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                calendar.refetchEvents();
+                form.reset();
+                form.classList.remove('was-validated');
+            } else {
+                alert('Error: ' + (data.error || 'Error desconocido'));
             }
-        });
+        })
+        .catch(error => alert('Error: ' + error));
     });
 });
-
-function marcarEnProceso(reporteId) {
-    const button = document.querySelector(`[data-reporte-id="${reporteId}"]`);
-    const originalText = button.innerHTML;
-    
-    button.disabled = true;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-    
-    fetch(`/taller/reporte/${reporteId}/en-proceso`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        } else {
-            button.disabled = false;
-            button.innerHTML = originalText;
-            alert('Error al actualizar el estado: ' + (data.error || 'Error desconocido'));
-        }
-    })
-    .catch(error => {
-        button.disabled = false;
-        button.innerHTML = originalText;
-        alert('Error al actualizar el estado: ' + error);
-    });
-}
-
-function marcarCompletado(reporteId) {
-    const button = document.querySelector(`[data-reporte-id="${reporteId}"]`);
-    const originalText = button.innerHTML;
-    
-    button.disabled = true;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-    
-    fetch(`/taller/reporte/${reporteId}/completado`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        } else {
-            button.disabled = false;
-            button.innerHTML = originalText;
-            alert('Error al actualizar el estado: ' + (data.error || 'Error desconocido'));
-        }
-    })
-    .catch(error => {
-        button.disabled = false;
-        button.innerHTML = originalText;
-        alert('Error al actualizar el estado: ' + error);
-    });
-}
 </script>
+
+<style>
+#calendar {
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.fc-event {
+    cursor: pointer;
+}
+.fc-event-completado {
+    background-color: #198754 !important;
+    border-color: #198754 !important;
+}
+.fc-event-planificado {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+}
+</style>
 {% endblock %}
