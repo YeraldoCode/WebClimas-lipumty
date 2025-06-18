@@ -8,8 +8,8 @@ class Config:
     DATA_FOLDER = os.path.join(os.path.dirname(__file__), 'data')
     ALLOWED_EXTENSIONS = {'xlsx'}
     SQLALCHEMY_ENGINE_OPTIONS = {
-        'pool_size': 5,
-        'max_overflow': 2,
+        'pool_size': 10,
+        'max_overflow': 5,
         'pool_timeout': 30,
         'pool_recycle': 1800
     }

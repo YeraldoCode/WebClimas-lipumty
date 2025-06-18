@@ -1,140 +1,399 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mt-4">
-    <div class="page-header text-center mb-4">
+<div class="container">
+    <div class="page-header">
         <h1 class="text-primary">Unidades</h1>
         <p class="text-muted">Visualiza y filtra las unidades por ID, planta y estado actual.</p>
     </div>
 
     <!-- Formulario de búsqueda -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <form method="GET" action="{{ url_for('admin_unidades') }}">
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label for="id_vehiculo" class="form-label">ID Vehículo</label>
-                        <input type="text" name="id_vehiculo" id="id_vehiculo" class="form-control" placeholder="Ejemplo: 12345" aria-label="Buscar por ID Vehículo">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="planta" class="form-label">Planta</label>
-                        <input type="text" name="planta" id="planta" class="form-control" placeholder="Ejemplo: HAMADEN" aria-label="Buscar por Planta">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="estado_actual" class="form-label">Estado Actual</label>
-                        <select name="estado_actual" id="estado_actual" class="form-select" aria-label="Filtrar por Estado Actual">
-                            <option value="">-- Seleccionar Estado --</option>
-                            <option value="Operando">Operando</option>
-                            <option value="Espera">Espera</option>
-                            <option value="Mantenimiento">Mantenimiento</option>
-                        </select>
-                    </div>
+    <div class="card">
+        <form method="GET" action="{{ url_for('admin_unidades') }}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_vehiculo" class="form-label">ID Vehículo</label>
+                    <input type="text" name="id_vehiculo" id="id_vehiculo" class="form-control" placeholder="Ejemplo: 12345" aria-label="Buscar por ID Vehículo">
                 </div>
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-primary px-4">Buscar</button>
+                <div class="form-group">
+                    <label for="planta" class="form-label">Planta</label>
+                    <input type="text" name="planta" id="planta" class="form-control" placeholder="Ejemplo: HAMADEN" aria-label="Buscar por Planta">
                 </div>
-            </form>
-        </div>
+                <div class="form-group">
+                    <label for="estado_actual" class="form-label">Estado Actual</label>
+                    <select name="estado_actual" id="estado_actual" class="form-select" aria-label="Filtrar por Estado Actual">
+                        <option value="">-- Seleccionar Estado --</option>
+                        <option value="Operando">Operando</option>
+                        <option value="Espera">Espera</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    Buscar
+                </button>
+            </div>
+        </form>
     </div>
 
     <!-- Tabla con scroll -->
-    <div class="table-responsive" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
-        <table class="table table-striped table-hover">
-            <thead class="table-primary">
+    <div class="table-responsive unidades-table-responsive" style="max-height: 340px; overflow-y: auto;">
+        <table class="table">
+            <thead>
                 <tr>
                     <th>ID Vehículo</th>
                     <th>Descripción</th>
                     <th>Estado Actual</th>
+                    <th>Acción</th>
                 </tr>
             </thead>
             <tbody id="tabla-unidades">
                 {% for unidad in unidades %}
                 <tr>
-                    <td>{{ unidad.idvehiculo }}</td>
-                    <td>{{ unidad.descripcion }}</td>
-                    <td>{{ unidad.estatus }}</td>
+                    <td data-label="ID Vehículo">{{ unidad.idvehiculo }}</td>
+                    <td data-label="Descripción">{{ unidad.descripcion }}</td>
+                    <td data-label="Estado Actual">
+                        <span class="badge 
+                            {% if unidad.estatus == 'Operando' %}bg-success
+                            {% elif unidad.estatus == 'Espera' %}bg-warning
+                            {% elif unidad.estatus == 'Mantenimiento' %}bg-danger
+                            {% else %}bg-secondary{% endif %}">
+                            {{ unidad.estatus }}
+                        </span>
+                    </td>
+                    <td data-label="Acción">
+                        <button class="btn btn-edit btn-editar-unidad"
+                            data-id="{{ unidad.idvehiculo }}"
+                            data-descripcion="{{ unidad.descripcion }}"
+                            data-estatus="{{ unidad.estatus }}">
+                            Editar
+                        </button>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <!-- Botón para regresar -->
-    <div class="text-start mb-3">
-        <a href="{{ url_for('admin') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Regresar
-        </a>
-    </div>
-
-    <!-- Mensaje cuando no hay resultados -->
     {% if unidades|length == 0 %}
-    <div class="alert alert-warning text-center mt-4">
+    <div class="alert alert-warning">
         No se encontraron unidades con los criterios de búsqueda.
     </div>
     {% endif %}
+
+    <div class="back-btn">
+        <a href="{{ url_for('admin') }}" class="btn btn-secondary">
+            ← Regresar
+        </a>
+    </div>
 </div>
 
+<!-- Modal de edición de unidad -->
+<div class="modal" id="modalEditarUnidad">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formEditarUnidad">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Unidad</h5>
+          <span class="modal-close" id="closeModal">&times;</span>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editUnidadId">
+          <div class="mb-3">
+            <label class="form-label"><strong>ID Vehículo:</strong> <span id="modalUnidadId"></span></label>
+          </div>
+          <div class="mb-3">
+            <label for="editDescripcion" class="form-label">Descripción</label>
+            <input type="text" class="form-control" id="editDescripcion" required>
+          </div>
+          <div class="mb-3">
+            <label for="editEstatus" class="form-label">Estado Actual</label>
+            <select class="form-select" id="editEstatus" required>
+              <option value="Operando">Operando</option>
+              <option value="Espera">Espera</option>
+              <option value="Mantenimiento">Mantenimiento</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Modal logic sin Bootstrap
+  const modal = document.getElementById('modalEditarUnidad');
+  const closeModal = document.getElementById('closeModal');
+  document.querySelectorAll('.btn-editar-unidad').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.getElementById('editUnidadId').value = this.dataset.id;
+      document.getElementById('modalUnidadId').textContent = this.dataset.id;
+      document.getElementById('editDescripcion').value = this.dataset.descripcion;
+      document.getElementById('editEstatus').value = this.dataset.estatus;
+      modal.classList.add('show');
+    });
+  });
+  closeModal.onclick = function() {
+    modal.classList.remove('show');
+  };
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.classList.remove('show');
+    }
+  };
+
+  // Guardar cambios
+  document.getElementById('formEditarUnidad').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const id = document.getElementById('editUnidadId').value;
+    const descripcion = document.getElementById('editDescripcion').value;
+    const estatus = document.getElementById('editEstatus').value;
+    fetch(`/admin/unidades/${id}/editar`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({descripcion, estatus})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        location.reload();
+      } else {
+        alert('Error al guardar los cambios');
+      }
+    });
+  });
+});
+</script>
+
 <style>
-/* Contenedor con scroll */
-.table-responsive {
-    max-height: 500px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    border: 1px solid #dee2e6;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+}
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.page-header h1 {
+    color: #2563eb;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+.page-header .text-muted {
+    color: #7f8c8d;
+    font-size: 1.08rem;
+}
+.card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.2rem 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.form-group {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+}
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.3rem;
+}
+.form-control, .form-select {
     border-radius: 8px;
+    font-size: 1rem;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid #d1d5db;
+    margin-bottom: 0.5rem;
+    background: #fff;
 }
-
-/* Tabla */
-.table {
-    margin-bottom: 0;
+.form-actions {
+    text-align: center;
+    margin-top: 1rem;
+}
+.btn {
+    display: inline-block;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin: 0.2rem 0;
+}
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
+}
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+.btn-secondary {
+    background: #e5e7eb;
+    color: #222;
+    border: 1px solid #d1d5db;
+}
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+.btn-success {
+    background: #10b981;
+    color: #fff;
+}
+.btn-success:hover {
+    background: #059669;
+}
+.btn-edit {
+    background: #3b82f6;
+    color: #fff;
     font-size: 0.95rem;
+    padding: 0.4rem 1rem;
+}
+.btn-edit:hover {
+    background: #2563eb;
+}
+.table-responsive.unidades-table-responsive {
+    max-height: 340px;
+    overflow-y: auto;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+}
+.table {
     width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    background: #fff;
 }
-
 .table thead {
-    background-color: #0d6efd;
-    color: white;
+    background: #2563eb;
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
-
+.table th, .table td {
+    padding: 0.7rem 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: #f8f9fa;
 }
-
 .table-hover tbody tr:hover {
     background-color: #e2e6ea;
 }
-
-/* Alerta */
-.alert-warning {
-    background-color: #fff3cd;
-    color: #856404;
+.badge {
+    display: inline-block;
+    font-size: 0.97em;
+    padding: 0.5em 0.9em;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.bg-success { background: #10b981; color: #fff; }
+.bg-warning { background: #facc15; color: #7c4700; }
+.bg-danger { background: #ef4444; color: #fff; }
+.bg-secondary { background: #6b7280; color: #fff; }
+.alert {
     border-radius: 10px;
     padding: 1rem;
     font-size: 1rem;
+    margin-bottom: 1rem;
+    border: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
-/* Card Styling */
-.card {
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0; top: 0; width: 100vw; height: 100vh;
+    overflow: auto;
+    background: rgba(0,0,0,0.3);
+    align-items: center;
+    justify-content: center;
+}
+.modal.show {
+    display: flex;
+}
+.modal-dialog {
+    background: #fff;
     border-radius: 12px;
-    border: 1px solid #dee2e6;
+    max-width: 400px;
+    width: 95%;
+    margin: auto;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+    animation: modalIn 0.2s;
 }
-
-.card-header {
-    border-bottom: 1px solid #dee2e6;
-    font-weight: bold;
+@keyframes modalIn {
+    from { transform: translateY(-40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
-
-.form-label {
-    font-weight: 500;
-    color: #495057;
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.2rem 0.5rem 1.2rem;
+    border-bottom: 1px solid #e5e7eb;
 }
-
-.btn-primary {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+.modal-title {
+    font-size: 1.2rem;
+    font-weight: 700;
 }
-
-.btn-primary:hover {
-    background-color: #0b5ed7;
-    border-color: #0b5ed7;
+.modal-close {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s;
+}
+.modal-close:hover {
+    color: #ef4444;
+}
+.modal-body {
+    padding: 1rem 1.2rem;
+}
+.modal-footer {
+    padding: 0.7rem 1.2rem 1.2rem 1.2rem;
+    text-align: right;
+    border-top: 1px solid #e5e7eb;
+}
+@media (max-width: 900px) {
+    .container { max-width: 100%; }
+}
+@media (max-width: 768px) {
+    .container { padding: 0.5rem; }
+    .page-header h1 { font-size: 1.2rem; }
+    .form-row { flex-direction: column; gap: 0.5rem; }
+    .table th, .table td { font-size: 0.97rem; }
+    .modal-dialog { max-width: 98vw; }
+}
+@media (max-width: 500px) {
+    .container { padding: 0.2rem; }
+    .page-header h1 { font-size: 1rem; }
+    .btn, .btn-primary, .btn-secondary, .btn-success, .btn-edit { font-size: 0.93rem; padding: 0.5rem 0.7rem; }
 }
 </style>
 {% endblock %}

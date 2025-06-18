@@ -123,12 +123,30 @@
     .back-button i {
       font-size: 1.1rem;
     }
+    /* --- MODIFICACIONES PARA SIDEBAR DINÁMICO EN MÓVIL --- */
+    .menu-toggle {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 1101;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 12px;
+      display: none;
+      cursor: pointer;
+    }
     @media (max-width: 768px) {
       .sidebar {
         transform: translateX(-100%);
+        transition: transform 0.3s;
       }
       .sidebar.active {
         transform: translateX(0);
+      }
+      .menu-toggle {
+        display: block !important;
       }
       .content {
         margin-left: 0;
@@ -138,10 +156,19 @@
         padding: 1rem;
       }
     }
+    @media (min-width: 769px) {
+      .menu-toggle {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>
-  {% if current_user.is_authenticated and not request.path.startswith('/coordinador') %}
+  {% if current_user.is_authenticated %}
+  <!-- Botón hamburguesa para abrir/cerrar sidebar en móvil -->
+  <button class="menu-toggle" aria-label="Menú">
+    <i class="fas fa-bars"></i>
+  </button>
   <div class="sidebar">
     <div class="sidebar-header">
       <!-- Logo arriba del título -->
@@ -157,6 +184,16 @@
         <i class="fas fa-home"></i>
         Inicio
       </a>
+
+      <div class="menu-section">Acciones</div>
+      <a href="{{ url_for('admin_unidades') }}" class="menu-item">
+        <i class="fas fa-bus"></i>
+        Visualizar Unidades
+      </a>
+      <a href="{{ url_for('export') }}" class="menu-item">
+        <i class="fas fa-file-export"></i>
+        Exportar Datos
+      </a>
       
       <div class="menu-section">Cuenta</div>
       <a href="/logout" class="menu-item">
@@ -169,9 +206,27 @@
       <div class="menu-section">Mantenimiento</div>
       <a href="/taller" class="menu-item {% if request.path == '/taller' %}active{% endif %}">
         <i class="fas fa-clipboard-check"></i>
-        Reportes Pendientes
+        Agenda
       </a>
+
+      <div class="menu-section">Reportes</div>
+        <a href="{{ url_for('taller_lista_reportes') }}" class="menu-item {% if request.path == '/taller/lista-reportes' %}active{% endif %}">
+        <i class="fas fa-list"></i>
+          Lista de Reportes
+        </a>
       
+      <div class="menu-section">Cuenta</div>
+      <a href="/logout" class="menu-item">
+        <i class="fas fa-sign-out-alt"></i>
+        Cerrar Sesión
+      </a>
+      {% elif current_user.rol == 'coordinador' %}
+      <!-- Secciones para Coordinador -->
+      <div class="menu-section">Panel Coordinador</div>
+      <a href="/coordinador" class="menu-item {% if request.path == '/coordinador' %}active{% endif %}">
+        <i class="fas fa-user-cog"></i>
+        Panel Coordinador
+      </a>
       <div class="menu-section">Cuenta</div>
       <a href="/logout" class="menu-item">
         <i class="fas fa-sign-out-alt"></i>
@@ -186,7 +241,7 @@
   </div>
   {% endif %}
 
-  <div class="content {% if not current_user.is_authenticated or request.path.startswith('/coordinador') %}no-sidebar{% endif %}">
+  <div class="content {% if not current_user.is_authenticated %}no-sidebar{% endif %}">
     {% if request.path.startswith('/coordinador') %}
     <a href="{% if request.path == '/coordinador' %}/{% else %}/coordinador{% endif %}" class="back-button">
       <i class="fas fa-arrow-left"></i>
@@ -211,16 +266,36 @@
     // Toggle sidebar on mobile
     document.addEventListener('DOMContentLoaded', function() {
       const sidebar = document.querySelector('.sidebar');
-      const content = document.querySelector('.content');
-      
-      // Add click event to close sidebar when clicking outside
-      document.addEventListener('click', function(e) {
+      const menuToggle = document.querySelector('.menu-toggle');
+
+      function handleSidebar() {
         if (window.innerWidth <= 768) {
-          if (!sidebar.contains(e.target) && !e.target.classList.contains('menu-toggle')) {
-            sidebar.classList.remove('active');
-          }
+          menuToggle.style.display = 'block';
+          sidebar.classList.remove('active');
+        } else {
+          menuToggle.style.display = 'none';
+          sidebar.classList.remove('active');
         }
-      });
+      }
+
+      if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          sidebar.classList.toggle('active');
+        });
+
+        // Cerrar sidebar al hacer click fuera en móvil
+        document.addEventListener('click', function(e) {
+          if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+            if (!sidebar.contains(e.target) && !e.target.classList.contains('menu-toggle')) {
+              sidebar.classList.remove('active');
+            }
+          }
+        });
+
+        window.addEventListener('resize', handleSidebar);
+        handleSidebar();
+      }
     });
   </script>
 </body>

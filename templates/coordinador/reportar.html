@@ -19,17 +19,18 @@
                             <i class="fas fa-bus"></i>
                             Unidad
                         </label>
-                     <select name="vehiculo_id" id="vehiculo_id" class="form-control" required>
-                        <option value="">Seleccione un vehículo</option>
-                        {% for vehiculo in vehiculos %}
-                            <option value="{{ vehiculo.idvehiculo }}" 
-                                    data-descripcion="{{ vehiculo.descripcion }}"
-                                    data-placas="{{ vehiculo.placas }}"
-                                    data-serial="{{ vehiculo.serial }}">
-                                {{ vehiculo.idvehiculo }} - {{ vehiculo.estatus }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                        <input type="text" id="vehiculo_search" class="form-control mb-2" placeholder="Buscar unidad...">
+                        <select name="vehiculo_id" id="vehiculo_id" class="form-control" required size="6" style="height:auto;">
+                            <option value="">Seleccione un vehículo</option>
+                            {% for vehiculo in vehiculos %}
+                                <option value="{{ vehiculo.idvehiculo }}" 
+                                        data-descripcion="{{ vehiculo.descripcion }}"
+                                        data-placas="{{ vehiculo.placas }}"
+                                        data-serial="{{ vehiculo.serial }}">
+                                    {{ vehiculo.idvehiculo }} - {{ vehiculo.estatus }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
 
@@ -46,13 +47,11 @@
                         </div>
                         <div class="info-item full-width">
                             <label>Planta de Operación</label>
-                            <!-- El valor inicial se establece dinámicamente -->
                             <textarea name="vehiculo_descripcion" id="vehiculo_descripcion" class="form-control" rows="2" required></textarea>
                         </div>
                     </div>
                 </div>
 
-                
                 <div class="form-section">
                     <h3>Tipo de Problema</h3>
                     <div class="form-group">
@@ -67,7 +66,6 @@
                         </select>
                     </div>
                 </div>
-
 
                 <div class="form-section">
                     <h3>Detalles del Problema</h3>
@@ -291,6 +289,27 @@
 </style>
 
 <script>
+// Filtro en el select de vehículos
+document.getElementById('vehiculo_search').addEventListener('input', function() {
+    const search = this.value.toLowerCase();
+    const select = document.getElementById('vehiculo_id');
+    for (let option of select.options) {
+        if (option.value === "") {
+            option.style.display = "";
+            continue;
+        }
+        const text = option.textContent.toLowerCase();
+        option.style.display = text.includes(search) ? "" : "none";
+    }
+    // Selecciona la primera opción visible si hay coincidencias
+    let firstVisible = Array.from(select.options).find(opt => opt.style.display !== "none" && opt.value !== "");
+    if (firstVisible) {
+        select.value = firstVisible.value;
+        select.dispatchEvent(new Event('change'));
+    }
+});
+
+// Mostrar info de unidad seleccionada
 document.getElementById('vehiculo_id').addEventListener('change', function() {
     const selectedOption = this.options[this.selectedIndex];
     const vehiculoInfo = document.getElementById('vehiculo-info');
@@ -310,6 +329,7 @@ document.getElementById('vehiculo_id').addEventListener('change', function() {
         vehiculoInfo.style.display = 'none';
     }
 });
+
 document.getElementById('reporteForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -330,39 +350,25 @@ document.getElementById('reporteForm').addEventListener('submit', function(e) {
     
     const formData = new FormData(this);
     
-    // Depurar datos del formulario
-    console.log('Datos del formulario:');
-    for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-    }
-    
     fetch('/coordinador/reportar-clima', {
         method: 'POST',
         body: formData
     })
     .then(async response => {
-        console.log('Status:', response.status);
         const contentType = response.headers.get('content-type');
-        console.log('Content-Type:', contentType);
-        
         let data;
         try {
             const text = await response.text();
-            console.log('Respuesta del servidor:', text);
             data = JSON.parse(text);
         } catch (e) {
-            console.error('Error al parsear respuesta:', e);
             throw new Error('Error al procesar la respuesta del servidor');
         }
-        
         if (!response.ok) {
             throw new Error(data.error || 'Error al enviar el reporte');
         }
-        
         return data;
     })
     .then(data => {
-        console.log('Datos procesados:', data);
         if (data.success) {
             successMessage.style.display = 'flex';
             this.reset();
@@ -373,7 +379,6 @@ document.getElementById('reporteForm').addEventListener('submit', function(e) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         errorMessage.querySelector('span').textContent = error.message || 'Error al enviar el reporte. Por favor, intente nuevamente.';
         errorMessage.style.display = 'flex';
     })

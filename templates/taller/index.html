@@ -12,30 +12,14 @@
                 <h5 class="mb-0">Planificar Mantenimiento</h5>
             </div>
             <div class="card-body">
-                <form id="planificacion-form" class="row g-3 needs-validation" novalidate>
-                    <div class="col-md-5">
-                        <label for="reportes" class="form-label fw-bold">Reporte a planificar:</label>
-                        <select id="reportes" name="reportes" class="form-select" required>
-                            <option value="" disabled hidden selected>Selecciona un reporte...</option>
-                            {% for tipo, reportes in reportes_por_tipo.items() %}
-                                <optgroup label="{{ tipo|capitalize }}">
-                                    {% for reporte in reportes %}
-                                    <option value="{{ reporte.id }}">
-                                        #{{ reporte.id }} - Unidad: {{ reporte.vehiculo_id }} - {{ reporte.descripcion|truncate(40) }}
-                                    </option>
-                                    {% endfor %}
-                                </optgroup>
-                            {% endfor %}
-                        </select>
-                        <div class="invalid-feedback">Selecciona un reporte.</div>
-                    </div>
-                    <div class="col-md-3">
+                <form id="planificacion-form" class="row g-3 needs-validation" novalidate autocomplete="off">
+                    <div class="col-12 col-md-3">
                         <label for="fecha" class="form-label fw-bold">Fecha de inicio:</label>
-                        <input type="date" id="fecha" name="fecha" class="form-control" required>
+                        <input type="date" id="fecha" name="fecha" class="form-control" required autocomplete="off">
                         <div class="form-text">Selecciona la <b>fecha</b> de inicio.</div>
                         <div class="invalid-feedback">Selecciona la fecha de inicio.</div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-12 col-md-2">
                         <label for="hora" class="form-label fw-bold">Hora de inicio:</label>
                         <select id="hora" name="hora" class="form-select" required>
                             <option value="" disabled hidden selected>Selecciona la hora...</option>
@@ -47,8 +31,24 @@
                         <div class="form-text">Selecciona la <b>hora</b> de inicio.</div>
                         <div class="invalid-feedback">Selecciona la hora de inicio.</div>
                     </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="button" class="btn btn-success w-100" id="guardar-planificacion">
+                    <div class="col-12 col-md-5">
+                        <label for="reportes" class="form-label fw-bold">Reportes a planificar:</label>
+                        <select id="reportes" name="reportes" class="form-select" multiple required>
+                            {% for tipo, reportes in reportes_por_tipo.items() %}
+                                <optgroup label="{{ tipo|capitalize }}">
+                                    {% for reporte in reportes %}
+                                    <option value="{{ reporte.id }}">
+                                        #{{ reporte.id }} - Unidad: {{ reporte.vehiculo_id }} - {{ reporte.descripcion|truncate(40) }}
+                                    </option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                        <small class="form-text text-muted">Toca para seleccionar uno o varios reportes.</small>
+                        <div class="invalid-feedback">Selecciona al menos un reporte.</div>
+                    </div>
+                    <div class="col-12 col-md-2 d-flex align-items-end">
+                        <button type="button" class="btn btn-success w-100 py-2" id="guardar-planificacion">
                             <i class="fas fa-save me-1"></i>Guardar
                         </button>
                     </div>
@@ -62,13 +62,31 @@
                 <i class="fas fa-calendar-alt me-2"></i>
                 <h5 class="mb-0">Calendario de Mantenimientos</h5>
             </div>
-            <div class="card-body">
+            <div class="card-body p-0">
                 <div id="calendar"></div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Modal para mostrar información del reporte -->
+<div class="modal fade" id="modalReporte" tabindex="-1" aria-labelledby="modalReporteLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-3">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalReporteLabel">Detalle del Reporte</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="modalReporteBody">
+        <!-- Aquí se insertará la información del reporte -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Choices.js para mejor UX en selects múltiples -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <!-- FullCalendar & Bootstrap Scripts -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
@@ -78,77 +96,142 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Calendario
+    // Mejor UX para selección múltiple de reportes
+    var choicesReportes = new Choices('#reportes', {
+        removeItemButton: true,
+        searchResultLimit: 10,
+        placeholder: true,
+        placeholderValue: 'Selecciona uno o varios reportes',
+        noResultsText: 'No hay coincidencias',
+        noChoicesText: 'No hay reportes disponibles'
+    });
+
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridWeek',
         locale: 'es',
-        height: 600,
+        initialView: window.innerWidth < 768 ? 'listWeek' : 'dayGridMonth',
+        height: window.innerWidth < 768 ? 'auto' : 600,
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridWeek,timeGridDay'
+            right: window.innerWidth < 768 ? 'listWeek' : 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        buttonText: {
+            today:    'Hoy',
+            month:    'Mes',
+            week:     'Semana',
+            day:      'Día',
+            list:     'Agenda'
         },
         events: '/api/eventos',
+        eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+        dayMaxEvents: true,
+        nowIndicator: true,
         eventClick: function(info) {
-            let fin = info.event.extendedProps.estado === 'completado';
-            let msg = fin
-                ? 'Este mantenimiento ya fue finalizado.'
-                : '¿Deseas finalizar el mantenimiento para este reporte?';
-            if (fin) {
-                alert(msg);
-                return;
-            }
-            if (confirm(msg)) {
-                fetch(`/taller/reporte/${info.event.id}/finalizar`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
+            // Mostrar modal con la información del reporte y botones de estatus
+            var data = info.event.extendedProps;
+            var reporteId = info.event.id;
+            var html = `
+                <div class="reporte-info mb-3">
+                    <p><strong>Unidad:</strong> ${data.vehiculo_id || ''}</p>
+                    <p><strong>Descripción del Vehículo:</strong> ${data.vehiculo_descripcion || ''}</p>
+                    <p><strong>Descripción del Problema:</strong> ${data.descripcion || ''}</p>
+                    <p><strong>Creado por:</strong> ${data.coordinador_username || 'Desconocido'}</p>
+                </div>
+                <div class="mb-2 d-grid gap-2">
+                    <button class="btn btn-success btn-lg" id="btn-listo" aria-label="Marcar como listo" title="Marcar como listo">Listo</button>
+                    <button class="btn btn-warning btn-lg" id="btn-atencion" aria-label="Marcar en atención" title="Marcar en atención">En atención</button>
+                    <button class="btn btn-danger btn-lg" id="btn-pendiente" aria-label="Marcar como pendiente" title="Marcar como pendiente">Pendiente</button>
+                </div>
+                <div class="mt-2" id="motivo-pendiente-container" style="display:none;">
+                    <select id="motivo-pendiente" class="form-select form-select-lg">
+                        <option value="">Seleccione motivo</option>
+                        <option value="Refacciones">Refacciones</option>
+                        <option value="No bajó">No bajó</option>
+                        <option value="Aún no se arregla">Aún no se arregla</option>
+                    </select>
+                </div>
+            `;
+            document.getElementById('modalReporteBody').innerHTML = html;
+            var modal = new bootstrap.Modal(document.getElementById('modalReporte'));
+            modal.show();
+
+            // Botón "Listo"
+            document.getElementById('btn-listo').onclick = function() {
+                fetch(`/taller/reporte/${reporteId}/finalizar`, {method:'POST'})
+                    .then(r=>r.json()).then(data=>{
+                        if(data.success) {
+                            alert('Reporte marcado como listo');
+                            modal.hide();
+                            calendar.refetchEvents();
+                        } else alert(data.error);
+                    });
+            };
+            // Botón "En atención"
+            document.getElementById('btn-atencion').onclick = function() {
+                fetch(`/taller/reporte/${reporteId}/en-proceso`, {method:'POST'})
+                    .then(r=>r.json()).then(data=>{
+                        if(data.success) {
+                            alert('Reporte en atención');
+                            modal.hide();
+                            calendar.refetchEvents();
+                        } else alert(data.error);
+                    });
+            };
+            // Botón "Pendiente"
+            document.getElementById('btn-pendiente').onclick = function() {
+                document.getElementById('motivo-pendiente-container').style.display = 'block';
+            };
+            // Selección de motivo pendiente
+            document.getElementById('motivo-pendiente').onchange = function() {
+                var motivo = this.value;
+                if(!motivo) return;
+                fetch(`/taller/reporte/${reporteId}/pendiente`, {
+                    method:'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({motivo})
+                }).then(r=>r.json()).then(data=>{
+                    if(data.success) {
+                        alert('Reporte marcado como pendiente');
+                        modal.hide();
                         calendar.refetchEvents();
-                    } else {
-                        alert('Error: ' + data.error);
-                    }
-                })
-                .catch(error => alert('Error: ' + error));
-            }
+                    } else alert(data.error);
+                });
+            };
         },
-        eventDidMount: function(info) {
-            var tooltip = new bootstrap.Tooltip(info.el, {
-                title: `<b>${info.event.title}</b><br>${info.event.extendedProps.description || ''}<br>
-                        <span class='badge bg-${info.event.extendedProps.estado === 'completado' ? 'success' : 'warning'}'>
-                        ${info.event.extendedProps.estado || ''}</span>`,
-                html: true,
-                placement: 'top',
-                trigger: 'hover'
-            });
+        eventContent: function(arg) {
+            // Mostrar solo el ID de la unidad como título
+            const unidad = arg.event.extendedProps.vehiculo_id ? `${arg.event.extendedProps.vehiculo_id}` : '';
+            return {
+                html: `<span>Unidad ${unidad}</span>`
+            };
+        },
+        eventClassNames: function(arg) {
+            return [
+                arg.event.extendedProps.estado === 'completado' ? 'fc-event-completado' : 'fc-event-planificado'
+            ];
         }
     });
     calendar.render();
 
-    // Validación y envío del formulario
+    // Validación y envío del formulario de planificación
     document.getElementById('guardar-planificacion').addEventListener('click', function() {
         var form = document.getElementById('planificacion-form');
-        var reporte = document.getElementById('reportes').value;
+        var reportes = choicesReportes.getValue(true); // obtiene array de valores seleccionados
         var fecha = document.getElementById('fecha').value;
         var hora = document.getElementById('hora').value;
 
-        // Validación visual Bootstrap
-        if (!reporte || reporte === "" || !fecha || !hora) {
+        if (reportes.length === 0 || !fecha || !hora) {
             form.classList.add('was-validated');
             return;
         }
 
-        // Unir fecha y hora en formato ISO para el backend
         var fecha_inicio = fecha + 'T' + hora;
 
         fetch('/taller/planificar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reportes: [reporte], fecha_inicio })
+            body: JSON.stringify({ reportes, fecha_inicio })
         })
         .then(response => response.json())
         .then(data => {
@@ -156,6 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert(data.message);
                 calendar.refetchEvents();
                 form.reset();
+                choicesReportes.clearStore();
                 form.classList.remove('was-validated');
             } else {
                 alert('Error: ' + (data.error || 'Error desconocido'));
@@ -165,24 +249,73 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-
 <style>
 #calendar {
     background: #fff;
-    border-radius: 8px;
-    padding: 10px;
+    border-radius: 12px;
+    padding: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    font-size: 1rem;
+    min-height: 350px;
+}
+.fc-toolbar-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+.fc-button {
+    border-radius: 6px !important;
+    font-size: 0.95rem !important;
 }
 .fc-event {
     cursor: pointer;
+    font-size: 0.95rem;
 }
 .fc-event-completado {
     background-color: #198754 !important;
     border-color: #198754 !important;
+    color: #fff !important;
 }
 .fc-event-planificado {
     background-color: #ffc107 !important;
     border-color: #ffc107 !important;
+    color: #222 !important;
+}
+@media (max-width: 768px) {
+    #calendar {
+        padding: 2px;
+        font-size: 0.95rem;
+        min-height: 250px;
+    }
+    .fc-toolbar-title {
+        font-size: 1.05rem;
+    }
+    .fc-button {
+        font-size: 0.85rem !important;
+        padding: 0.3rem 0.7rem !important;
+    }
+    .fc .fc-list-event-title {
+        font-size: 0.98rem;
+    }
+    #planificacion-form .form-label,
+    #planificacion-form .form-control,
+    #planificacion-form .form-select {
+        font-size: 1.1rem;
+    }
+    #guardar-planificacion {
+        font-size: 1.2rem;
+        padding: 1rem;
+    }
+    #modalReporteBody .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    #modalReporteBody .btn:last-child {
+        margin-bottom: 0;
+    }
+    #modalReporteBody select {
+        font-size: 1.1rem;
+    }
 }
 </style>
 {% endblock %}

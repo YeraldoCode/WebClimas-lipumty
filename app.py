@@ -2,7 +2,7 @@
 # Roles: coordinador (sin login), logística (admin), próximamente taller.
 # Funcionalidades: revisión, edición, trazabilidad, carga/exportación Excel.
 
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, jsonify, Blueprint
 from flask_wtf import FlaskForm, CSRFProtect
 from wtforms import StringField, PasswordField, FileField, SubmitField
 from wtforms.validators import DataRequired
@@ -63,6 +63,13 @@ def create_app():
     return app
 
 app = create_app()
+
+# =============================
+# Cierre de sesión de base de datos
+# =============================
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()
 
 # =============================
 # Rutas principales
@@ -187,6 +194,22 @@ def coordinador():
     
     return render_template('coordinador/index.html', unidades_operando=unidades_operando, total_unidades_operando=total_unidades_operando)
 
+@app.route('/api/vehiculos')
+@login_required
+def api_vehiculos():
+    vehiculos = Vehiculo.query.all()
+    return jsonify([
+        {
+            "id": v.idvehiculo,
+            "descripcion": v.descripcion,
+            "placas": v.placas,
+            "serial": v.serial,
+            "estatus": v.estatus
+        }
+        for v in vehiculos
+    ])
+
+
 @app.route('/coordinador/reportar-clima', methods=['GET', 'POST'])
 @login_required
 def reportar_clima():
@@ -302,6 +325,33 @@ def admin():
         flash('Ocurrió un error al cargar la página de administración', 'error')
         return redirect(url_for('index'))
     
+@app.route('/admin/unidades/<int:unidad_id>/editar', methods=['POST'])
+@login_required
+def editar_unidad(unidad_id):
+    if current_user.rol != 'logistica':
+        return jsonify({'success': False, 'error': 'No autorizado'}), 403
+
+    data = request.get_json()
+    descripcion = data.get('descripcion')
+    estatus = data.get('estatus')
+
+    # Busca el vehículo por ID
+    unidad = Vehiculo.query.get(unidad_id)
+    if not unidad:
+        return jsonify({'success': False, 'error': 'Unidad no encontrada'}), 404
+
+    # Actualiza los campos permitidos
+    if descripcion is not None:
+        unidad.descripcion = descripcion
+    if estatus is not None:
+        unidad.estatus = estatus
+
+    try:
+        db.session.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/taller/reporte/<int:reporte_id>/en-proceso', methods=['POST'])
 @login_required
@@ -332,6 +382,92 @@ def taller_en_proceso(reporte_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
+
+
+    
+@app.route('/taller/planificar', methods=['POST'])
+@login_required
+def planificar_taller():
+    if current_user.rol != 'taller':
+        return jsonify({'success': False, 'error': 'No autorizado'})
+
+    try:
+        data = request.json
+        reportes = data.get('reportes', [])
+        fecha_inicio = data.get('fecha_inicio')
+
+        if not reportes or not fecha_inicio:
+            return jsonify({'success': False, 'error': 'Todos los campos son requeridos'})
+
+        # Acepta formato 'YYYY-MM-DDTHH:MM'
+        try:
+            fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%dT%H:%M')
+        except ValueError:
+            return jsonify({'success': False, 'error': 'Formato de fecha/hora inválido'})
+
+        for reporte_id in reportes:
+            reporte = ReporteClima.query.get(reporte_id)
+            if reporte:
+                reporte.fecha_inicio = fecha_inicio_dt
+                reporte.estado = 'planificado'
+
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Planeación guardada exitosamente'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)})
+        
+@app.route('/taller/reporte/<int:reporte_id>/finalizar', methods=['POST'])
+@login_required
+def finalizar_mantenimiento(reporte_id):
+    if current_user.rol != 'taller':
+        return jsonify({'success': False, 'error': 'No autorizado'})
+    try:
+        reporte = ReporteClima.query.get(reporte_id)
+        if not reporte:
+            return jsonify({'success': False, 'error': 'Reporte no encontrado'})
+
+        # Actualizar estado y asignar fecha de finalización
+        reporte.estado = 'completado'
+        reporte.fecha_fin = datetime.now()
+
+        # Cambiar el estatus del vehículo asociado a "Operando"
+        vehiculo = Vehiculo.query.get(reporte.vehiculo_id)
+        if vehiculo:
+            vehiculo.estatus = 'Operando'
+
+        historial = HistorialReporte(
+            reporte_id=reporte.id,
+            usuario_id=current_user.id,
+            accion='completado'
+        )
+        db.session.add(historial)
+        db.session.commit()
+
+        return jsonify({'success': True, 'message': 'Mantenimiento finalizado exitosamente'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)})
+
+
+@app.route('/taller/reporte/<int:reporte_id>/pendiente', methods=['POST'])
+@login_required
+def marcar_pendiente(reporte_id):
+    if current_user.rol != 'taller':
+        return jsonify({'success': False, 'error': 'No autorizado'})
+    motivo = request.json.get('motivo')
+    try:
+        reporte = ReporteClima.query.get(reporte_id)
+        if not reporte:
+            return jsonify({'success': False, 'error': 'Reporte no encontrado'})
+        reporte.estado = 'pendiente'
+        reporte.descripcion = f"{reporte.descripcion}\nMotivo pendiente: {motivo}"
+        db.session.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)})
+    
 
 @app.route('/taller/reporte/<int:reporte_id>/completado', methods=['POST'])
 @login_required
@@ -366,65 +502,6 @@ def taller_completado(reporte_id):
         db.session.add(historial)
         db.session.commit()
         return jsonify({'success': True})
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'success': False, 'error': str(e)})
-    
-@app.route('/taller/planificar', methods=['POST'])
-@login_required
-def planificar_taller():
-    if current_user.rol != 'taller':
-        return jsonify({'success': False, 'error': 'No autorizado'})
-
-    try:
-        data = request.json
-        reportes = data.get('reportes', [])
-        fecha_inicio = data.get('fecha_inicio')
-
-        if not reportes or not fecha_inicio:
-            return jsonify({'success': False, 'error': 'Todos los campos son requeridos'})
-
-        # Acepta formato 'YYYY-MM-DDTHH:MM'
-        try:
-            fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%dT%H:%M')
-        except ValueError:
-            return jsonify({'success': False, 'error': 'Formato de fecha/hora inválido'})
-
-        for reporte_id in reportes:
-            reporte = ReporteClima.query.get(reporte_id)
-            if reporte:
-                reporte.fecha_inicio = fecha_inicio_dt
-                reporte.estado = 'planificado'
-
-        db.session.commit()
-        return jsonify({'success': True, 'message': 'Planeación guardada exitosamente'})
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'success': False, 'error': str(e)})
-@app.route('/taller/reporte/<int:reporte_id>/finalizar', methods=['POST'])
-@login_required
-def finalizar_mantenimiento(reporte_id):
-    if current_user.rol != 'taller':
-        return jsonify({'success': False, 'error': 'No autorizado'})
-
-    try:
-        reporte = ReporteClima.query.get(reporte_id)
-        if not reporte:
-            return jsonify({'success': False, 'error': 'Reporte no encontrado'})
-
-        # Actualizar estado y asignar fecha de finalización
-        reporte.estado = 'completado'
-        reporte.fecha_fin = datetime.now()
-
-        historial = HistorialReporte(
-            reporte_id=reporte.id,
-            usuario_id=current_user.id,
-            accion='completado'
-        )
-        db.session.add(historial)
-        db.session.commit()
-
-        return jsonify({'success': True, 'message': 'Mantenimiento finalizado exitosamente'})
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
@@ -484,6 +561,7 @@ def admin_reportes_clima():
     reportes = db.session.query(ReporteClima).filter_by(estado='pendiente').all()
     return render_template('logistica/reportes_clima.html', reportes=reportes)
 
+
 @app.route('/admin/reportes-clima/<int:reporte_id>/aprobar', methods=['POST'])
 @login_required
 def aprobar_reporte_clima(reporte_id):
@@ -504,6 +582,8 @@ def aprobar_reporte_clima(reporte_id):
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
 
+
+
 @app.route('/admin/reportes-clima/<int:reporte_id>/rechazar', methods=['POST'])
 @login_required
 def rechazar_reporte_clima(reporte_id):
@@ -523,7 +603,9 @@ def rechazar_reporte_clima(reporte_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
-    
+
+
+
 @app.route('/admin/unidades', methods=['GET'])
 @login_required
 def admin_unidades():
@@ -560,13 +642,49 @@ def api_eventos():
             continue  # Ignora reportes sin fecha de inicio
         eventos.append({
             "id": reporte.id,
-            "title": f"Reporte #{reporte.id} - {reporte.tipo_problema.capitalize()}",
+            "title": f"Reporte {reporte.id}",
             "start": reporte.fecha_inicio.strftime('%Y-%m-%dT%H:%M:%S'),
-            "description": reporte.descripcion,
+            "descripcion": reporte.descripcion,
+            "vehiculo_id": reporte.vehiculo_id,
+            "vehiculo_descripcion": reporte.vehiculo.descripcion if reporte.vehiculo else "",
+            "coordinador_username": reporte.coordinador.username if reporte.coordinador else "",
             "estado": reporte.estado,
             "color": "green" if reporte.estado == 'completado' else "orange"
         })
     return jsonify(eventos)
+
+@app.route('/api/reportes')
+@login_required
+def api_reportes():
+    fecha = request.args.get('fecha')
+    tipo = request.args.get('tipo', 'dia')
+    query = ReporteClima.query
+
+    if fecha:
+        from datetime import datetime, timedelta
+        fecha_dt = datetime.strptime(fecha, '%Y-%m-%d')
+        if tipo == 'semana':
+            fin_semana = fecha_dt + timedelta(days=6)
+            query = query.filter(ReporteClima.fecha_inicio >= fecha_dt, ReporteClima.fecha_inicio <= fin_semana)
+        else:
+            query = query.filter(db.func.date(ReporteClima.fecha_inicio) == fecha_dt.date())
+    reportes = query.order_by(ReporteClima.fecha_inicio).all()
+    return jsonify([
+    {
+        'vehiculo_id': r.vehiculo_id,
+        'vehiculo_descripcion': r.vehiculo.descripcion if r.vehiculo else '',
+        'descripcion': r.descripcion,
+        'fecha_inicio': r.fecha_inicio.isoformat() if r.fecha_inicio else '',
+        'estado': r.estado
+    } for r in reportes
+])
+
+@app.route('/taller/lista-reportes')
+@login_required
+def taller_lista_reportes():
+    if current_user.rol != 'taller':
+        return redirect(url_for('index'))
+    return render_template('taller/lista_reportes.html')
 
 # =============================
 # Fin del archivo principal

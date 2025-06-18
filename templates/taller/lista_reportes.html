@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Reportes - Taller{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 class="titulo-lista">Lista de Reportes por Fecha</h2>
+  <form id="filtro-fecha-form" autocomplete="off">
+    <div class="form-group">
+      <label for="filtro-tipo">Tipo de filtro:</label>
+      <select id="filtro-tipo">
+        <option value="dia">Día</option>
+        <option value="semana">Semana</option>
+      </select>
+    </div>
+    <div class="form-group" id="filtro-fecha-group">
+      <label for="filtro-fecha">Selecciona fecha:</label>
+      <input type="date" id="filtro-fecha" required>
+    </div>
+    <div class="form-group" id="filtro-semana-group" style="display:none;">
+      <label for="filtro-semana">Selecciona semana:</label>
+      <select id="filtro-semana"></select>
+    </div>
+    <button type="submit" id="buscar-btn">
+      <span id="buscar-texto">Buscar</span>
+      <span id="buscar-spinner" style="display:none;" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    </button>
+    <button type="button" id="limpiar-btn" style="margin-left:0.5rem;">Limpiar</button>
+  </form>
+
+  <div class="tabla-scroll">
+    <!-- Solo visible en escritorio -->
+    <table id="tabla-reportes" class="compact-table desktop-only">
+      <thead>
+        <tr>
+          <th>Unidad</th>
+          <th>Planta</th>
+          <th>Descripción</th>
+          <th>Fecha</th>
+          <th>Estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Se llena con JS -->
+      </tbody>
+    </table>
+    <!-- Solo visible en móvil -->
+    <div id="tabla-reportes-mobile" class="mobile-only"></div>
+  </div>
+</div>
+
+<style>
+  .container {
+    max-width: 1000px;
+    margin: 1.5rem auto;
+    background: #fff;
+    padding: 1.2rem 0.7rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .titulo-lista {
+    color: #0d6efd;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+    align-items: flex-end;
+  }
+  .form-group {
+    flex: 1;
+    min-width: 140px;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+  }
+  input[type="date"],
+  select {
+    width: 100%;
+    padding: 0.35rem 0.5rem;
+    border: 1.2px solid #b6d4fe;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+  input[type="date"]:focus,
+  select:focus {
+    border-color: #0d6efd;
+    outline: none;
+  }
+  button[type="submit"], #limpiar-btn {
+    padding: 0.38rem 1.1rem;
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.98rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    height: 2.2rem;
+    margin-top: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  #limpiar-btn {
+    background: #6c757d;
+    margin-top: 1.2rem;
+  }
+  button[type="submit"]:hover {
+    background: #0b5ed7;
+  }
+  #limpiar-btn:hover {
+    background: #495057;
+  }
+  .tabla-scroll {
+    overflow-x: auto;
+    width: 100%;
+  }
+  .compact-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    table-layout: fixed;
+  }
+  .compact-table th, .compact-table td {
+    padding: 0.35rem 0.3rem;
+    text-align: center;
+    border-bottom: 1px solid #e3e3e3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+  }
+  .compact-table th {
+    background-color: #e3f2fd;
+    color: #0d6efd;
+    font-weight: bold;
+    font-size: 0.97rem;
+    border-bottom: 2px solid #b6d4fe;
+  }
+  .compact-table td.text-start {
+    text-align: left;
+  }
+  .compact-table tr:hover {
+    background-color: #f1f8ff;
+  }
+  .badge {
+    padding: 0.25em 0.7em;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    display: inline-block;
+  }
+  .success { background: #198754; color: white; }
+  .danger { background: #dc3545; color: white; }
+  .warning { background: #ffc107; color: #222; }
+  /* Tarjetas móviles */
+  #tabla-reportes-mobile .reporte-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    margin-bottom: 0.7rem;
+    padding: 0.7rem 1rem;
+    font-size: 0.97rem;
+    border-left: 4px solid #0d6efd;
+  }
+  #tabla-reportes-mobile .reporte-card .badge {
+    margin-top: 0.3rem;
+    display: inline-block;
+  }
+  #tabla-reportes-mobile .reporte-label {
+    font-weight: 600;
+    color: #0d6efd;
+    margin-right: 0.3rem;
+  }
+  /* Responsive: solo muestra tabla en escritorio y tarjetas en móvil */
+  .desktop-only { display: table; }
+  .mobile-only { display: none; }
+  @media (max-width: 768px) {
+    .desktop-only { display: none !important; }
+    .mobile-only { display: block !important; }
+    .container { padding: 0.5rem 0.2rem; }
+    .titulo-lista { font-size: 1.05rem; }
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    function getWeeksOfYear(year) {
+      const weeks = [];
+      let date = new Date(year, 0, 1);
+      while (date.getDay() !== 1) date.setDate(date.getDate() + 1);
+      let week = 1;
+      while (date.getFullYear() === year) {
+        const start = new Date(date);
+        const end = new Date(date);
+        end.setDate(end.getDate() + 4);
+        weeks.push({
+          label: `Semana ${week} (${start.toLocaleDateString()} - ${end.toLocaleDateString()})`,
+          value: `${start.toISOString().slice(0,10)}`
+        });
+        date.setDate(date.getDate() + 7);
+        week++;
+      }
+      return weeks;
+    }
+
+    // Inicializar el filtro de semanas al cargar la página
+    function initializeWeekFilter() {
+      const select = document.getElementById('filtro-semana');
+      const year = new Date().getFullYear();
+      const semanas = getWeeksOfYear(year);
+      select.innerHTML = '';
+      semanas.forEach(s =>
+        select.innerHTML += `<option value="${s.value}">${s.label}</option>`
+      );
+      // Selecciona la primera semana por defecto
+      if (semanas.length > 0) select.selectedIndex = 0;
+    }
+
+    // Llama a la inicialización del filtro de semanas
+    initializeWeekFilter();
+
+    // Mostrar/ocultar filtros según tipo
+    document.getElementById('filtro-tipo').addEventListener('change', function() {
+      const tipo = this.value;
+      const fechaInput = document.getElementById('filtro-fecha');
+      const fechaGroup = document.getElementById('filtro-fecha-group');
+      const semanaGroup = document.getElementById('filtro-semana-group');
+      if (tipo === 'semana') {
+        fechaGroup.style.display = 'none';
+        semanaGroup.style.display = '';
+        fechaInput.removeAttribute('required'); // Deshabilitar validación de fecha
+      } else {
+        fechaGroup.style.display = '';
+        semanaGroup.style.display = 'none';
+        fechaInput.setAttribute('required', 'true'); // Habilitar validación de fecha
+      }
+    });
+
+    document.getElementById('filtro-fecha').focus();
+
+    document.getElementById('filtro-fecha-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const tipo = document.getElementById('filtro-tipo').value;
+      let fecha = '';
+
+      // Validar el filtro seleccionado
+      if (tipo === 'semana') {
+        const semanaSelect = document.getElementById('filtro-semana');
+        fecha = semanaSelect.value;
+        if (!fecha) {
+          alert('Por favor selecciona una semana.');
+          semanaSelect.focus();
+          return;
+        }
+      } else {
+        fecha = document.getElementById('filtro-fecha').value;
+        if (!fecha) {
+          alert('Por favor selecciona un día.');
+          document.getElementById('filtro-fecha').focus();
+          return;
+        }
+      }
+
+      const tbody = document.querySelector('#tabla-reportes tbody');
+      const mobileDiv = document.getElementById('tabla-reportes-mobile');
+      const buscarBtn = document.getElementById('buscar-btn');
+      const buscarTexto = document.getElementById('buscar-texto');
+      const buscarSpinner = document.getElementById('buscar-spinner');
+
+      buscarBtn.disabled = true;
+      buscarSpinner.style.display = 'inline-block';
+      buscarTexto.textContent = 'Buscando...';
+      tbody.innerHTML = `<tr><td colspan="6">Cargando...</td></tr>`;
+      mobileDiv.innerHTML = '';
+
+      fetch(`/api/reportes?fecha=${fecha}&tipo=${tipo}`)
+        .then(res => res.json())
+        .then(data => {
+          tbody.innerHTML = '';
+          mobileDiv.innerHTML = '';
+          if (!data.length) {
+            tbody.innerHTML = `<tr><td colspan="6">No hay reportes para este filtro.</td></tr>`;
+            mobileDiv.innerHTML = `<div class="text-muted" style="padding:1rem;">No hay reportes para este filtro.</div>`;
+          } else {
+            data.forEach(r => {
+              const estadoClase = r.estado === 'completado' ? 'success' :
+                                  r.estado === 'pendiente' ? 'danger' : 'warning';
+              tbody.innerHTML += `
+                <tr>
+                  <td>${r.vehiculo_id}</td>
+                  <td>${r.vehiculo_descripcion || ''}</td>
+                  <td class="text-start">${r.descripcion}</td>
+                  <td>${r.fecha_inicio?.split('T')[0] || ''}</td>
+                  <td><span class="badge ${estadoClase}">${r.estado.charAt(0).toUpperCase() + r.estado.slice(1)}</span></td>
+                </tr>
+              `;
+              mobileDiv.innerHTML += `
+                <div class="reporte-card">
+                  <div><span class="reporte-label">Unidad:</span> ${r.vehiculo_id}</div>
+                  <div><span class="reporte-label">Planta:</span> ${r.vehiculo_descripcion || ''}</div>
+                  <div><span class="reporte-label">Descripción:</span> ${r.descripcion}</div>
+                  <div><span class="reporte-label">Fecha:</span> ${r.fecha_inicio?.split('T')[0] || ''}</div>
+                  <span class="badge ${estadoClase}">${r.estado.charAt(0).toUpperCase() + r.estado.slice(1)}</span>
+                </div>
+              `;
+            });
+          }
+        })
+        .catch(() => {
+          tbody.innerHTML = `<tr><td colspan="6">Error al cargar los datos.</td></tr>`;
+          mobileDiv.innerHTML = `<div class="text-danger" style="padding:1rem;">Error al cargar los datos.</div>`;
+        })
+        .finally(() => {
+          buscarBtn.disabled = false;
+          buscarSpinner.style.display = 'none';
+          buscarTexto.textContent = 'Buscar';
+        });
+    });
+
+    document.getElementById('limpiar-btn').addEventListener('click', function() {
+      document.getElementById('filtro-tipo').selectedIndex = 0;
+      document.getElementById('filtro-fecha').value = '';
+      document.getElementById('filtro-semana').selectedIndex = 0;
+      document.getElementById('filtro-fecha-group').style.display = '';
+      document.getElementById('filtro-semana-group').style.display = 'none';
+      document.querySelector('#tabla-reportes tbody').innerHTML = '';
+      document.getElementById('tabla-reportes-mobile').innerHTML = '';
+      document.getElementById('filtro-fecha').focus();
+    });
+
+    document.querySelectorAll('#filtro-fecha, #filtro-tipo, #filtro-semana').forEach(el => {
+      el.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          document.getElementById('buscar-btn').click();
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}
