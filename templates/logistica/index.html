@@ -9,6 +9,11 @@
         <p class="subtitle">Gestión de reportes de clima y vehículos en espera</p>
     </div>
 
+    <!-- Campo de búsqueda -->
+    <div class="search-bar">
+        <input type="text" id="search-input" class="form-control" placeholder="Buscar reportes por descripción del vehículo, unidad o creador...">
+    </div>
+
     <!-- Resumen de reportes -->
     <div class="dashboard-grid">
         <div class="status-card">
@@ -34,9 +39,12 @@
     <!-- Reportes de Reparación -->
     <div class="section">
         <h2>Reportes de Reparación</h2>
-        <div class="reportes-grid">
+        <div class="reportes-grid" id="reportes-reparacion">
             {% for reporte in reportes_reparacion %}
-            <div class="reporte-card">
+            <div class="reporte-card" 
+                 data-descripcion="{{ reporte.vehiculo.descripcion }}" 
+                 data-unidad="{{ reporte.vehiculo_id }}" 
+                 data-creador="{{ reporte.coordinador.username if reporte.coordinador else 'Desconocido' }}">
                 <div class="reporte-header">
                     <h4>Reporte #{{ reporte.id }}</h4>
                     <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
@@ -59,9 +67,12 @@
     <!-- Reportes de Conversión -->
     <div class="section">
         <h2>Reportes de Conversión</h2>
-        <div class="reportes-grid">
+        <div class="reportes-grid" id="reportes-conversion">
             {% for reporte in reportes_conversion %}
-            <div class="reporte-card">
+            <div class="reporte-card" 
+                 data-descripcion="{{ reporte.vehiculo.descripcion }}" 
+                 data-unidad="{{ reporte.vehiculo_id }}" 
+                 data-creador="{{ reporte.coordinador.username if reporte.coordinador else 'Desconocido' }}">
                 <div class="reporte-header">
                     <h4>Reporte #{{ reporte.id }}</h4>
                     <span class="fecha">{{ reporte.fecha_reporte.strftime('%d/%m/%Y %H:%M') }}</span>
@@ -83,183 +94,219 @@
 </div>
 
 <script>
-    // Función para aceptar un reporte
-    document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('btn-aprobar')) {
-            const reporteId = event.target.getAttribute('data-reporte-id');
-            fetch(`/admin/reportes-clima/${reporteId}/aprobar`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    alert('Reporte aceptado correctamente.');
-                    location.reload();
-                } else {
-                    response.json().then(data => {
-                        alert(`Error al aceptar el reporte: ${data.error}`);
-                    });
-                }
-            }).catch(error => {
-                alert(`Error de conexión: ${error}`);
-            });
-        }
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search-input');
+        const reportesCards = document.querySelectorAll('.reporte-card');
 
-    // Función para rechazar un reporte
-    document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('btn-rechazar')) {
-            const reporteId = event.target.getAttribute('data-reporte-id');
-            fetch(`/admin/reportes-clima/${reporteId}/rechazar`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    alert('Reporte rechazado correctamente.');
-                    location.reload();
+        // Escuchar cambios en el campo de búsqueda
+        searchInput.addEventListener('input', function () {
+            const query = searchInput.value.toLowerCase();
+
+            // Filtrar las cartas según el texto ingresado
+            reportesCards.forEach(card => {
+                const descripcion = card.getAttribute('data-descripcion').toLowerCase();
+                const unidad = card.getAttribute('data-unidad').toLowerCase();
+                const creador = card.getAttribute('data-creador').toLowerCase();
+
+                // Mostrar u ocultar la carta según la coincidencia
+                if (descripcion.includes(query) || unidad.includes(query) || creador.includes(query)) {
+                    card.style.display = 'block';
                 } else {
-                    response.json().then(data => {
-                        alert(`Error al rechazar el reporte: ${data.error}`);
-                    });
+                    card.style.display = 'none';
                 }
-            }).catch(error => {
-                alert(`Error de conexión: ${error}`);
             });
-        }
+        });
     });
 </script>
-
 <style>
+/* Contenedor principal */
 .container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+    max-width: 1000px;
+    margin: 1rem auto;
+    padding: 0 0.5rem;
+    font-family: 'Roboto', sans-serif;
+    color: #333;
 }
 
+/* Encabezado de la página */
 .page-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .page-header h1 {
     color: #2c3e50;
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
 }
 
 .page-header .subtitle {
     color: #7f8c8d;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    font-weight: 300;
 }
 
+/* Barra de búsqueda */
+.search-bar {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.search-bar input {
+    width: 100%;
+    max-width: 500px;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.search-bar input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 3px 6px rgba(52, 152, 219, 0.2);
+}
+
+/* Tarjetas de resumen */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .status-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 1rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    gap: 0.8rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.status-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .status-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
-}
-
-.status-icon i {
+    font-size: 1.2rem;
+    background: #f1f5f9;
     color: #3498db;
 }
 
 .status-info h3 {
     color: #2c3e50;
     font-size: 1rem;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.2rem;
 }
 
 .status-number {
     color: #3498db;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: bold;
 }
 
+/* Sección de reportes */
 .section {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.section h2 {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-bottom: 0.8rem;
+    border-bottom: 2px solid #3498db;
+    display: inline-block;
+    padding-bottom: 0.2rem;
+}
+
+/* Tarjetas de reportes */
 .reportes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1rem;
 }
 
 .reporte-card {
-    background: #f8fafc;
-    border-radius: 8px;
+    background: #f9fafb;
+    border-radius: 10px;
     padding: 1rem;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reporte-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 .reporte-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
 }
 
 .reporte-header h4 {
     color: #2c3e50;
     font-size: 1rem;
+    font-weight: bold;
     margin: 0;
 }
 
 .fecha {
     color: #6b7280;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
 .reporte-info p {
-    margin: 0.25rem 0;
+    margin: 0.3rem 0;
     color: #4b5563;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
 }
 
+.reporte-info p strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* Botones de acción */
 .reporte-actions {
     display: flex;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    gap: 0.4rem;
+    margin-top: 0.8rem;
 }
 
 .btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    justify-content: center;
+    padding: 0.4rem 0.8rem;
     border: none;
     border-radius: 6px;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
 }
 
 .btn-success {
@@ -280,56 +327,17 @@
     background: #dc2626;
 }
 
-.btn-secondary {
-    background: #3b82f6;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background: #2563eb;
-}
-
-/* --- RESPONSIVE PARA MÓVIL --- */
-@media (max-width: 600px) {
-    .container {
-        padding: 0 0.3rem;
-    }
-    .page-header h1 {
-        font-size: 1.2rem;
-    }
-    .page-header .subtitle {
-        font-size: 0.95rem;
-    }
+/* Responsivo */
+@media (max-width: 768px) {
     .dashboard-grid {
         grid-template-columns: 1fr;
-        gap: 1rem;
     }
-    .status-card {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1rem;
-        gap: 0.5rem;
-    }
-    .section {
-        padding: 1rem;
-    }
+
     .reportes-grid {
         grid-template-columns: 1fr;
-        gap: 0.7rem;
     }
-    .reporte-card {
-        padding: 0.7rem;
-    }
-    .reporte-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.2rem;
-    }
+
     .btn {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.7rem;
-    }
-    .btn-secondary, .btn-success, .btn-danger {
         width: 100%;
         justify-content: center;
     }

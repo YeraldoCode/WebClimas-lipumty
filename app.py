@@ -454,20 +454,26 @@ def finalizar_mantenimiento(reporte_id):
 @login_required
 def marcar_pendiente(reporte_id):
     if current_user.rol != 'taller':
-        return jsonify({'success': False, 'error': 'No autorizado'})
-    motivo = request.json.get('motivo')
+        return jsonify({'success': False, 'error': 'No autorizado'}), 403
+
+    data = request.get_json()
+    motivo = data.get('motivo')
+
+    if not motivo:
+        return jsonify({'success': False, 'error': 'El motivo es obligatorio'}), 400
+
+    reporte = ReporteClima.query.get(reporte_id)
+    if not reporte:
+        return jsonify({'success': False, 'error': 'Reporte no encontrado'}), 404
+
     try:
-        reporte = ReporteClima.query.get(reporte_id)
-        if not reporte:
-            return jsonify({'success': False, 'error': 'Reporte no encontrado'})
         reporte.estado = 'pendiente'
-        reporte.descripcion = f"{reporte.descripcion}\nMotivo pendiente: {motivo}"
+        reporte.motivo = motivo
         db.session.commit()
-        return jsonify({'success': True})
+        return jsonify({'success': True, 'message': 'Reporte marcado como pendiente'})
     except Exception as e:
         db.session.rollback()
-        return jsonify({'success': False, 'error': str(e)})
-    
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/taller/reporte/<int:reporte_id>/completado', methods=['POST'])
 @login_required
@@ -656,34 +662,74 @@ def api_eventos():
 @app.route('/api/reportes')
 @login_required
 def api_reportes():
-    fecha = request.args.get('fecha')
-    tipo = request.args.get('tipo', 'dia')
+    fecha = request.args.get('fecha')  # Fecha seleccionada en el filtro
+    tipo = request.args.get('tipo', 'dia')  # Tipo de filtro: 'dia' o 'semana'
     query = ReporteClima.query
 
     if fecha:
         from datetime import datetime, timedelta
         fecha_dt = datetime.strptime(fecha, '%Y-%m-%d')
+
         if tipo == 'semana':
+            # Filtrar reportes dentro de la semana seleccionada
             fin_semana = fecha_dt + timedelta(days=6)
-            query = query.filter(ReporteClima.fecha_inicio >= fecha_dt, ReporteClima.fecha_inicio <= fin_semana)
-        else:
+            query = query.filter(ReporteClima.fecha_inicio >= fecha_dt,
+                                ReporteClima.fecha_inicio <= fin_semana)
+        else:  # tipo == 'dia'
+            # Filtrar reportes solo del día seleccionado
             query = query.filter(db.func.date(ReporteClima.fecha_inicio) == fecha_dt.date())
+
     reportes = query.order_by(ReporteClima.fecha_inicio).all()
     return jsonify([
-    {
-        'vehiculo_id': r.vehiculo_id,
-        'vehiculo_descripcion': r.vehiculo.descripcion if r.vehiculo else '',
-        'descripcion': r.descripcion,
-        'fecha_inicio': r.fecha_inicio.isoformat() if r.fecha_inicio else '',
-        'estado': r.estado
-    } for r in reportes
-])
+        {
+            'vehiculo_id': r.vehiculo_id,
+            'vehiculo_descripcion': r.vehiculo.descripcion if r.vehiculo else '',
+            'descripcion': r.descripcion,
+            'fecha_inicio': r.fecha_inicio.isoformat() if r.fecha_inicio else '',
+            'estado': r.estado,
+            'fecha_completado': r.fecha_completado.isoformat() if r.fecha_completado else '',
+            'motivo': r.motivo if r.motivo else ''
+        }
+        for r in reportes
+    ])
+
+@app.route('/logistica/buscar-reportes', methods=['GET'])
+@login_required
+def buscar_reportes():
+    if current_user.rol != 'logistica':
+        return jsonify({'error': 'No autorizado'}), 403
+
+    query = request.args.get('q', '').strip()
+    if not query:
+        return jsonify([])
+
+    # Filtrar reportes por coincidencia en descripción, unidad o creador
+    reportes = ReporteClima.query.filter(
+        (ReporteClima.descripcion.ilike(f'%{query}%')) |
+        (ReporteClima.vehiculo_id.ilike(f'%{query}%')) |
+        (Usuario.username.ilike(f'%{query}%'))
+    ).join(Usuario, ReporteClima.coordinador_id == Usuario.id, isouter=True).all()
+
+    return jsonify([
+        {
+            'id': r.id,
+            'vehiculo_id': r.vehiculo_id,
+            'vehiculo_descripcion': r.vehiculo.descripcion if r.vehiculo else '',
+            'descripcion': r.descripcion,
+            'fecha_reporte': r.fecha_reporte.isoformat(),
+            'coordinador_username': r.coordinador.username if r.coordinador else 'Desconocido'
+        }
+        for r in reportes
+    ])
 
 @app.route('/taller/lista-reportes')
 @login_required
-def taller_lista_reportes():
-    if current_user.rol != 'taller':
+def lista_reportes():
+    # Permitir acceso a los roles "taller" y "logística"
+    if current_user.rol not in ['taller', 'logistica']:
+        flash('No tienes permiso para acceder a esta sección', 'error')
         return redirect(url_for('index'))
+    
     return render_template('taller/lista_reportes.html')
 
 # =============================

@@ -38,6 +38,7 @@
           <th>Descripción</th>
           <th>Fecha</th>
           <th>Estatus</th>
+          <th>Información Adicional</th>
         </tr>
       </thead>
       <tbody>
@@ -239,11 +240,11 @@
       if (tipo === 'semana') {
         fechaGroup.style.display = 'none';
         semanaGroup.style.display = '';
-        fechaInput.removeAttribute('required'); // Deshabilitar validación de fecha
+        fechaInput.removeAttribute('required');
       } else {
         fechaGroup.style.display = '';
         semanaGroup.style.display = 'none';
-        fechaInput.setAttribute('required', 'true'); // Habilitar validación de fecha
+        fechaInput.setAttribute('required', 'true');
       }
     });
 
@@ -294,24 +295,38 @@
             mobileDiv.innerHTML = `<div class="text-muted" style="padding:1rem;">No hay reportes para este filtro.</div>`;
           } else {
             data.forEach(r => {
-              const estadoClase = r.estado === 'completado' ? 'success' :
-                                  r.estado === 'pendiente' ? 'danger' : 'warning';
+              const estadoClase = r.estado === 'completado' ? 'success'
+                : (r.estado === 'pendiente' ? 'danger' : 'warning');
+
+              // Determinamos la información adicional:
+              let infoAdicional = '';
+              if (r.estado === 'completado' && r.fecha_completado) {
+                infoAdicional = `Se completó el ${r.fecha_completado.split('T')[0]}`;
+              } else if (r.estado === 'pendiente' && r.motivo) {
+                infoAdicional = `Motivo: ${r.motivo}`;
+              }
+
+              // Generar la fila en la tabla de escritorio
               tbody.innerHTML += `
                 <tr>
                   <td>${r.vehiculo_id}</td>
                   <td>${r.vehiculo_descripcion || ''}</td>
                   <td class="text-start">${r.descripcion}</td>
-                  <td>${r.fecha_inicio?.split('T')[0] || ''}</td>
+                  <td>${r.fecha_inicio ? r.fecha_inicio.split('T')[0] : ''}</td>
                   <td><span class="badge ${estadoClase}">${r.estado.charAt(0).toUpperCase() + r.estado.slice(1)}</span></td>
+                  <td>${infoAdicional}</td>
                 </tr>
               `;
+
+              // Generar la “tarjeta” en vista móvil
               mobileDiv.innerHTML += `
                 <div class="reporte-card">
                   <div><span class="reporte-label">Unidad:</span> ${r.vehiculo_id}</div>
                   <div><span class="reporte-label">Planta:</span> ${r.vehiculo_descripcion || ''}</div>
                   <div><span class="reporte-label">Descripción:</span> ${r.descripcion}</div>
-                  <div><span class="reporte-label">Fecha:</span> ${r.fecha_inicio?.split('T')[0] || ''}</div>
+                  <div><span class="reporte-label">Fecha:</span> ${r.fecha_inicio ? r.fecha_inicio.split('T')[0] : ''}</div>
                   <span class="badge ${estadoClase}">${r.estado.charAt(0).toUpperCase() + r.estado.slice(1)}</span>
+                  <div><span class="reporte-label">Información Adicional:</span> ${infoAdicional}</div>
                 </div>
               `;
             });

@@ -73,6 +73,7 @@ class ReporteClima(db.Model):
     vehiculo = db.relationship('Vehiculo', backref='reportes_clima')
     coordinador = db.relationship('Usuario', foreign_keys=[coordinador_id], backref='reportes_creados')
     tecnico = db.relationship('Usuario', foreign_keys=[tecnico_id], backref='reportes_revisados')
+    motivo = db.Column(db.Text, nullable=True)  # Agregar este campo
 
 
 
