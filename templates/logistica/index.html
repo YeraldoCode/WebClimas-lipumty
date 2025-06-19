@@ -11,7 +11,7 @@
 
     <!-- Campo de búsqueda -->
     <div class="search-bar">
-        <input type="text" id="search-input" class="form-control" placeholder="Buscar reportes por descripción del vehículo, unidad o creador...">
+        <input type="text" id="search-input" class="form-control" placeholder="Buscar reportes por planta, unidad o creador...">
     </div>
 
     <!-- Resumen de reportes -->
@@ -51,7 +51,7 @@
                 </div>
                 <div class="reporte-info">
                     <p><strong>Unidad:</strong> {{ reporte.vehiculo_id }}</p>
-                    <p><strong>Descripción del Vehículo:</strong> {{ reporte.vehiculo.descripcion }}</p>
+                    <p><strong>Planta:</strong> {{ reporte.vehiculo.descripcion }}</p>
                     <p><strong>Descripción del Problema:</strong> {{ reporte.descripcion }}</p>
                     <p><strong>Creado por:</strong> {{ reporte.coordinador.username if reporte.coordinador else 'Desconocido' }}</p>
                 </div>
@@ -114,6 +114,58 @@
                 } else {
                     card.style.display = 'none';
                 }
+            });
+        });
+
+        // Manejar clics en los botones de "Aprobar"
+        document.querySelectorAll('.btn-aprobar').forEach(button => {
+            button.addEventListener('click', function () {
+                const reporteId = this.getAttribute('data-reporte-id');
+                fetch(`/admin/reportes-clima/${reporteId}/aprobar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Reporte aprobado correctamente.');
+                        location.reload(); // Recargar la página para reflejar los cambios
+                    } else {
+                        alert(`Error al aprobar el reporte: ${data.error}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ocurrió un error al procesar la solicitud.');
+                });
+            });
+        });
+
+        // Manejar clics en los botones de "Rechazar"
+        document.querySelectorAll('.btn-rechazar').forEach(button => {
+            button.addEventListener('click', function () {
+                const reporteId = this.getAttribute('data-reporte-id');
+                fetch(`/admin/reportes-clima/${reporteId}/rechazar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Reporte rechazado correctamente.');
+                        location.reload(); // Recargar la página para reflejar los cambios
+                    } else {
+                        alert(`Error al rechazar el reporte: ${data.error}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ocurrió un error al procesar la solicitud.');
+                });
             });
         });
     });

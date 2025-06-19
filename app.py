@@ -74,6 +74,22 @@ def shutdown_session(exception=None):
 # =============================
 # Rutas principales
 # =============================
+# Estados de reporte
+ESTADOS_REPORTE = [
+    'pendiente',
+    'aprobado',
+    'planificado',
+    'en_proceso',
+    'completado',
+    'rechazado'
+]
+
+# Estados de vehículo
+ESTADOS_VEHICULO = [
+    'Operando',
+    'Espera',
+    'Mantenimiento'
+]
 
 @app.route('/')
 def index():
@@ -364,15 +380,13 @@ def taller_en_proceso(reporte_id):
         if not reporte:
             return jsonify({'success': False, 'error': 'Reporte no encontrado'})
 
-        # Validar que el estado actual sea 'aprobado'
-        if reporte.estado != 'aprobado':
-            return jsonify({'success': False, 'error': 'El reporte no está aprobado'})
+        # Solo permitir transición desde 'aprobado' o 'planificado'
+        if reporte.estado not in ['aprobado', 'planificado']:
+            return jsonify({'success': False, 'error': 'El reporte no está aprobado ni planificado'})
 
-        # Actualizar estado del reporte
         reporte.estado = 'en_proceso'
         reporte.fecha_inicio = datetime.now()
 
-        # Actualizar estado de la unidad asociada
         vehiculo = Vehiculo.query.get(reporte.vehiculo_id)
         if vehiculo:
             vehiculo.estatus = 'Mantenimiento'
@@ -384,7 +398,6 @@ def taller_en_proceso(reporte_id):
         return jsonify({'success': False, 'error': str(e)})
 
 
-    
 @app.route('/taller/planificar', methods=['POST'])
 @login_required
 def planificar_taller():
@@ -399,7 +412,6 @@ def planificar_taller():
         if not reportes or not fecha_inicio:
             return jsonify({'success': False, 'error': 'Todos los campos son requeridos'})
 
-        # Acepta formato 'YYYY-MM-DDTHH:MM'
         try:
             fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%dT%H:%M')
         except ValueError:
@@ -416,6 +428,7 @@ def planificar_taller():
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
+
         
 @app.route('/taller/reporte/<int:reporte_id>/finalizar', methods=['POST'])
 @login_required
@@ -427,11 +440,9 @@ def finalizar_mantenimiento(reporte_id):
         if not reporte:
             return jsonify({'success': False, 'error': 'Reporte no encontrado'})
 
-        # Actualizar estado y asignar fecha de finalización
         reporte.estado = 'completado'
         reporte.fecha_fin = datetime.now()
 
-        # Cambiar el estatus del vehículo asociado a "Operando"
         vehiculo = Vehiculo.query.get(reporte.vehiculo_id)
         if vehiculo:
             vehiculo.estatus = 'Operando'
@@ -486,20 +497,16 @@ def taller_completado(reporte_id):
         if not reporte:
             return jsonify({'success': False, 'error': 'Reporte no encontrado'})
 
-        # Validar que el estado actual sea 'en_proceso'
         if reporte.estado != 'en_proceso':
             return jsonify({'success': False, 'error': 'El reporte no está en proceso'})
 
-        # Actualizar estado del reporte
         reporte.estado = 'completado'
         reporte.fecha_completado = datetime.now()
 
-        # Cambiar el estatus del vehículo asociado a "Operando"
         vehiculo = Vehiculo.query.get(reporte.vehiculo_id)
         if vehiculo:
             vehiculo.estatus = 'Operando'
 
-        # Registrar en el historial
         historial = HistorialReporte(
             reporte_id=reporte.id,
             usuario_id=current_user.id,
@@ -639,13 +646,19 @@ def admin_unidades():
 @app.route('/api/eventos', methods=['GET'])
 @login_required
 def api_eventos():
+    # Incluir también los reportes en atención/en proceso
     reportes = ReporteClima.query.filter(
-        ReporteClima.estado.in_(['planificado', 'completado'])
+        ReporteClima.estado.in_(['planificado', 'completado', 'en_proceso'])
     ).all()
     eventos = []
     for reporte in reportes:
         if not reporte.fecha_inicio:
             continue  # Ignora reportes sin fecha de inicio
+        color = (
+            "green" if reporte.estado == 'completado'
+            else "blue" if reporte.estado == 'en_proceso'
+            else "orange"
+        )
         eventos.append({
             "id": reporte.id,
             "title": f"Reporte {reporte.id}",
@@ -655,7 +668,7 @@ def api_eventos():
             "vehiculo_descripcion": reporte.vehiculo.descripcion if reporte.vehiculo else "",
             "coordinador_username": reporte.coordinador.username if reporte.coordinador else "",
             "estado": reporte.estado,
-            "color": "green" if reporte.estado == 'completado' else "orange"
+            "color": color
         })
     return jsonify(eventos)
 
