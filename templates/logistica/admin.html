@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Panel de Logística{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Panel de Logística</h2>
+
+  <!-- Herramientas de administración -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h4 class="card-title mb-3">Herramientas de administración</h4>
+      <button id="limpiar-todos-btn" class="btn btn-danger mb-2">Eliminar TODOS los reportes y restaurar unidades</button>
+      <button id="restaurar-taller-btn" class="btn btn-warning mb-2">Restaurar reportes gestionados por taller</button>
+      <button id="limpiar-coordinador-btn" class="btn btn-secondary mb-2">Eliminar reportes de coordinador</button>
+      <div id="admin-msg" class="mt-2"></div>
+    </div>
+  </div>
+
+  <!-- Aquí puedes agregar el resto del contenido del panel logístico, como tablas, estadísticas, etc. -->
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Resumen de reportes</h5>
+      <!-- Ejemplo de tabla de reportes, puedes personalizar según tu lógica -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Vehículo</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Fecha de reporte</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reporte in reportes_reparacion.items %}
+          <tr>
+            <td>{{ reporte.id }}</td>
+            <td>{{ reporte.vehiculo.descripcion if reporte.vehiculo else '' }}</td>
+            <td>{{ reporte.descripcion }}</td>
+            <td>{{ reporte.estado }}</td>
+            <td>{{ reporte.fecha_reporte.strftime('%Y-%m-%d %H:%M') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('limpiar-todos-btn').onclick = function() {
+  if (confirm('¿Estás seguro de eliminar TODOS los reportes y restaurar unidades?')) {
+    fetch('/admin/limpiar-todos-reportes', {method: 'POST'})
+      .then(r => r.json()).then(data => {
+        document.getElementById('admin-msg').innerText = data.message || data.error;
+        if(data.success) location.reload();
+      });
+  }
+};
+
+document.getElementById('restaurar-taller-btn').onclick = function() {
+  if (confirm('¿Restaurar reportes gestionados por taller a estado aprobado?')) {
+    fetch('/admin/restaurar-reportes-taller', {method: 'POST'})
+      .then(r => r.json()).then(data => {
+        document.getElementById('admin-msg').innerText = data.message || data.error;
+        if(data.success) location.reload();
+      });
+  }
+};
+
+document.getElementById('limpiar-coordinador-btn').onclick = function() {
+  if (confirm('¿Eliminar reportes de coordinador (pendiente/aprobado)?')) {
+    fetch('/admin/limpiar-reportes-coordinador', {method: 'POST'})
+      .then(r => r.json()).then(data => {
+        document.getElementById('admin-msg').innerText = data.message || data.error;
+        if(data.success) location.reload();
+      });
+  }
+};
+</script>
+<style>
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+}
+.card {
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(13,110,253,0.07);
+    margin-bottom: 2rem;
+}
+.card-title {
+    font-weight: 700;
+    color: #0d6efd;
+}
+.btn-danger, .btn-warning, .btn-secondary {
+    font-weight: 600;
+    font-size: 1.05rem;
+    border-radius: 8px;
+    margin-right: 0.5rem;
+    min-width: 260px;
+}
+.btn-danger {
+    background: linear-gradient(90deg, #dc3545 60%, #f87171 100%);
+    border: none;
+}
+.btn-warning {
+    background: linear-gradient(90deg, #ffc107 60%, #fbbf24 100%);
+    border: none;
+    color: #333;
+}
+.btn-secondary {
+    background: linear-gradient(90deg, #6c757d 60%, #a1a1aa 100%);
+    border: none;
+}
+#admin-msg {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 1rem;
+}
+.table th, .table td {
+    vertical-align: middle;
+}
+@media (max-width: 900px) {
+    .btn-danger, .btn-warning, .btn-secondary {
+        min-width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+</style>
+{% endblock %}

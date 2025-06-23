@@ -21,7 +21,6 @@
                         </label>
                         <input type="text" id="vehiculo_search" class="form-control mb-2" placeholder="Buscar unidad...">
                         <select name="vehiculo_id" id="vehiculo_id" class="form-control" required size="6" style="height:auto;">
-                            <option value="">Seleccione un vehículo</option>
                             {% for vehiculo in vehiculos %}
                                 <option value="{{ vehiculo.idvehiculo }}" 
                                         data-descripcion="{{ vehiculo.descripcion }}"
@@ -46,8 +45,54 @@
                             <span id="vehiculo_serial"></span>
                         </div>
                         <div class="info-item full-width">
-                            <label>Planta de Operación</label>
-                            <textarea name="vehiculo_descripcion" id="vehiculo_descripcion" class="form-control" rows="2" required></textarea>
+                            <label for="vehiculo_descripcion">Planta de Operación</label>
+                            <select name="vehiculo_descripcion" id="vehiculo_descripcion" class="form-control" required>
+                                <option value="">Seleccione una planta...</option>
+                                <option>ABB ELECTRICAL CONTROL SYSTEMS</option>
+                                <option>AMAZON MTY</option>
+                                <option>AMAZON MTY 2</option>
+                                <option>AMCOR MTY</option>
+                                <option>AXIONLOG MTY</option>
+                                <option>AZTEK</option>
+                                <option>BAT</option>
+                                <option>CELESTICA AGUA FRIA</option>
+                                <option>CELESTICA APODACA</option>
+                                <option>CELESTICA ESCOBEDO</option>
+                                <option>DAWN FOODS</option>
+                                <option>DONG KOOK MTY</option>
+                                <option>FORNEY MTY</option>
+                                <option>GLOBAL FM</option>
+                                <option>HAMADEN</option>
+                                <option>IAC</option>
+                                <option>IAC SANTA CATARINA</option>
+                                <option>J&J LUBRICANTES</option>
+                                <option>KAYAKU SAFETY</option>
+                                <option>KEPLER CONSTRUCTORA</option>
+                                <option>LIEBHERR</option>
+                                <option>LISI</option>
+                                <option>LIXIL</option>
+                                <option>MOTA-ENGIL</option>
+                                <option>NAPS</option>
+                                <option>NIDEC-CMD</option>
+                                <option>NIDEC-COLD</option>
+                                <option>NIDEC-NLA</option>
+                                <option>NIDEC-USEM</option>
+                                <option>OWENS CORNING</option>
+                                <option>PALACIO DE HIERRO MTY</option>
+                                <option>PANEL REY</option>
+                                <option>PLASMAN</option>
+                                <option>RAGASA</option>
+                                <option>SAINT_GOBAIN</option>
+                                <option>SCANPAINT</option>
+                                <option>SIEMENS</option>
+                                <option>TAURO REMOLQUES</option>
+                                <option>TERNIUM ETRR</option>
+                                <option>VEOLIA</option>
+                                <option>VERTIV MONTERREY</option>
+                                <option>VIAKEM</option>
+                                <option>WELMON</option>
+                                <option>WOLONG</option>
+                            </select>
                         </div>
                     </div>
                 </div>

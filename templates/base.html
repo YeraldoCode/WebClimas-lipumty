@@ -185,6 +185,11 @@
         <i class="fas fa-home"></i>
         Inicio
       </a>
+      <!-- Nuevo acceso al panel de administración -->
+      <a href="{{ url_for('admin_panel') }}" class="menu-item {% if request.path == '/logistica/admin' %}active{% endif %}">
+        <i class="fas fa-tools"></i>
+        Herramientas Admin
+      </a>
 
       <div class="menu-section">Acciones</div>
       <a href="{{ url_for('admin_unidades') }}" class="menu-item">
@@ -195,10 +200,11 @@
         <i class="fas fa-file-export"></i>
         Exportar Datos
       </a>
-          <a href="{{ url_for('lista_reportes') }}" class="menu-item {% if request.path == '/taller/lista-reportes' %}active{% endif %}">
+      <a href="{{ url_for('lista_reportes') }}" class="menu-item {% if request.path == '/taller/lista-reportes' %}active{% endif %}">
         <i class="fas fa-list"></i>
           Lista de Reportes
-        </a>
+      </a>
+      
       
 
 
@@ -234,6 +240,10 @@
       <a href="/coordinador" class="menu-item {% if request.path == '/coordinador' %}active{% endif %}">
         <i class="fas fa-user-cog"></i>
         Panel Coordinador
+      </a>
+      <a href="{{ url_for('lista_reportes_coordinador') }}" class="menu-item">
+          <i class="fas fa-list"></i>
+          Mis Reportes
       </a>
       <div class="menu-section">Cuenta</div>
       <a href="/logout" class="menu-item">

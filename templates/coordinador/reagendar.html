@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Reagendar Reporte{% endblock %}
+{% block content %}
+<div class="container reagendar-container mt-5 mb-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <h2 class="mb-4 text-primary fw-bold">
+                <i class="fas fa-calendar-alt me-2"></i>Reagendar Reporte #{{ reporte.id }}
+            </h2>
+            <form method="post" autocomplete="off">
+                <div class="mb-4">
+                    <label for="fecha_inicio" class="form-label fw-semibold">Nueva fecha y hora</label>
+                    <input type="datetime-local" class="form-control form-control-lg" id="fecha_inicio" name="fecha_inicio" required>
+                </div>
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-save me-1"></i>Guardar
+                    </button>
+                    <a href="{{ url_for('lista_reportes_coordinador') }}" class="btn btn-outline-secondary btn-lg px-4">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+.reagendar-container {
+    max-width: 480px;
+    background: #f8fafc;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(13,110,253,0.08);
+    padding: 2.5rem 2rem;
+}
+.card {
+    border-radius: 18px;
+    background: #fff;
+    border: none;
+}
+h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0d6efd;
+    letter-spacing: 0.01em;
+}
+.form-label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 1.1rem;
+}
+.form-control {
+    border-radius: 10px;
+    border: 1.5px solid #b6d4fe;
+    font-size: 1.08rem;
+    padding: 0.7rem 1.1rem;
+    background: #f1f5f9;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-control:focus {
+    border-color: #0d6efd;
+    background: #e7f0fe;
+    box-shadow: 0 0 0 2px #b6d4fe33;
+}
+.btn-primary {
+    background: linear-gradient(90deg, #0d6efd 60%, #3b82f6 100%);
+    border: none;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+}
+.btn-primary:hover, .btn-primary:focus {
+    background: linear-gradient(90deg, #2563eb 60%, #0d6efd 100%);
+    box-shadow: 0 4px 16px rgba(13,110,253,0.13);
+}
+.btn-outline-secondary {
+    border-radius: 10px;
+    font-weight: 600;
+    color: #6c757d;
+    border: 1.5px solid #b6d4fe;
+    background: #f8fafc;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-outline-secondary:hover, .btn-outline-secondary:focus {
+    background: #e7f0fe;
+    color: #0d6efd;
+    border-color: #0d6efd;
+}
+@media (max-width: 600px) {
+    .reagendar-container {
+        padding: 1rem 0.5rem;
+        max-width: 98vw;
+    }
+    h2 {
+        font-size: 1.3rem;
+    }
+}
+</style>
+{% endblock %}

@@ -230,7 +230,7 @@ button[type="submit"]:hover {
       while (date.getFullYear() === year) {
         const start = new Date(date);
         const end = new Date(date);
-        end.setDate(end.getDate() + 4);
+        end.setDate(end.getDate() + 6);
         weeks.push({
           label: `Semana ${week} (${start.toLocaleDateString()} - ${end.toLocaleDateString()})`,
           value: `${start.toISOString().slice(0,10)}`

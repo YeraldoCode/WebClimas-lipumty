@@ -74,7 +74,7 @@ class ReporteClima(db.Model):
     coordinador = db.relationship('Usuario', foreign_keys=[coordinador_id], backref='reportes_creados')
     tecnico = db.relationship('Usuario', foreign_keys=[tecnico_id], backref='reportes_revisados')
     motivo = db.Column(db.Text, nullable=True)  # Agregar este campo
-
+    fecha_aprobacion = db.Column(db.DateTime)
 
 
 class HistorialReporte(db.Model):
