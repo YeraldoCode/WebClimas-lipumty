@@ -172,7 +172,6 @@ document.addEventListener('DOMContentLoaded', function() {
            document.getElementById('btn-atencion').onclick = function() {
                 fetch(`/taller/reporte/${reporteId}/en-proceso`, {method:'POST'})
                     .then(r=>r.json()).then(data=>{
-                        console.log(data); // <-- Agrega esto para depurar
                         if(data.success) {
                             alert('Reporte en atención');
                             modal.hide();
@@ -226,6 +225,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }, 300);
     }
+
+    // Mejora input de fecha en móvil: fuerza el foco y scroll al seleccionar fecha
+    document.getElementById('fecha').addEventListener('focus', function() {
+        if (window.innerWidth < 768) {
+            this.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+    });
 
     // Validación y envío del formulario de planificación
     document.getElementById('guardar-planificacion').addEventListener('click', function() {
@@ -469,210 +475,6 @@ document.addEventListener('DOMContentLoaded', function() {
 .fc .fc-toolbar-chunk .fc-button:active {
     filter: brightness(0.95);
 }
-.fc .fc-toolbar-chunk .fc-button {
-    margin-bottom: 0.2rem;
-}
-.fc .fc-toolbar-chunk {
-    display: flex;
-    align-items: center;
-}
-.fc .fc-toolbar-chunk .fc-toolbar-title {
-    margin-left: 0.5rem;
-}
-.fc .fc-toolbar-chunk .fc-button-group {
-    gap: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button {
-    margin-right: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button:last-child {
-    margin-right: 0;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-active {
-    background: linear-gradient(90deg, #2563eb 0%, #0d6efd 100%) !important;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-disabled {
-    background: #e9ecef !important;
-    color: #b0b0b0 !important;
-    opacity: 0.7 !important;
-    cursor: not-allowed !important;
-}
-.fc .fc-toolbar-chunk .fc-button:focus {
-    outline: 2px solid #0d6efd !important;
-}
-.fc .fc-toolbar-chunk .fc-button:active {
-    filter: brightness(0.95);
-}
-.fc .fc-toolbar-chunk .fc-button {
-    margin-bottom: 0.2rem;
-}
-.fc .fc-toolbar-chunk {
-    display: flex;
-    align-items: center;
-}
-.fc .fc-toolbar-chunk .fc-toolbar-title {
-    margin-left: 0.5rem;
-}
-.fc .fc-toolbar-chunk .fc-button-group {
-    gap: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button {
-    margin-right: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button:last-child {
-    margin-right: 0;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-active {
-    background: linear-gradient(90deg, #2563eb 0%, #0d6efd 100%) !important;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-disabled {
-    background: #e9ecef !important;
-    color: #b0b0b0 !important;
-    opacity: 0.7 !important;
-    cursor: not-allowed !important;
-}
-.fc .fc-toolbar-chunk .fc-button:focus {
-    outline: 2px solid #0d6efd !important;
-}
-.fc .fc-toolbar-chunk .fc-button:active {
-    filter: brightness(0.95);
-}
-.fc .fc-toolbar-chunk .fc-button {
-    margin-bottom: 0.2rem;
-}
-.fc .fc-toolbar-chunk {
-    display: flex;
-    align-items: center;
-}
-.fc .fc-toolbar-chunk .fc-toolbar-title {
-    margin-left: 0.5rem;
-}
-.fc .fc-toolbar-chunk .fc-button-group {
-    gap: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button {
-    margin-right: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button:last-child {
-    margin-right: 0;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-active {
-    background: linear-gradient(90deg, #2563eb 0%, #0d6efd 100%) !important;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-disabled {
-    background: #e9ecef !important;
-    color: #b0b0b0 !important;
-    opacity: 0.7 !important;
-    cursor: not-allowed !important;
-}
-.fc .fc-toolbar-chunk .fc-button:focus {
-    outline: 2px solid #0d6efd !important;
-}
-.fc .fc-toolbar-chunk .fc-button:active {
-    filter: brightness(0.95);
-}
-.fc .fc-toolbar-chunk .fc-button {
-    margin-bottom: 0.2rem;
-}
-.fc .fc-toolbar-chunk {
-    display: flex;
-    align-items: center;
-}
-.fc .fc-toolbar-chunk .fc-toolbar-title {
-    margin-left: 0.5rem;
-}
-.fc .fc-toolbar-chunk .fc-button-group {
-    gap: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button {
-    margin-right: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button:last-child {
-    margin-right: 0;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-active {
-    background: linear-gradient(90deg, #2563eb 0%, #0d6efd 100%) !important;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-disabled {
-    background: #e9ecef !important;
-    color: #b0b0b0 !important;
-    opacity: 0.7 !important;
-    cursor: not-allowed !important;
-}
-.fc .fc-toolbar-chunk .fc-button:focus {
-    outline: 2px solid #0d6efd !important;
-}
-.fc .fc-toolbar-chunk .fc-button:active {
-    filter: brightness(0.95);
-}
-.fc .fc-toolbar-chunk .fc-button {
-    margin-bottom: 0.2rem;
-}
-.fc .fc-toolbar-chunk {
-    display: flex;
-    align-items: center;
-}
-.fc .fc-toolbar-chunk .fc-toolbar-title {
-    margin-left: 0.5rem;
-}
-.fc .fc-toolbar-chunk .fc-button-group {
-    gap: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button {
-    margin-right: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button:last-child {
-    margin-right: 0;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-active {
-    background: linear-gradient(90deg, #2563eb 0%, #0d6efd 100%) !important;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-disabled {
-    background: #e9ecef !important;
-    color: #b0b0b0 !important;
-    opacity: 0.7 !important;
-    cursor: not-allowed !important;
-}
-.fc .fc-toolbar-chunk .fc-button:focus {
-    outline: 2px solid #0d6efd !important;
-}
-.fc .fc-toolbar-chunk .fc-button:active {
-    filter: brightness(0.95);
-}
-.fc .fc-toolbar-chunk .fc-button {
-    margin-bottom: 0.2rem;
-}
-.fc .fc-toolbar-chunk {
-    display: flex;
-    align-items: center;
-}
-.fc .fc-toolbar-chunk .fc-toolbar-title {
-    margin-left: 0.5rem;
-}
-.fc .fc-toolbar-chunk .fc-button-group {
-    gap: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button {
-    margin-right: 0.2rem;
-}
-.fc .fc-toolbar-chunk .fc-button:last-child {
-    margin-right: 0;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-active {
-    background: linear-gradient(90deg, #2563eb 0%, #0d6efd 100%) !important;
-}
-.fc .fc-toolbar-chunk .fc-button.fc-button-disabled {
-    background: #e9ecef !important;
-    color: #b0b0b0 !important;
-    opacity: 0.7 !important;
-    cursor: not-allowed !important;
-}
-.fc .fc-toolbar-chunk .fc-button:focus {
-    outline: 2px solid #0d6efd !important;
-}
-.fc .fc-toolbar-chunk .fc-button:active {
-    filter: brightness(0.95);
-}
 
 @media (max-width: 768px) {
     #calendar {
@@ -702,7 +504,18 @@ document.addEventListener('DOMContentLoaded', function() {
     .fc .fc-list-event-title {
         font-size: 0.90rem;
     }
+    input[type="date"] {
+        font-size: 1.1rem;
+        min-height: 44px;
+        padding: 0.5rem 0.7rem;
+        border-radius: 9px;
+        background: #fff;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .form-group {
+        min-width: 100px;
+    }
 }
-
 </style>
 {% endblock %}

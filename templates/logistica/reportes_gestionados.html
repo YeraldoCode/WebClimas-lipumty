@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Reportes Gestionados - Logística{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="background: #f3f6fa; min-height: 100vh;">
+    <div class="mx-auto" style="max-width: 1200px;">
+        <div class="d-flex align-items-center mb-4">
+            <i class="fas fa-file-alt fa-2x text-primary me-3"></i>
+            <h2 class="fw-bold mb-0">Reportes Aceptados o Rechazados</h2>
+        </div>
+
+        <!-- Tabla para escritorio -->
+        <div class="d-none d-md-block">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light text-primary">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Vehículo</th>
+                                    <th>Descripción</th>
+                                    <th>Estado</th>
+                                    <th>Fecha de reporte</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for r in reportes %}
+                                <tr>
+                                    <td class="fw-semibold">{{ r.id }}</td>
+                                    <td>{{ r.vehiculo.descripcion if r.vehiculo else '—' }}</td>
+                                    <td>{{ r.descripcion }}</td>
+                                    <td>
+                                        {% set estados = {
+                                            'aprobado': ('Aprobado', 'info', 'fas fa-check-circle'),
+                                            'rechazado': ('Rechazado', 'danger', 'fas fa-times-circle')
+                                        } %}
+                                        {% set label, color, icon = estados.get(r.estado, (r.estado, 'secondary', 'fas fa-question')) %}
+                                        <span class="badge rounded-pill bg-{{ color }} px-3 py-2 shadow-sm">
+                                            <i class="{{ icon }} me-1"></i>{{ label }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark">{{ r.fecha_reporte.strftime('%Y-%m-%d %H:%M') }}</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cartas para móvil -->
+        <div class="d-md-none">
+            {% for r in reportes %}
+            <div class="card shadow-sm border-0 rounded-4 mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="card-title fw-bold text-primary mb-0">#{{ r.id }}</h5>
+                        <span class="badge rounded-pill bg-{{ 
+                            (r.estado == 'aprobado') and 'info' or
+                            (r.estado == 'rechazado') and 'danger' or
+                            'secondary'
+                        }} px-3 py-2 shadow-sm">
+                            <i class="{% if r.estado == 'aprobado' %}fas fa-check-circle
+                                {% elif r.estado == 'rechazado' %}fas fa-times-circle
+                                {% else %}fas fa-question{% endif %} me-1"></i>
+                            {% if r.estado == 'aprobado' %}
+                                Aprobado
+                            {% elif r.estado == 'rechazado' %}
+                                Rechazado
+                            {% else %}
+                                {{ r.estado }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="mb-1"><strong>Vehículo:</strong> {{ r.vehiculo.descripcion if r.vehiculo else '—' }}</div>
+                    <div class="mb-1"><strong>Descripción:</strong> {{ r.descripcion }}</div>
+                    <div class="mb-1"><strong>Fecha de reporte:</strong>
+                        <span class="text-dark">{{ r.fecha_reporte.strftime('%Y-%m-%d %H:%M') }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<style>
+body {
+    background: #f3f6fa !important;
+    font-family: 'Inter', sans-serif;
+    color: #374151;
+}
+.card {
+    border-radius: 1.5rem;
+    background: #fff;
+    border: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+.badge {
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.1);
+}
+.table th, .table td {
+    vertical-align: middle;
+    font-size: 1.1rem;
+    padding: 1rem;
+    color: #374151;
+}
+.table thead th {
+    font-weight: 700;
+    color: #0d6efd;
+    background: #e9f1fb;
+    border-bottom: 2px solid #b6d4fe;
+    letter-spacing: 0.02em;
+}
+.table tbody tr:hover {
+    background: #f1f5f9;
+    transition: background 0.2s ease;
+}
+@media (max-width: 767.98px) {
+    .d-md-block { display: none !important; }
+    .d-md-none { display: block !important; }
+    .card { border-radius: 1rem; }
+    .card-body { padding: 1.2rem 1rem; }
+    .card-title { font-size: 1.1rem; }
+}
+@media (min-width: 768px) {
+    .d-md-block { display: block !important; }
+    .d-md-none { display: none  !important; }
+}
+</style>
+{% endblock %}

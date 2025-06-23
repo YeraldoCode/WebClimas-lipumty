@@ -1,26 +1,84 @@
 {% extends "base.html" %}
-{% block title %}Reagendar Reporte{% endblock %}
+{% block title %}Reenviar Reporte a Logística{% endblock %}
 {% block content %}
 <div class="container reagendar-container mt-5 mb-5">
     <div class="card shadow-lg border-0">
         <div class="card-body">
             <h2 class="mb-4 text-primary fw-bold">
-                <i class="fas fa-calendar-alt me-2"></i>Reagendar Reporte #{{ reporte.id }}
+                <i class="fas fa-calendar-alt me-2"></i>Reenviar Reporte #{{ reporte.id }}
             </h2>
-            <form method="post" autocomplete="off">
-                <div class="mb-4">
-                    <label for="fecha_inicio" class="form-label fw-semibold">Nueva fecha y hora</label>
-                    <input type="datetime-local" class="form-control form-control-lg" id="fecha_inicio" name="fecha_inicio" required>
+            <!-- Card resumen del reporte -->
+            <div class="card mb-4 border-0 shadow-sm rounded-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="card-title fw-bold text-primary mb-0">#{{ reporte.id }}</h5>
+                        <span class="badge rounded-pill bg-{{ 
+                            (reporte.estado == 'aprobado') and 'info' or
+                            (reporte.estado == 'planificado') and 'warning text-dark' or
+                            (reporte.estado == 'completado') and 'success' or
+                            (reporte.estado == 'rechazado') and 'danger' or
+                            (reporte.estado == 'pendiente') and 'secondary' or
+                            (reporte.estado == 'enviado') and 'primary' or 'light'
+                        }} px-3 py-2 shadow-sm">
+                            <i class="{% if reporte.estado == 'aprobado' %}fas fa-check-circle
+                                {% elif reporte.estado == 'planificado' %}fas fa-calendar-alt
+                                {% elif reporte.estado == 'completado' %}fas fa-check-double
+                                {% elif reporte.estado == 'rechazado' %}fas fa-times-circle
+                                {% elif reporte.estado == 'pendiente' %}fas fa-hourglass-half
+                                {% elif reporte.estado == 'enviado' %}fas fa-paper-plane
+                                {% else %}fas fa-question{% endif %} me-1"></i>
+                            {% if reporte.estado == 'aprobado' %}
+                                Aprobado
+                            {% elif reporte.estado == 'planificado' %}
+                                Planificado
+                            {% elif reporte.estado == 'completado' %}
+                                Completado
+                            {% elif reporte.estado == 'rechazado' %}
+                                Rechazado
+                            {% elif reporte.estado == 'pendiente' %}
+                                Pendiente
+                            {% elif reporte.estado == 'enviado' %}
+                                Enviado
+                            {% else %}
+                                {{ reporte.estado }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="mb-1"><strong>Vehículo:</strong> {{ reporte.vehiculo.descripcion if reporte.vehiculo else '—' }}</div>
+                    <div class="mb-1"><strong>Descripción:</strong> {{ reporte.descripcion }}</div>
+                    <div class="mb-1"><strong>Inicio:</strong>
+                        {% if reporte.fecha_inicio %}
+                            <span class="text-dark">{{ reporte.fecha_inicio.strftime('%Y-%m-%d %H:%M') }}</span>
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </div>
                 </div>
+            </div>
+            {% if reporte.estado == 'rechazado' %}
+            <div class="alert alert-info mb-4" role="alert">
+                Este reporte fue rechazado por logística. Puedes reenviarlo para su revisión y aprobación.
+            </div>
+            <form method="post" autocomplete="off">
                 <div class="d-flex justify-content-end gap-2">
                     <button type="submit" class="btn btn-primary btn-lg px-4">
-                        <i class="fas fa-save me-1"></i>Guardar
+                        <i class="fas fa-paper-plane me-1"></i>Reenviar
                     </button>
                     <a href="{{ url_for('lista_reportes_coordinador') }}" class="btn btn-outline-secondary btn-lg px-4">
                         <i class="fas fa-times me-1"></i>Cancelar
                     </a>
                 </div>
             </form>
+            {% elif reporte.estado == 'pendiente' %}
+            <div class="alert alert-warning mb-4" role="alert">
+                Este reporte está pendiente y será planificado por taller. No puedes replanificarlo desde aquí.
+            </div>
+            <div class="d-flex justify-content-end">
+                <a href="{{ url_for('lista_reportes_coordinador') }}" class="btn btn-outline-secondary btn-lg px-4">
+                    <i class="fas fa-arrow-left me-1"></i>Volver
+                </a>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -37,29 +95,18 @@
     background: #fff;
     border: none;
 }
-h2 {
-    font-size: 2rem;
+.card-title {
+    font-size: 1.2rem;
     font-weight: 700;
-    color: #0d6efd;
-    letter-spacing: 0.01em;
 }
-.form-label {
-    font-weight: 600;
-    color: #374151;
-    font-size: 1.1rem;
+.badge {
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.1);
 }
-.form-control {
-    border-radius: 10px;
-    border: 1.5px solid #b6d4fe;
+.alert-info, .alert-warning {
     font-size: 1.08rem;
-    padding: 0.7rem 1.1rem;
-    background: #f1f5f9;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-.form-control:focus {
-    border-color: #0d6efd;
-    background: #e7f0fe;
-    box-shadow: 0 0 0 2px #b6d4fe33;
+    border-radius: 10px;
 }
 .btn-primary {
     background: linear-gradient(90deg, #0d6efd 60%, #3b82f6 100%);

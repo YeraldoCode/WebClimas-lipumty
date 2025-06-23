@@ -2,103 +2,183 @@
 {% block title %}Mis Reportes - Coordinador{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Mis Reportes</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Vehículo</th>
-                <th>Descripción</th>
-                <th>Estado</th>
-                <th>Fecha de inicio</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for r in reportes %}
-            <tr>
-                <td>{{ r.id }}</td>
-                <td>{{ r.vehiculo.descripcion if r.vehiculo else '' }}</td>
-                <td>{{ r.descripcion }}</td>
-                <td>
-                  {% if r.estado == 'aprobado' %}
-                    <span class="badge bg-info">Aprobado</span>
-                  {% elif r.estado == 'planificado' %}
-                    <span class="badge bg-warning text-dark">Planificado</span>
-                  {% elif r.estado == 'completado' %}
-                    <span class="badge bg-success">Completado</span>
-                  {% elif r.estado == 'rechazado' %}
-                    <span class="badge bg-danger">Rechazado</span>
-                  {% elif r.estado == 'pendiente' and not r.fecha_inicio %}
-                    <span class="badge bg-primary">Enviado</span>
-                  {% elif r.estado == 'pendiente' and r.fecha_inicio %}
-                    <span class="badge bg-secondary">Pendiente</span>
-                  {% else %}
-                    {{ r.estado }}
-                  {% endif %}
-                </td>
-                <td>{{ r.fecha_inicio.strftime('%Y-%m-%d %H:%M') if r.fecha_inicio else '' }}</td>
-                <td>
-                    {% if r.estado == 'rechazado' or (r.estado == 'pendiente' and r.fecha_inicio) %}
-                    <a href="{{ url_for('reagendar_reporte', reporte_id=r.id) }}" class="btn btn-sm btn-primary">Reagendar</a>
-                    {% else %}
-                    <span class="text-muted">-</span>
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div class="container-fluid py-4" style="background: #f3f6fa; min-height: 100vh;">
+    <div class="mx-auto" style="max-width: 1200px;">
+        <div class="d-flex align-items-center mb-4">
+            <i class="fas fa-clipboard-list fa-2x text-primary me-3"></i>
+            <h2 class="fw-bold mb-0" style="letter-spacing:0.01em;">Mis Reportes</h2>
+        </div>
+        <!-- Tabla para escritorio -->
+        <div class="d-none d-md-block">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light text-primary">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Vehículo</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Inicio</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for r in reportes %}
+                                <tr>
+                                    <td class="fw-semibold">{{ r.id }}</td>
+                                    <td>{{ r.vehiculo.descripcion if r.vehiculo else '—' }}</td>
+                                    <td>{{ r.descripcion }}</td>
+                                    <td>
+                                        {% set estados = {
+                                            'aprobado': ('Aprobado', 'info', 'fas fa-check-circle'),
+                                            'planificado': ('Planificado', 'warning text-dark', 'fas fa-calendar-alt'),
+                                            'completado': ('Completado', 'success', 'fas fa-check-double'),
+                                            'rechazado': ('Rechazado', 'danger', 'fas fa-times-circle'),
+                                            'pendiente': ('Pendiente', 'secondary', 'fas fa-hourglass-half'),
+                                            'enviado': ('Enviado', 'primary', 'fas fa-paper-plane')
+                                        } %}
+                                        {% if r.estado == 'pendiente' and not r.fecha_inicio %}
+                                            {% set label, color, icon = estados['enviado'] %}
+                                        {% elif r.estado == 'pendiente' and r.fecha_inicio %}
+                                            {% set label, color, icon = estados['pendiente'] %}
+                                        {% else %}
+                                            {% set label, color, icon = estados.get(r.estado, (r.estado, 'light', 'fas fa-question')) %}
+                                        {% endif %}
+                                        <span class="badge rounded-pill bg-{{ color }} px-3 py-2 shadow-sm">
+                                            <i class="{{ icon }} me-1"></i>{{ label }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if r.fecha_inicio %}
+                                            <span class="text-dark">{{ r.fecha_inicio.strftime('%Y-%m-%d %H:%M') }}</span>
+                                        {% else %}
+                                            <span class="text-muted">—</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if r.estado == 'rechazado' or (r.estado == 'pendiente' and r.fecha_inicio) %}
+                                        <a href="{{ url_for('reagendar_reporte', reporte_id=r.id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">
+                                            <i class="fas fa-calendar-plus me-1"></i>Reagendar
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">—</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Cartas para móvil -->
+        <div class="d-md-none">
+            {% for r in reportes %}
+            <div class="card shadow-sm border-0 rounded-4 mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="card-title fw-bold text-primary mb-0">#{{ r.id }}</h5>
+                        <span class="badge rounded-pill bg-{{ 
+                            (r.estado == 'pendiente' and not r.fecha_inicio) and 'primary' or
+                            (r.estado == 'pendiente' and r.fecha_inicio) and 'secondary' or
+                            (r.estado == 'aprobado') and 'info' or
+                            (r.estado == 'planificado') and 'warning text-dark' or
+                            (r.estado == 'completado') and 'success' or
+                            (r.estado == 'rechazado') and 'danger' or 'light'
+                        }} px-3 py-2 shadow-sm">
+                            <i class="{% if r.estado == 'pendiente' and not r.fecha_inicio %}fas fa-paper-plane
+                                {% elif r.estado == 'pendiente' and r.fecha_inicio %}fas fa-hourglass-half
+                                {% elif r.estado == 'aprobado' %}fas fa-check-circle
+                                {% elif r.estado == 'planificado' %}fas fa-calendar-alt
+                                {% elif r.estado == 'completado' %}fas fa-check-double
+                                {% elif r.estado == 'rechazado' %}fas fa-times-circle
+                                {% else %}fas fa-question{% endif %} me-1"></i>
+                            {% if r.estado == 'pendiente' and not r.fecha_inicio %}
+                                Enviado
+                            {% elif r.estado == 'pendiente' and r.fecha_inicio %}
+                                Pendiente
+                            {% elif r.estado == 'aprobado' %}
+                                Aprobado
+                            {% elif r.estado == 'planificado' %}
+                                Planificado
+                            {% elif r.estado == 'completado' %}
+                                Completado
+                            {% elif r.estado == 'rechazado' %}
+                                Rechazado
+                            {% else %}
+                                {{ r.estado }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="mb-1"><strong>Vehículo:</strong> {{ r.vehiculo.descripcion if r.vehiculo else '—' }}</div>
+                    <div class="mb-1"><strong>Descripción:</strong> {{ r.descripcion }}</div>
+                    <div class="mb-1"><strong>Inicio:</strong>
+                        {% if r.fecha_inicio %}
+                            <span class="text-dark">{{ r.fecha_inicio.strftime('%Y-%m-%d %H:%M') }}</span>
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </div>
+                    <div class="mt-3">
+                        {% if r.estado == 'rechazado' or (r.estado == 'pendiente' and r.fecha_inicio) %}
+                        <a href="{{ url_for('reagendar_reporte', reporte_id=r.id) }}" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm w-100">
+                            <i class="fas fa-calendar-plus me-1"></i>Reagendar
+                        </a>
+                        {% else %}
+                        <span class="text-muted">—</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
+
 <style>
-.container {
-    max-width: 1100px;
-    margin: 2rem auto;
+body {
+    background: #f3f6fa !important;
+    font-family: 'Inter', sans-serif;
+    color: #374151;
+}
+.card {
+    border-radius: 1.5rem;
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-    padding: 2rem 2.5rem;
+    border: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
-h2 {
+.card-title {
+    font-size: 1.2rem;
     font-weight: 700;
-    color: #0d6efd;
-    margin-bottom: 1.5rem;
-}
-.table {
-    border-radius: 10px;
-    overflow: hidden;
-    background: #f8fafc;
-}
-.table th, .table td {
-    vertical-align: middle;
-    font-size: 1.05rem;
 }
 .badge {
-    font-size: 1em;
-    padding: 0.5em 1em;
-    border-radius: 8px;
+    font-size: 0.95rem;
     letter-spacing: 0.03em;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.1);
 }
-.btn-primary {
-    background: linear-gradient(90deg, #0d6efd 60%, #3b82f6 100%);
-    border: none;
+.btn-outline-primary {
     font-weight: 600;
-    transition: background 0.2s;
+    border-width: 2px;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease-in-out;
 }
-.btn-primary:hover {
-    background: linear-gradient(90deg, #2563eb 60%, #0d6efd 100%);
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+    background: #0d6efd;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(13, 110, 253, 0.2);
 }
-.text-muted {
-    color: #b0b3b8 !important;
+@media (max-width: 767.98px) {
+    .d-md-block { display: none !important; }
+    .d-md-none { display: block !important; }
+    .card { border-radius: 1rem; }
 }
-@media (max-width: 800px) {
-    .container {
-        padding: 1rem 0.5rem;
-    }
-    .table th, .table td {
-        font-size: 0.95rem;
-    }
+@media (min-width: 768px) {
+    .d-md-block { display: block !important; }
+    .d-md-none { display: none !important; }
 }
 </style>
 {% endblock %}

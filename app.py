@@ -139,11 +139,16 @@ def panel_taller():
 
     # Filtrar reportes aceptados por logística
     reportes_aceptados = ReporteClima.query.filter_by(estado='aprobado').all()
+    # Filtrar reportes pendientes (NO incluir rechazados)
+    reportes_pendientes = ReporteClima.query.filter_by(estado='pendiente').all()
+
+    # Unir ambos conjuntos (NO agregar rechazados)
+    reportes_total = reportes_aceptados + reportes_pendientes
 
     # Dividir reportes por tipo
     reportes_por_tipo = {}
     eventos = []
-    for reporte in reportes_aceptados:
+    for reporte in reportes_total:
         tipo = reporte.tipo_problema
         if tipo not in reportes_por_tipo:
             reportes_por_tipo[tipo] = []
@@ -194,7 +199,6 @@ def panel_taller():
                             reportes_por_tipo=reportes_por_tipo,
                             estadisticas=estadisticas,
                             eventos=eventos)
-
 
 @app.route('/coordinador')
 @login_required
@@ -726,7 +730,7 @@ def api_reportes():
     fecha = request.args.get('fecha')
     tipo = request.args.get('tipo', 'dia')
     # Solo mostrar los estados gestionados por taller
-    estados = ['planificado', 'en_proceso', 'completado', 'rechazado', 'pendiente']
+    estados = ['planificado', 'en_proceso', 'completado', 'pendiente']
     query = ReporteClima.query.filter(
         ReporteClima.estado.in_(estados),
         ReporteClima.fecha_inicio.isnot(None)
@@ -906,19 +910,25 @@ def reagendar_reporte(reporte_id):
     if reporte.coordinador_id != current_user.id or reporte.estado not in ['rechazado', 'pendiente']:
         abort(403)
     if request.method == 'POST':
-        nueva_fecha = request.form.get('fecha_inicio')
-        if nueva_fecha:
-            from datetime import datetime
-            try:
-                reporte.fecha_inicio = None  # Limpia la fecha anterior
-                reporte.estado = 'pendiente'
-                db.session.commit()
-                flash('Reporte reagendado correctamente. Espera aprobación de logística.', 'success')
-                return redirect(url_for('lista_reportes_coordinador'))
-            except Exception as e:
-                db.session.rollback()
-                flash('Error al reagendar: ' + str(e), 'danger')
+        try:
+            reporte.fecha_inicio = None  # Limpia la fecha anterior
+            reporte.estado = 'pendiente'
+            db.session.commit()
+            flash('Reporte reenviado correctamente. Espera aprobación de logística.', 'success')
+            return redirect(url_for('lista_reportes_coordinador'))
+        except Exception as e:
+            db.session.rollback()
+            flash('Error al reenviar: ' + str(e), 'danger')
     return render_template('coordinador/reagendar.html', reporte=reporte)
+
+
+@app.route('/logistica/reportes-gestionados')
+@login_required
+def reportes_gestionados_logistica():
+    if current_user.rol != 'logistica':
+        abort(403)
+    reportes = ReporteClima.query.filter(ReporteClima.estado.in_(['aprobado', 'rechazado'])).order_by(ReporteClima.fecha_reporte.desc()).all()
+    return render_template('logistica/reportes_gestionados.html', reportes=reportes)
 # =============================
 # Fin del archivo principal
 # =============================
