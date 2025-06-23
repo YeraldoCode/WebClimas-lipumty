@@ -27,7 +27,7 @@
                             <tbody>
                             {% for r in reportes %}
                                 <tr>
-                                    <td class="fw-semibold">{{ r.id }}</td>
+                                    <td class="fw-semibold">{{ r.vehiculo_id }}</td>
                                     <td>{{ r.vehiculo.descripcion if r.vehiculo else '—' }}</td>
                                     <td>{{ r.descripcion }}</td>
                                     <td>
@@ -80,7 +80,7 @@
             <div class="card shadow-sm border-0 rounded-4 mb-3">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="card-title fw-bold text-primary mb-0">#{{ r.id }}</h5>
+                        <h5 class="card-title fw-bold text-primary mb-0">#{{ r.vehiculo_id }}</h5>
                         <span class="badge rounded-pill bg-{{ 
                             (r.estado == 'pendiente' and not r.fecha_inicio) and 'primary' or
                             (r.estado == 'pendiente' and r.fecha_inicio) and 'secondary' or
