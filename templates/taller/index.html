@@ -129,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function() {
         dayMaxEvents: true,
         nowIndicator: true,
         eventClick: function(info) {
-            // Mostrar modal con la información del reporte y botones de estatus
             var data = info.event.extendedProps;
             var reporteId = info.event.id;
             var html = `
@@ -139,66 +138,95 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p><strong>Descripción del Problema:</strong> ${data.descripcion || ''}</p>
                     <p><strong>Creado por:</strong> ${data.coordinador_username || 'Desconocido'}</p>
                 </div>
-                <div class="mb-2 d-grid gap-2">
-                    <button class="btn btn-success btn-lg" id="btn-listo" aria-label="Marcar como listo" title="Marcar como listo">Listo</button>
-                    <button class="btn btn-warning btn-lg" id="btn-atencion" aria-label="Marcar en atención" title="Marcar en atención">En atención</button>
-                    <button class="btn btn-danger btn-lg" id="btn-pendiente" aria-label="Marcar como pendiente" title="Marcar como pendiente">Pendiente</button>
-                </div>
-                <div class="mt-2" id="motivo-pendiente-container" style="display:none;">
-                    <select id="motivo-pendiente" class="form-select form-select-lg">
-                        <option value="">Seleccione motivo</option>
-                        <option value="Refacciones">Refacciones</option>
-                        <option value="No bajó">No bajó</option>
-                        <option value="Aún no se arregla">Aún no se arregla</option>
-                    </select>
-                </div>
             `;
+
+            if (data.estado === 'completado') {
+                // Solo muestra la información, sin botones
+            } else if (data.estado === 'en-proceso') {
+                // Solo muestra "Listo" y "Pendiente"
+                html += `
+                    <div class="mb-2 d-grid gap-2">
+                        <button class="btn btn-success btn-lg" id="btn-listo" aria-label="Marcar como listo" title="Marcar como listo">Listo</button>
+                        <button class="btn btn-danger btn-lg" id="btn-pendiente" aria-label="Marcar como pendiente" title="Marcar como pendiente">Pendiente</button>
+                    </div>
+                    <div class="mt-2" id="motivo-pendiente-container" style="display:none;">
+                        <select id="motivo-pendiente" class="form-select form-select-lg">
+                            <option value="">Seleccione motivo</option>
+                            <option value="Refacciones">Refacciones</option>
+                            <option value="No bajó">No bajó</option>
+                            <option value="Aún no se arregla">Aún no se arregla</option>
+                        </select>
+                    </div>
+                `;
+            } else if (data.estado === 'planificado' || data.estado === 'pendiente') {
+                // Solo muestra "En atención" y "Pendiente"
+                html += `
+                    <div class="mb-2 d-grid gap-2">
+                        <button class="btn btn-warning btn-lg" id="btn-atencion" aria-label="Marcar en atención" title="Marcar en atención">En atención</button>
+                        <button class="btn btn-danger btn-lg" id="btn-pendiente" aria-label="Marcar como pendiente" title="Marcar como pendiente">Pendiente</button>
+                    </div>
+                    <div class="mt-2" id="motivo-pendiente-container" style="display:none;">
+                        <select id="motivo-pendiente" class="form-select form-select-lg">
+                            <option value="">Seleccione motivo</option>
+                            <option value="Refacciones">Refacciones</option>
+                            <option value="No bajó">No bajó</option>
+                            <option value="Aún no se arregla">Aún no se arregla</option>
+                        </select>
+                    </div>
+                `;
+            }
+
             document.getElementById('modalReporteBody').innerHTML = html;
             var modal = new bootstrap.Modal(document.getElementById('modalReporte'));
             modal.show();
 
-            // Botón "Listo"
-            document.getElementById('btn-listo').onclick = function() {
-                fetch(`/taller/reporte/${reporteId}/finalizar`, {method:'POST'})
-                    .then(r=>r.json()).then(data=>{
+            // Solo asigna handlers si no está completado
+            if (data.estado !== 'completado') {
+                if (data.estado === 'en-proceso') {
+                    document.getElementById('btn-listo').onclick = function() {
+                        fetch(`/taller/reporte/${reporteId}/finalizar`, {method:'POST'})
+                            .then(r=>r.json()).then(data=>{
+                                if(data.success) {
+                                    alert('Reporte marcado como listo');
+                                    modal.hide();
+                                    calendar.refetchEvents();
+                                } else alert(data.error);
+                            });
+                    };
+                }
+                if (data.estado === 'en-proceso' || data.estado === 'planificado' || data.estado === 'pendiente') {
+                    if (document.getElementById('btn-atencion')) {
+                        document.getElementById('btn-atencion').onclick = function() {
+                            fetch(`/taller/reporte/${reporteId}/en-proceso`, {method:'POST'})
+                                .then(r=>r.json()).then(data=>{
+                                    if(data.success) {
+                                        alert('Reporte en atención');
+                                        modal.hide();
+                                        calendar.refetchEvents();
+                                    } else alert(data.error);
+                                });
+                        };
+                    }
+                }
+                document.getElementById('btn-pendiente').onclick = function() {
+                    document.getElementById('motivo-pendiente-container').style.display = 'block';
+                };
+                document.getElementById('motivo-pendiente').onchange = function() {
+                    var motivo = this.value;
+                    if(!motivo) return;
+                    fetch(`/taller/reporte/${reporteId}/pendiente`, {
+                        method:'POST',
+                        headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({motivo})
+                    }).then(r=>r.json()).then(data=>{
                         if(data.success) {
-                            alert('Reporte marcado como listo');
+                            alert('Reporte marcado como pendiente');
                             modal.hide();
                             calendar.refetchEvents();
                         } else alert(data.error);
                     });
-            };
-            // Botón "En atención"
-           document.getElementById('btn-atencion').onclick = function() {
-                fetch(`/taller/reporte/${reporteId}/en-proceso`, {method:'POST'})
-                    .then(r=>r.json()).then(data=>{
-                        if(data.success) {
-                            alert('Reporte en atención');
-                            modal.hide();
-                            calendar.refetchEvents();
-                        } else alert(data.error);
-                    });
-            };  
-            // Botón "Pendiente"
-            document.getElementById('btn-pendiente').onclick = function() {
-                document.getElementById('motivo-pendiente-container').style.display = 'block';
-            };
-            // Selección de motivo pendiente
-            document.getElementById('motivo-pendiente').onchange = function() {
-                var motivo = this.value;
-                if(!motivo) return;
-                fetch(`/taller/reporte/${reporteId}/pendiente`, {
-                    method:'POST',
-                    headers: {'Content-Type':'application/json'},
-                    body: JSON.stringify({motivo})
-                }).then(r=>r.json()).then(data=>{
-                    if(data.success) {
-                        alert('Reporte marcado como pendiente');
-                        modal.hide();
-                        calendar.refetchEvents();
-                    } else alert(data.error);
-                });
-            };
+                };
+            }
         },
         eventContent: function(arg) {
             // Mostrar solo el ID de la unidad como título
@@ -206,11 +234,15 @@ document.addEventListener('DOMContentLoaded', function() {
             return {
                 html: `<span>Unidad ${unidad}</span>`
             };
-        },
+        },  
         eventClassNames: function(arg) {
-            return [
-                arg.event.extendedProps.estado === 'completado' ? 'fc-event-completado' : 'fc-event-planificado'
-            ];
+            // Asigna clase según el estado del reporte para el color
+            const estado = arg.event.extendedProps.estado;
+            if (estado === 'completado') return ['fc-event-completado'];
+            if (estado === 'pendiente') return ['fc-event-pendiente'];
+            if (estado === 'en-proceso') return ['fc-event-enproceso'];
+            if (estado === 'planificado') return ['fc-event-default'];
+            return ['fc-event-default'];
         }
     });
     calendar.render();
@@ -344,32 +376,46 @@ document.addEventListener('DOMContentLoaded', function() {
     font-size: 1.08rem;
     letter-spacing: 0.5px;
 }
-.fc-event {
-    cursor: pointer;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: none;
-    padding: 0.18rem 0.7rem;
-    margin-bottom: 0.15rem;
-    box-shadow: 0 1px 4px rgba(13,110,253,0.07);
-    transition: box-shadow 0.18s;
-}
-.fc-event-completado {
-    background: linear-gradient(90deg, #198754 0%, #43e97b 100%) !important;
-    border: none !important;
+/* Evento planificado (gris/amarillo claro) */
+.fc-event-default,
+.fc-event-planificado {
+    background: linear-gradient(90deg, #3b82f6 0%, #0d6efd 100%) !important;
     color: #fff !important;
     font-weight: 700;
+    border: 1px solid #0d6efd !important;
 }
-.fc-event-planificado {
-    background: linear-gradient(90deg, #ffc107 0%, #f8b500 100%) !important;
-    border: none !important;
-    color: #222 !important;
+
+/* Evento en proceso (naranja/amarillo) */
+.fc-event-enproceso {
+    background: linear-gradient(90deg, #f59e42 0%, #fbbf24 100%) !important;
+    color: #fff !important;
     font-weight: 700;
+    border: 1px solid #fbbf24 !important;
 }
+
+/* Evento pendiente (rojo) */
+.fc-event-pendiente {
+    background: linear-gradient(90deg, #dc3545 0%, #ff7675 100%) !important;
+    color: #fff !important;
+    font-weight: 700;
+    border: 1px solid #dc3545 !important;
+}
+
+/* Evento completado (verde) */
+.fc-event-completado {
+    background: linear-gradient(90deg, #198754 0%, #43e97b 100%) !important;
+    color: #fff !important;
+    font-weight: 700;
+    border: 1px solid #198754 !important;
+}
+
+/* Hover para todos los eventos */
 .fc-event:hover {
     box-shadow: 0 4px 16px rgba(13,110,253,0.13);
     filter: brightness(1.08);
 }
+
+/* Personalización para la vista de lista */
 .fc .fc-list-event-title {
     font-size: 1.05rem;
     font-weight: 600;
@@ -385,38 +431,15 @@ document.addEventListener('DOMContentLoaded', function() {
     background: #198754 !important;
 }
 .fc .fc-list-event-planificado .fc-list-event-dot {
-    background: #ffc107 !important;
+    background: #ffe082 !important;
 }
-.fc .fc-list-day-cushion {
-    background: #e7f0fe;
-    color: #0d6efd;
-    font-weight: 700;
-    border-radius: 8px;
+.fc .fc-list-event-enproceso .fc-list-event-dot {
+    background: #fbbf24 !important;
 }
-.fc .fc-list-table tr:hover {
-    background: #e7f0fe !important;
+.fc .fc-list-event-pendiente .fc-list-event-dot {
+    background: #dc3545 !important;
 }
-.fc .fc-scrollgrid {
-    border-radius: 0 0 12px 12px;
-    overflow: hidden;
-}
-.fc .fc-daygrid-day-frame {
-    min-height: 70px;
-}
-.fc .fc-daygrid-event-dot {
-    background: #0d6efd !important;
-}
-.fc .fc-daygrid-event {
-    margin-top: 0.15rem;
-}
-.fc .fc-daygrid-block-event .fc-event-title {
-    font-size: 1.01rem;
-    font-weight: 600;
-}
-.fc .fc-daygrid-event-dot {
-    width: 10px;
-    height: 10px;
-}
+
 .fc .fc-toolbar-chunk .fc-button-group {
     margin-right: 0.5rem;
 }

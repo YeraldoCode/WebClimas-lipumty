@@ -696,17 +696,20 @@ def admin_unidades():
 @app.route('/api/eventos', methods=['GET'])
 @login_required
 def api_eventos():
-    # Incluir también los reportes en atención/en proceso
+    # Incluye todos los estados relevantes para el calendario
+    estados_mostrar = ['planificado', 'completado', 'en_proceso', ]
     reportes = ReporteClima.query.filter(
-        ReporteClima.estado.in_(['planificado', 'completado', 'en_proceso'])
+        ReporteClima.estado.in_(estados_mostrar)
     ).all()
     eventos = []
     for reporte in reportes:
         if not reporte.fecha_inicio:
             continue  # Ignora reportes sin fecha de inicio
+        # Convierte 'en_proceso' a 'en-proceso' para el frontend
+        estado_front = reporte.estado.replace('_', '-')
         color = (
-            "green" if reporte.estado == 'completado'
-            else "blue" if reporte.estado == 'en_proceso'
+            "green" if estado_front == 'completado'
+            else "blue" if estado_front == 'en-proceso'
             else "orange"
         )
         eventos.append({
@@ -717,11 +720,10 @@ def api_eventos():
             "vehiculo_id": reporte.vehiculo_id,
             "vehiculo_descripcion": reporte.vehiculo.descripcion if reporte.vehiculo else "",
             "coordinador_username": reporte.coordinador.username if reporte.coordinador else "",
-            "estado": reporte.estado,
+            "estado": estado_front,
             "color": color
         })
     return jsonify(eventos)
-
 
 
 @app.route('/api/reportes')
