@@ -25,15 +25,7 @@ from flask_sqlalchemy import SQLAlchemy
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    app.config['SECRET_KEY'] = 'tu_clave_secreta'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://lipu_admin:XTHV02bIaM8kXSVuMsZ2Sg7FzZQ5HoQr@dpg-d0qvdpripnbc73ept3m0-a.oregon-postgres.render.com/lipuclimas'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
-    # Deshabilitar CSRF para rutas del coordinador
-    app.config['WTF_CSRF_ENABLED'] = False
-
-    # Inicializar extensiones
     db.init_app(app)
     login_manager = LoginManager()
     login_manager.init_app(app)
@@ -44,19 +36,16 @@ def create_app():
     def load_user(user_id):
         return db.session.get(Usuario, int(user_id))
 
-    # Manejador de errores global
     @app.errorhandler(Exception)
     def handle_error(error):
         print(f"Error global: {str(error)}")
         import traceback
         print(f"Traceback: {traceback.format_exc()}")
-        
         if request.is_json or request.path.startswith('/coordinador/'):
             return jsonify({
                 'success': False,
                 'error': str(error)
             }), getattr(error, 'code', 500)
-        
         flash(str(error), 'error')
         return redirect(url_for('index'))
 
@@ -64,13 +53,9 @@ def create_app():
 
 app = create_app()
 
-# =============================
-# Cierre de sesión de base de datos
-# =============================
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db.session.remove()
-
 # =============================
 # Rutas principales
 # =============================

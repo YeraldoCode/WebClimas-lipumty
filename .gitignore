@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Entorno virtual
+venv/
+env/
+.venv/
+ENV/
+
+# Archivos de configuración sensibles
+config.py
+.env
+
+# Archivos de base de datos locales
+*.sqlite3
+*.db
+
+# Archivos temporales y logs
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Archivos de Jupyter
+.ipynb_checkpoints/
+
+# Archivos de Excel temporales
+*.xlsx
+*.xls
+
+# Archivos de subida de usuarios
+uploads/
+static/uploads/
+*.csv
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# Otros
+*.orig
