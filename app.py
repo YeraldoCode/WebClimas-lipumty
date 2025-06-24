@@ -23,15 +23,12 @@ from flask_sqlalchemy import SQLAlchemy
 # Configuración e inicialización
 # =============================
 def create_app():
+    import os
     app = Flask(__name__)
     app.config.from_object(Config)
-    app.config['SECRET_KEY'] = 'tu_clave_secreta'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://lipu_admin:XTHV02bIaM8kXSVuMsZ2Sg7FzZQ5HoQr@dpg-d0qvdpripnbc73ept3m0-a.oregon-postgres.render.com/lipuclimas'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
-    # Deshabilitar CSRF para rutas del coordinador
-    app.config['WTF_CSRF_ENABLED'] = False
+
+    app.config['WTF_CSRF_ENABLED'] = True
 
     # Inicializar extensiones
     db.init_app(app)
@@ -44,20 +41,24 @@ def create_app():
     def load_user(user_id):
         return db.session.get(Usuario, int(user_id))
 
-    # Manejador de errores global
+    # Manejador de errores global seguro
     @app.errorhandler(Exception)
     def handle_error(error):
-        print(f"Error global: {str(error)}")
+        from flask import current_app
         import traceback
-        print(f"Traceback: {traceback.format_exc()}")
-        
+        is_debug = current_app.config.get("DEBUG", False)
+        if is_debug:
+            print(f"Error global: {str(error)}")
+            print(f"Traceback: {traceback.format_exc()}")
+            error_msg = str(error)
+        else:
+            error_msg = "Ocurrió un error interno. Contacta al administrador."
         if request.is_json or request.path.startswith('/coordinador/'):
             return jsonify({
                 'success': False,
-                'error': str(error)
+                'error': error_msg
             }), getattr(error, 'code', 500)
-        
-        flash(str(error), 'error')
+        flash(error_msg, 'error')
         return redirect(url_for('index'))
 
     return app
