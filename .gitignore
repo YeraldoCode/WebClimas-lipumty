@@ -18,6 +18,7 @@ config.py
 # Archivos de base de datos locales
 *.sqlite3
 *.db
+*.sql
 
 # Archivos temporales y logs
 *.log

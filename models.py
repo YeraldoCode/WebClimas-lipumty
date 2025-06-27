@@ -29,22 +29,20 @@ class Usuario(UserMixin, db.Model):
 
 class Vehiculo(db.Model):
     __tablename__ = 'vehiculos'
-    idvehiculo = db.Column(db.Integer, primary_key=True)
-    serial = db.Column(db.String(50))
+    idvehiculo = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    serial = db.Column(db.String(100))
     marca = db.Column(db.String(50))
-    modelo = db.Column(db.String(50))
-    asientos = db.Column(db.Integer)
     motor = db.Column(db.String(50))
     anio = db.Column(db.Integer)
     tipo_vehiculo = db.Column(db.String(50))
     gpo_estatus = db.Column(db.String(50))
     uso = db.Column(db.String(50))
     estatus = db.Column(db.String(50))
-    combustible = db.Column(db.String(30))
-    eco = db.Column(db.String(30))
-    placas = db.Column(db.String(30))
-    placas_federales = db.Column(db.String(30))
-    descripcion = db.Column(db.String(255))
+    mecanix = db.Column(db.String(100))  # Nuevo campo
+    costo_reparacion = db.Column(db.Float)  # Nuevo campo
+    placas = db.Column(db.String(20))
+    placas_federales = db.Column(db.String(20))
+    descripcion = db.Column(db.Text)
     odometro = db.Column(db.Integer)
 
 class Servicio(db.Model):

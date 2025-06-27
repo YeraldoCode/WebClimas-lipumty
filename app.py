@@ -1,7 +1,6 @@
 # App principal para el control y mantenimiento de climas de unidades de transporte.
 # Roles: coordinador (sin login), logística (admin), próximamente taller.
 # Funcionalidades: revisión, edición, trazabilidad, carga/exportación Excel.
-
 from flask import Flask, abort, render_template, request, redirect, url_for, flash, session, send_file, jsonify, Blueprint
 from flask_wtf import FlaskForm, CSRFProtect
 from wtforms import StringField, PasswordField, FileField, SubmitField
@@ -17,11 +16,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 from werkzeug.utils import secure_filename
 import json
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-
-# =============================
+# ==================================
 # Configuración e inicialización
-# =============================
+# ==================================
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -52,6 +51,7 @@ def create_app():
     return app
 
 app = create_app()
+migrate = Migrate(app, db)
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -359,6 +359,8 @@ def admin():
         print(f"Error en la ruta /admin: {str(e)}")
         flash('Ocurrió un error al cargar la página de administración', 'error')
         return redirect(url_for('index'))
+
+
     
 @app.route('/admin/unidades/<int:unidad_id>/editar', methods=['POST'])
 @login_required
@@ -387,6 +389,59 @@ def editar_unidad(unidad_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/admin/usuarios', methods=['GET', 'POST'])
+@login_required
+def admin_usuarios():
+    if current_user.rol != 'logistica':
+        if request.is_json:
+            return jsonify({'success': False, 'error': 'No autorizado'}), 403
+        flash('No tienes permiso para acceder a esta sección', 'error')
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        username = request.form.get('username') or (request.json and request.json.get('username'))
+        password = request.form.get('password') or (request.json and request.json.get('password'))
+        rol = request.form.get('rol') or (request.json and request.json.get('rol'))
+        email = request.form.get('email') or (request.json and request.json.get('email'))
+
+        if not username or not password or not rol:
+            msg = 'Todos los campos obligatorios deben ser completados'
+            if request.is_json:
+                return jsonify({'success': False, 'error': msg}), 400
+            flash(msg, 'error')
+        elif Usuario.query.filter_by(username=username).first():
+            msg = 'El nombre de usuario ya existe'
+            if request.is_json:
+                return jsonify({'success': False, 'error': msg}), 400
+            flash(msg, 'error')
+        else:
+            nuevo_usuario = Usuario(
+                username=username,
+                password_hash=generate_password_hash(password),
+                rol=rol,
+                email=email
+            )
+            db.session.add(nuevo_usuario)
+            db.session.commit()
+            msg = 'Usuario creado exitosamente'
+            if request.is_json:
+                return jsonify({'success': True, 'message': msg}), 201
+            flash(msg, 'success')
+
+    usuarios = Usuario.query.all()
+    if request.is_json:
+        return jsonify([
+            {
+                'id': u.id,
+                'username': u.username,
+                'rol': u.rol,
+                'email': u.email
+            } for u in usuarios
+        ])
+    return render_template('logistica/usuarios.html', usuarios=usuarios)
+
 
 @app.route('/taller/reporte/<int:reporte_id>/en-proceso', methods=['POST'])
 @login_required
